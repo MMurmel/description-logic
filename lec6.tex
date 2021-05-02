@@ -1,0 +1,229 @@
+\lecture{6}{29.04.2021}{}
+
+\begin{proof}
+	By induction on the structure of $C$ :
+	\begin{itemize}
+		\item $C = A \in \mathscr{C}$:
+			Then $d_1 \in A^{\mathcal{I}_1}$ iff $d_2 \in A^{\mathcal{I}_2}$ is an immediate consequence of $d_1 \rho d_2$ for a bisimulation $\rho$.
+		\item $C = D \sqcap E$ :
+			$d_1 \in \left( D \sqcap E \right)^{\mathcal{I}_1}$ iff $d_1 \in D^{\mathcal{I}_1}$ and $d_1 \in E^{\mathcal{I}_1}$.
+			But then $d_2 \in D^{\mathcal{I}_2}$ and $d_2 \in E^{\mathcal{I}_2}$ (induction).
+			And therefore $d_2 \in \left( D \sqcap E \right)^{\mathcal{I}_2}$.
+		\item $\neg, \sqcup$ can be treated similarly.
+		\item $C = \exists r.D$ :
+				$d_1 \in \left( \exists r.D \right)^{\mathcal{I}_1}$ iff there is $d_1' \in \Delta^{\mathcal{I}_1}$ such that $(d_1, d_1') \in r^{\mathcal{I}_1}$ and $d_1' \in D^{\mathcal{I}_1}$.
+				Then there is $d_2' \in \Delta^{\mathcal{I}_2}$ such that $\left( d_2, d_2' \right) \in r^{\mathcal{I}_2}$ and $d_1' \rho d_2'$.
+				By induction we get that $d_2' \in D^{\mathcal{I}_2}$ and therefore  $d_2 \in \left( \exists r.D \right)^{\mathcal{I}_2}$.
+			\item $C = \forall r.D$ can be treated similarly.
+	\end{itemize}
+\end{proof}
+
+\section{Expressive power}
+We have so far introduced extensions of $\mathcal{ALC}$ by concept constructors \textbf{number restrictions}, \textbf{nominals} and the role constructor \textbf{invers roles}.
+We will now show, that they really extend $\mathcal{ALC}$, i.e., there is no way these could be expressed by plain $\mathcal{ALC}$.
+
+\begin{prop}[$\mathcal{ALCN}$ is more expressive than $\mathcal{ALC}$]
+	No $\mathcal{ALC}$-concept description is equivalent to the $\mathcal{ALCN}$-concept description $\left( \leq 1 r \right)$.
+\end{prop}
+\begin{proof}
+	Assume that $C$ is an $\mathcal{ALC}$-concept description such that $C \equiv ( \leq 1 r )$, i.e. $C^{\mathcal{I}} = \left( \leq 1 r \right)^\mathcal{I}$ holds for all interpretations $\mathcal{I}$.
+	Consider the following two interpretations $\mathcal{I}_1$ and $\mathcal{I}_2$ :
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default] (d1) {$d_1$};
+				\node[default, below of = d1] (e1) {$e_1$};
+				\draw (d1) edge[left] node{$r$} (e1);
+			\end{tikzpicture}
+			\caption{$\mathcal{I}_1$}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default] (d2) {$d_2$};
+				\node[default, below left of = d2] (e21) {$e_{2,1}$};
+				\node[default, below right of = d2] (e22) {$e_{2,2}$};
+				\draw (d2) edge[left] node{$r$} (e21);
+				\draw (d2) edge[right] node{$r$} (e22);
+			\end{tikzpicture}
+			\caption{$\mathcal{I}_2$}
+		\end{subfigure}
+	\end{figure}
+	Then $\rho \coloneqq \left\{ (d_1,d_2), (e_1,e_{1,2}), (e_1,e_{2,2}) \right\}$ is a bisimulation, which shows $(\mathcal{I}_1, d_1) \sim (\mathcal{I}_2,d_2)$.
+	Thus, we have $d_1 \in C^{\mathcal{I}_1} \iff d_2 \in C^{\mathcal{I}_2}$.
+	This yields a contradiction, since $d_1 \in ( \leq 1r)^{\mathcal{I}_1} = C^{\mathcal{I}_1}$ but $d_2 \notin ( \leq 1r)^{\mathcal{I}_2} = C^{\mathcal{I}_2}$. $\contra$
+\end{proof}
+
+\begin{prop}[$\mathcal{ALCI}$ is more expressive than $\mathcal{ALC}$]
+	No $\mathcal{ALC}$-concept description is equivalent to the $\mathcal{ALCI}$-concept description $\exists r^{-}.\top$.
+\end{prop}
+\begin{proof}
+	Assume that $C$ is an $\mathcal{ALC}$-concept description such that $C \equiv \exists r^{-}.\top$.
+	Consider the following two interpretations:
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default] (e1) {$e_1$};
+				\node[default, below of = e1] (d1) {$d_1$};
+				\draw (e1) edge[left] node{$r$} (d1);
+			\end{tikzpicture}
+			\caption{$\mathcal{I}_1$}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default] (d2) {$d_2$};
+			\end{tikzpicture}
+			\caption{$\mathcal{I}_2$}
+		\end{subfigure}
+	\end{figure}
+	Then $\rho \coloneqq \left\{ (d_1,d_2) \right\}$ is a bisimulation, which shows $\left(  \mathcal{I}_1, d_1 \right) \sim \left( \mathcal{I}_2,d_2 \right)$.
+	Thus, we have  $d_1 \in C^{\mathcal{I}_1} \iff d_2 \in C^{\mathcal{I}_2}$.
+	This yields a contradiction, since $d_1 \in \left( \exists r^{-}.\top \right)^{\mathcal{I}_1} = C^{\mathcal{I}_1}$, but
+	$d_2 \notin \left( \exists r^{-}.\top \right)^{\mathcal{I}_2} = C^{\mathcal{I}_2}$. $\contra$
+\end{proof}
+
+\begin{prop}[$\mathcal{ALCO}$ is more expressive than $\mathcal{ALC}$]
+	No $\mathcal{ALC}$-concept description is equivalent to the $\mathcal{ALCO}$-concept description $\left\{ a \right\}$.
+\end{prop}
+\begin{proof}
+	Assume that $C$ is an $\mathcal{ALC}$-concept description such that $C \equiv \left\{ a \right\}$.
+	Consider the following two interpretations:
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default, label =left: $\left\{ a \right\}^{\mathcal{I}_1}$] (d1) {$d_1$};
+			\end{tikzpicture}
+			\caption{$\mathcal{I}_1$}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default] (d2) {$d_2$};
+				\node[default, label= right: $\left\{ a \right\}^{\mathcal{I}_2}$, right of = d2] (e2) {$e_2$};
+			\end{tikzpicture}
+			\caption{$\mathcal{I}_2$}
+	\end{subfigure}
+	\end{figure}
+	The meaning of these interpretations is, that $a^{\mathcal{I}_1} = d_1$ and $a^{\mathcal{I}_2} = e_2$.
+	Then $\rho \coloneqq \left\{ (d_1,d_2) \right\}$ is a bisimulation, which yields $\left( \mathcal{I}_1, d_1 \right) \sim \left( \mathcal{I}_2, d_2 \right)$.
+	Thus, $d_1 \in C^{\mathcal{I}_1} \iff d_2 \in C^{\mathcal{I}_2}$.
+	This yields a contradiction, since $d_1 \in \left\{ a \right\}^{\mathcal{I}_1} = C^{\mathcal{I}_1}$, but
+	 $d_2 \notin \left\{ a \right\}^{\mathcal{I}_2} = C^{\mathcal{I}_2}$. $\contra$
+\end{proof}
+These proofs were the result of the fact, that we defined bisimulation with $\mathcal{ALC}$ in mind.
+One could also define a notion of bisimulation under which $\mathcal{ALCN}$ or $\mathcal{ALCI}$ are invariant.
+
+\section{Closure under disjoint union}
+\begin{definition}
+	Let $\mathfrak{R}$ be an index set and $\left( \mathcal{I}_{\nu} \right)_{\nu \in \mathfrak{R}}$ a family of interpretations $\mathcal{I}_{\nu} = \left( \Delta^{\mathcal{I}_{\nu}}, \cdot^{\mathcal{I}_{\nu}} \right)$.
+	Their disjoint union $\mathcal{J}$ is defined as follows:
+	\begin{align*}
+		\Delta^{\mathcal{J}} &= \left\{ (d,\nu) \mid \nu \in \mathfrak{R}\land d \in \Delta^{\mathcal{I}_{\nu}} \right\}, \\
+		A^{\mathcal{J}} &= \left\{ (d,\nu) \mid \nu \in \mathfrak{R} \land d \in A^{\mathcal{I}_\nu}\right\} \text{for all } A \in \mathscr{C}, \\
+		r^{\mathcal{J}} &= \left\{ \left( (d,\nu),(e,\nu) \right) \mid \nu \in \mathfrak{R} \land (d,e) \in r^{\mathcal{I}_\nu} \right\} \text{for all } r \in \mathscr{R}.
+	\end{align*}
+\end{definition}
+\begin{notation}
+	We then write
+	\[
+	\mathcal{J} = \biguplus_{\nu \in \mathfrak{R}} \mathcal{I}_{\nu}
+	.\]
+\end{notation}
+\begin{note}
+	If there are some $\mathcal{I}_{\nu_1}, \mathcal{I}_{\nu_2}$ that are not disjoint,
+	we make them artificially disjoint by adding the index $\nu$ to the tuple.
+\end{note}
+
+\begin{lemma}\label{lemma:disjoint union 1}
+	For $\nu \in \mathfrak{R}$, all $\mathcal{ALC}$-concept description $C$, and all $d \in \Delta^{\mathcal{I}_\nu}$ we have:
+	\[
+		d \in C^{\mathcal{I}_\nu} \iff (d,\nu) \in C^{\mathcal{J}}
+	.\]
+\end{lemma}
+\begin{proof}[Proof sketch]
+	Let $\mathcal{J} = \biguplus_{\nu \in \mathfrak{R}} \mathcal{I}_\nu$.
+	We claim that
+	\[
+	\rho_\nu \coloneqq \left\{ \left( (d,\nu),d \right) \mid d \in \Delta^{\mathcal{I}_\nu} \right\}
+	\]
+	is a bisimulation (and proof that).
+	And then lemma \ref{lemma:disjoint union 1} follows from theorem \ref{thm: bisimulation invariance}.
+\end{proof}
+
+\begin{theorem}
+	Let $\mathcal{T}$ be an $\mathcal{ALC}$ TBox and $(\mathcal{I}_\nu)_{\nu \in \mathfrak{R}}$ a family of models of $\mathcal{T}$.
+	Then its disjoint union $\mathcal{J} = \biguplus_{\nu \in \mathfrak{R}} \mathcal{I}_\nu$ is also a model of $\mathcal{T}$.
+\end{theorem}
+This theorem tells us, that models of TBoxes are closed under disjoint union.
+\begin{proof}
+	Let $C \sqsubseteq D \in \mathcal{T}$.
+	We must show that $C^{\mathcal{J}} \subseteq D^{\mathcal{J}}$.
+	Let $\left( d,\nu \right) \in C^{\mathcal{J}}$.
+	By lemma \ref{lemma:disjoint union 1}, this implies $d \in C^{\mathcal{I}_\nu}$.
+	Since $\mathcal{I}_\nu$ is a model of $\mathcal{T}$, we obtain $d \in D^{\mathcal{I}_\nu}$.
+	Again, by lemma \ref{lemma:disjoint union 1}, this implies $(d,\nu) \in D^{\mathcal{J}}$.
+\end{proof}
+
+\begin{corollary}
+ 	Let $\mathcal{T}$ be an $\mathcal{ALC}$ TBox and $C$ an $\mathcal{ALC}$ concept that is satisfiable w.r.t. $\mathcal{T}$.
+	Then there is a model $\mathcal{J}$ of $\mathcal{T}$ in which the extension $C^{\mathcal{J}}$ of $C$ is infinite.
+\end{corollary}
+\begin{proof}
+	Since $C$ is satisfiable w.r.t. $\mathcal{T}$, there is a model $\mathcal{I}$ of $\mathcal{T}$ and $d \in \Delta^{\mathcal{I}}$ such that $d \in C^{\mathcal{I}}$.
+	For $\nu = 1,2,3,\ldots$ let $\mathcal{I}_\nu = \mathcal{I}$.
+	Let $\mathcal{J} = \biguplus_{\nu \geq 1} \mathcal{I}_\nu$.
+	We know that $\mathcal{J}$ is a model of $\mathcal{T}$ since $\mathcal{I}$ is a model of $\mathcal{T}$.
+	In $\mathcal{J}$, $C$ has infinitely many elements, since $(d,\nu) \in C^{\mathcal{J}}$ for $\nu \geq 1$.
+\end{proof}
+Therefore the only concepts that are \textbf{always} interpreted as a finite set,
+are unsatisfiable concepts (w.r.t. a TBox $\mathcal{T}$).
+
+\section{Finite model property}
+\begin{definition}[Finite model]
+	The interpretation $\mathcal{I}$ is a model of a concept $C$ w.r.t. a TBox $\mathcal{T}$,
+	if $\mathcal{I}$ is a model of $\mathcal{T}$ such that $C^{\mathcal{I}} \neq \emptyset$.
+	We call this model finite if $\Delta^{\mathcal{I}}$ is finite.
+	\newline
+	We call the following the \textit{Finite model property} (of $\mathcal{ALC}$):
+	\newline
+	If $\mathcal{T}$ is an $\mathcal{ALC}$-TBox and $C$ an $\mathcal{ALC}$-concept description 
+	such that $C$ is satisfiable w.r.t. $\mathcal{T}$,
+	then $C$ has a finite model w.r.t. $\mathcal{T}$.
+\end{definition}	
+To proof this we first need some auxiliary results.
+
+\begin{mdframed}[frametitle={Sizes in $\mathcal{ALC}$}]
+	We define the size of an $\mathcal{ALC}$-concept description recursively:
+	\begin{itemize}
+		\item $C = A \in \mathscr{C}$ : $\text{size}(C) \coloneqq 1$,
+		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$ : $\text{size}(C) \coloneqq 1 + \text{size}(C_1) + \text{size}(C_2)$,
+		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$ : $\text{size}(C) \coloneqq 1 + \text{size}(D)$.
+	\end{itemize}
+	We also define the size of a TBox $\mathcal{T}$ as follows:
+	\[
+		\text{size}(\mathcal{T}) \coloneqq \sum_{C \sqsubseteq D \in \mathcal{T}} \text{size}(C) + \text{size}(D)
+	.\]
+\end{mdframed}
+
+\begin{mdframed}[frametitle={Subconcepts in $\mathcal{ALC}$}]
+	We define the subconcepts of an $\mathcal{ALC}$-concept description recursively:
+	\begin{itemize}
+		\item $C = A \in \mathscr{C}$ : $\text{sub}(C) \coloneqq \left\{ A \right\}$,
+		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$ : $\text{sub}(C) \coloneqq \left\{ C \right\} \cup \text{sub}(C_1) \cup \text{sub}(C_2)$,
+		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$ : $\text{sub}(C) \coloneqq \left\{ C \right\} \cup \text{sub}(D)$.
+	\end{itemize}
+	We also define the subconcepts of a TBox $\mathcal{T}$ as follows:
+	\[
+		\text{sub}(\mathcal{T}) \coloneqq \bigcup_{C \sqsubseteq D \in \mathcal{T}} \text{sub}(C) \cup \text{sub}(D)
+	.\]
+\end{mdframed}

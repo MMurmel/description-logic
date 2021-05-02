@@ -1,0 +1,161 @@
+\lecture{2}{15.04.2021}{}
+\begin{definition}[Semantics of $\mathcal{ALC}$]
+	An interpretation $\mathcal{I} = (\Delta^{\mathcal{I}}, \cdot^{\mathcal{I}})$ is a tuple consisting of 
+	a non-empty domain $\Delta^{\mathcal{I}}$ and
+	an extension mapping $\cdot^{\mathcal{I}}$ :
+	\begin{itemize}
+		\item $\forall A \in \mathscr{C} : A^{\mathcal{I}} \subseteq \Delta^{\mathcal{I}}$
+		\item $\forall r \in \mathscr{R} : r^{\mathcal{I}}\subseteq \Delta^{\mathcal{I}} \times \Delta^{\mathcal{I}}$
+	\end{itemize}
+	$\cdot^{\mathcal{I}}$ is further extend to complex $\mathcal{ALC}$-concept descriptions:
+	\begin{itemize}
+		\item $\left( C \sqcap D \right) ^{\mathcal{I}} \coloneqq C^{\mathcal{I}} \cap D^{\mathcal{I}}$
+		\item $\left( C \sqcup D \right)^{\mathcal{I}} \coloneqq C^{\mathcal{I}} \cup D^{\mathcal{I}}$
+		\item $\left( \neg C \right) ^{\mathcal{I}} \coloneqq \Delta ^{\mathcal{I}} \setminus C^{\mathcal{I}}$
+		\item $\left( \forall r.C \right)^{\mathcal{I}} \coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \forall e \in \Delta^{\mathcal{I}}: (d,e) \in r^{\mathcal{I}} \implies e \in C^{\mathcal{I}} \right\} $
+		\item $\left( \exists r.C \right)^{\mathcal{I}} \coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \exists e \in \Delta^{\mathcal{I}}: (d,e) \in r^{\mathcal{I}} \land e \in C^{\mathcal{I}} \right\} $
+	\end{itemize}
+\end{definition}
+We define the unary predicate symbols of $\mathscr{C}$ to be interpreted as sets
+and the binary predicate symbols of $\mathscr{R}$ to be interpreted as binary relations.
+This is quite intuitive, but needs to be stated nevertheless.
+Furthermore $\sqcap, \sqcup$ and $\neg$ are intuitively interpreted as the basic set operations.
+The definitions for $\left( \forall r.C \right)^{\mathcal{I}}$ and $\left( \exists r.C \right)^{\mathcal{I}}$
+can be understood easily, when the interpretation is visualized as a graph.
+The elements of $\Delta^{\mathcal{I}}$ are the nodes and the $r^{\mathcal{I}}$ are the edges.
+Every $d \in \Delta^{\mathcal{I}}$ gets annotated (or tagged/colored) with the (finitely many) concept names it belongs to.
+Then $\left( \exists r.C \right)^{\mathcal{I}}$ are these nodes, that have a $r$-successor in $C$.
+Similarly $\left( \forall r.C \right)^{\mathcal{I}}$ are the nodes in $\Delta^{\mathcal{I}}$, whose $r$-successors are all in $C$
+or which don't have any $r$-successors at all.
+
+% TODO make graph as example
+
+\subsection{Relationship with FOL}
+We will now show, that $\mathcal{ALC}$ really is just a fragment of FOL.
+Obviously $\mathcal{ALC}$ cannot be as expressive as FOL (e.g. Predicates of arity $ \geq 3$), but like explained earlier, that is actually intended.
+\newline
+Interpretations of $\mathcal{ALC}$ can be viewed as first-order interpretations only concerning unary and binary predicates.
+Meanwhile concepts descriptions in $\mathcal{ALC}$ correspond to FOL formulae with one free variable. 
+The FOL formula needs a free variable, so it can take an individual as input and check, whether it satisfies the formula.
+\newline
+Given such a formula $\phi (x)$ with the free variable $x$ and an interpretation $\mathcal{I}$, the extension of $\phi$ w.r.t. $\mathcal{I}$ is defined as:
+\[
+	\phi ^{\mathcal{I}} \coloneqq \left\{ d \in \Delta ^{\mathcal{I}} \mid \mathcal{I} \vDash \phi (d) \right\} 
+.\]
+We will now show, that one can translate $\mathcal{ALC}$-concepts C into FOL formulae $\tau_{x}(C)$ (with the free variable $x$) such that their extensions coincide.
+Since $\mathcal{ALC}$-concepts are defined by induction, we will also define this translation inductively:
+
+\begin{mdframed}
+Let $A \in \mathscr{C}$, $r \in \mathscr{R}$ and $C, D$ be (possibly) complex concepts.
+\begin{align*}
+	\tau_{x}(A) &\coloneqq A(x) \\
+	\tau_{x} \left( C \sqcap D \right) &\coloneqq \tau_{x}(C) \land \tau_{x}(D) \\
+	\tau_{x} \left( C \sqcup D \right) &\coloneqq \tau_{x}(C) \lor \tau_{x}(D) \\
+	\tau_{x} (\neg C) &\coloneqq \neg \tau_{x}(C) \\
+	\tau_{x} \left( \forall r.C \right) &\coloneqq \forall y.(r(x,y) \rightarrow \tau_{y}(C)) \\
+	\tau_{x} \left( \exists r.C \right) &\coloneqq \exists y.(r(x,y) \land \tau_{y}(C)) \\
+\end{align*}
+\end{mdframed}
+
+\begin{note}
+Here, $y$ is different from $x$ and one can prove, that only two variables are needed when used in alternation.
+\end{note}
+
+\begin{lemma}
+	$C$ and $\tau_{x}(C)$ have the same extension, i.e.,
+	\[
+		C^{\mathcal{I}} = \left\{ d \in \Delta^{\mathcal{I}} \mid \mathcal{I} \vDash \tau_{x}(C)(d) \right\} 
+	.\] 
+\end{lemma}
+\begin{proof}
+	By induction on the structure of $C$.
+\end{proof}
+The whole point of showing, that $\mathcal{ALC}$ is a fragment of FOL is, that we get to reuse results already obtained for FOL.
+An example of this is the compactness of FOL, which means $\mathcal{ALC}$ is also compact.
+Furthermore with only two free variables ($x$ and $y$, respectively) and the specific structure of the translation defined above,
+$\mathcal{ALC}$ can be seen as belonging to the \textit{two-variable fragment} and the \textit{guarded fragment} of FOL,
+which we know are decidable subclasses of FOL.
+
+\subsection{Additional constructors}
+In DL research many more constructors were introduced and investigated.
+Like explained earlier, these constructors follow a common naming scheme and may be used to extend $\mathcal{AL}$, $\mathcal{ALC}$ or other DLs.
+\begin{example}[$\mathcal{Q}$ in naming scheme]
+	This allows \textbf{qualified number restrictions}: 
+	$\left( \geq nr.C \right) $ and $\left( \leq nr.C \right) $ with the following semantics:
+	\begin{align*}
+		\left( \geq nr.C \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \land e \in C^{\mathcal{I}} \right\} \right| \geq n \right\} \\
+		\left( \leq nr.C \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \land e \in C^{\mathcal{I}} \right\} \right| \leq n \right\} \\
+	\end{align*}
+\end{example}
+
+\begin{example}[$\mathcal{N}$ in naming scheme]
+	This allows \textbf{(simple) number restrictions}:
+	$\left( \geq nr \right)$, and $\left( \leq nr \right)$ as abbreviations for $\left( \geq nr.\top \right)$ and $\left( \leq nr.\bot \right)$:
+	\begin{align*}
+		\left( \geq nr \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \right\}  \right| \geq n \right\} \\
+		\left( \leq nr \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \right\}  \right| \leq n \right\} 
+	\end{align*}
+\end{example}
+
+In addition one can also define \textbf{role constructors}.
+\begin{example}[$\mathcal{I}$ in naming scheme]
+	This allows \textbf{inverse roles}:
+	If $r$ is a role then $r^{-}$ denotes its inverse:
+	\[
+		\left( r^{-} \right) ^{\mathcal{I}} \coloneqq \left\{ (e,d) \mid (d,e) \in r^{\mathcal{I}} \right\} 
+	.\] 
+	$r^{-}$ can then be used in any place a role can be used.
+\end{example}
+
+\newpage
+\section{Terminological knowledge}
+\subsection{$\mathcal{ALC}$ TBoxes}
+Simply stating $\mathcal{ALC}$-concept descriptions is not enough to capture the relations and constraints in which these concepts interact within a particular domain (the domains terminology).
+We can however achieve this by introducing another concept, a terminological box (TBox):
+
+\begin{definition}[$\mathcal{ALC}$ GCIs and TBoxes]
+	Let $C, D$ be (possibly complex) concept descriptions.
+	\begin{itemize}
+		\item A general concept inclusion (GCI) is of the form $C \sqsubseteq D$.
+		\item A TBox is a finite set of GCIs.
+		\item An interpretation $\mathcal{I}$ satisfies $C \sqsubseteq D$ iff $C^{\mathcal{I}} \subseteq D^{\mathcal{I}}$.
+		\item An interpretation $\mathcal{I}$ is a model of the TBox $\mathcal{T}$ iff it satisfies all the GCIs in $\mathcal{T}$.
+	\end{itemize}
+\end{definition}
+
+\begin{note}
+	The definition above is not specific for $\mathcal{ALC}$, it may also be applied to other concept description languages.
+	The only difference is that $C, D$ might not be called ($\mathcal{ALC}$)-concept descriptions.
+\end{note}
+
+\begin{example}
+	A few examples for GCIs:
+	 \begin{itemize}
+		\item House $\sqsubseteq$ Building
+		\item $\exists\text{isFriendOf}.\text{Human} \sqsubseteq \exists\text{knows}.\text{Human}$
+		\item Alive $\sqcap$ Dead $\sqsubseteq \bot$ 
+	\end{itemize}
+\end{example}
+
+We call two TBoxes equivalent if they have the same models.
+It should be intuitively clear, that the more GCIs an TBox $\mathcal{T}$ contains the fewer models satisfy $\mathcal{T}$.
+
+\begin{lemma}
+	If $\mathcal{T} \subseteq \mathcal{T}'$ for two TBoxes $\mathcal{T}, \mathcal{T}'$, then each model of $\mathcal{T}'$ is also a model of $\mathcal{T}$.
+\end{lemma}
+
+\begin{definition}[Concept definitions, acyclic TBoxes]
+	A concept definition is of the form $A \equiv C$ where $A$ is a concept name and  $C$ is a concept description.
+	An interpretation $\mathcal{I}$ satisfies the concept definition $A \equiv C$ iff $A^{\mathcal{I}} = C^{\mathcal{I}}$.
+	\newline
+	An acyclic TBox is a finite set of concept definitions that does not contain multiple definitions for the same concept name and
+	does not contain cyclic definitions, i.e there is no sequence $A_1 \equiv C_1, \ldots, A_n \equiv C_n \in \mathcal{T} (n \geq 1)$ such that
+	$A_{i+1}$ occurs in $C_i (1 \leq i < n)$ and $A_1$ occurs in $C_{n}$. 
+	\newline
+	An interpretation $\mathcal{I}$ is a model of the acyclic TBox $\mathcal{T}$ iff it satisfies all its concept definitions: $A^{\mathcal{I}} = C^{\mathcal{I}}$ for all $A \equiv C \in \mathcal{T}$
+	Given an acyclic TBox, we call a concept name $A$ occurring in $\mathcal{T}$ a:
+	\begin{itemize}
+		\item defined concept iff there is a $C$ such that $A \equiv C \in \mathcal{T}$ 
+		\item primitive concept otherwise.
+	\end{itemize}
+\end{definition}

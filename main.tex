@@ -1,0 +1,30 @@
+\documentclass[a4paper]{report}
+\input{../preamble.tex}
+\title{Description Logic}
+
+% account for different counting scheme in lecture
+\counterwithout*{definition}{section}
+\counterwithin*{definition}{chapter}
+\renewcommand{\thedefinition}{\arabic{chapter}.\arabic{definition}}
+
+% ensure right spacing around squared cup and cap
+\let\helpercap\sqcap
+\renewcommand{\sqcap}{\mathrel{\helpercap}}
+\let\helpercup\sqcup
+\renewcommand{\sqcup}{\mathrel{\helpercup}}
+
+\begin{document}
+	\selectlanguage{english}
+	\maketitle
+	\tableofcontents
+	% TODO write Prolog containing reference to the book
+	%% start of lectures
+	\input{lec1.tex}
+	\input{lec2.tex}
+	\input{lec3.tex}
+	\input{lec4.tex}
+	\input{lec5.tex}
+	\input{lec6.tex}
+	\input{lec7.tex}
+	% end of lectures
+\end{document}

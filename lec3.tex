@@ -1,0 +1,194 @@
+\lecture{3}{20.04.2021}{}
+\begin{example}
+	Here is an example on an acyclic TBox:
+	\begin{itemize}
+		\item Woman $\equiv$ Person $\sqcap$ Female
+		\item Man $\equiv$ Person $\sqcap \neg$ Female
+	\end{itemize}
+	$\left\{ \text{Woman}, \text{Man} \right\} $ are the defined concepts and $\left\{ \text{Person}, \text{Female} \right\}$ are primitive concepts.
+\end{example}
+
+\begin{prop}
+	For every acyclic TBox $\mathcal{T}$ we can effectively construct an equivalent acyclic TBox $ \widehat{\mathcal{T}}$
+	such that the right-hand sides of concept definitions in $\widehat{\mathcal{T}}$ contain only primitive concepts.
+\end{prop}
+\begin{proof}
+	By recursively expanding the (finitely many and acyclic) definitions.
+\end{proof}
+
+Given an acyclic TBox $\mathcal{T}$, a primitive interpretation $\mathcal{J}$ for $\mathcal{T}$ 
+consists of a nonempty set $\Delta^{\mathcal{J}}$ together with an extension mapping $\cdot^{\mathcal{J}}$, that maps
+\begin{itemize}
+	\item primitive concepts $P$ to sets $P^{\mathcal{J}} \subseteq \Delta^{\mathcal{J}}$ 
+	\item role names r to binary relations $r^\mathcal{J} \subseteq \Delta^{\mathcal{J}} \times \Delta^{\mathcal{J}}$
+\end{itemize}
+The interpretation $\mathcal{I}$ is an extension of the primitive interpretation $\mathcal{J}$ iff $\Delta^{\mathcal{J}} = \Delta^{\mathcal{I}}$ and
+ \begin{itemize}
+	\item $P^{\mathcal{J}} = P^{\mathcal{I}}$ for all primitive concepts $P$ 
+	\item $r^{\mathcal{J}} = r^{\mathcal{I}}$ for all role names $r$
+\end{itemize}
+
+\begin{corollary}
+	Let $\mathcal{T}$ be an acyclic TBox.
+	Any primitive interpretation $\mathcal{J}$ for $\mathcal{T}$ has a unique extension to a model of $\mathcal{T}$.
+\end{corollary}
+\begin{proof}
+	First construct the expanded TBox $\widehat{\mathcal{T}}$ for $\mathcal{T}$.
+	Obviously, $\mathcal{T}$ and $\widehat{\mathcal{T}}$ have the same primitive and defined concepts.
+	Let $\mathcal{J}$ be a primitive interpretation.
+	We define its extension $\mathcal{I}$ as follows:
+	For every defined concept $A$, let $A \equiv \hat{C}$ be its definition in $\widehat{\mathcal{T}}$.
+	Since $\hat{C}$ contains only primitive concepts, $\hat{C}^{\mathcal{J}}$ is well-defined and we set $A^{\mathcal{I}} \coloneqq \hat{C}^{\mathcal{J}}$
+	\begin{enumerate}
+		\item $\mathcal{I}$ is a model of $\mathcal{T}$ : \newline
+			By definition it is a model of $\widehat{\mathcal{T}}$ and we know $\mathcal{T}$ and $\widehat{\mathcal{T}}$ are equivalent.
+		\item $\mathcal{I}$ is unique: \newline
+			Assume that $\mathcal{I}'$ is another model of $\mathcal{T}$ that extends $\mathcal{J}$.
+			Then $\mathcal{I}'$ is also a model of $\widehat{\mathcal{T}}$, and thus the following holds for all defined concepts $A$,
+			where $A \equiv \hat{C}$ is the definition of $A$ in $\widehat{\mathcal{T}}$ :
+			\[
+				A^{\mathcal{I}'} = \hat{C}^{\mathcal{I}'} = \hat{C}^{\mathcal{J}} = \hat{C}^{\mathcal{I}} = A^{\mathcal{I}}
+			. \qedhere \]
+	\end{enumerate}
+\end{proof}
+
+\subsection*{Relationship with FOL}
+$\mathcal{ALC}$-TBoxes can be translated into FOL:
+\[
+	\tau(\mathcal{T}) \coloneqq \bigwedge_{C \sqsubseteq D \in \mathcal{T}} \forall x.\left( \tau_x(C) \rightarrow \tau_x(D) \right)
+.\]
+
+\begin{lemma}
+	Let $\mathcal{T}$ be a TBox, then $\mathcal{T}$ and $\tau(\mathcal{T})$ have the same models.
+\end{lemma}
+\begin{proof}
+	trivial.
+\end{proof}
+
+\section{Assertional knowledge}
+\subsection{$\mathcal{ALC}$ ABoxes}
+While concepts make statements about sets of individuals, we now want to state knowledge about specific individuals.
+
+\begin{definition}[Assertions and ABoxes]
+	An assertion is of the form $a:C$ (concept assertion) or $(a,b):r$ (role assertion),
+	where $C$ is a concept description, $r$ is a role and $a,b$ are individual names from a set $\mathscr{I}$ of such names (disjoint with $\mathscr{C} \cup \mathscr{R}$).
+	An ABox is a finite set of assertions.
+	An Interpretation $\mathcal{I}$ is a model of an ABox $\mathcal{A}$ if it satisfies all its assertions:
+	\begin{itemize}
+		\item $a^{\mathcal{I}} \in C^{\mathcal{I}}$ for all $a:C \in \mathcal{A}$ 
+		\item $(a^{\mathcal{I}}, b^{\mathcal{I}}) \in r^{\mathcal{I}}$ for all $(a,b):r \in \mathcal{A}$
+	\end{itemize}
+\end{definition}
+
+\begin{example}
+	An example of an ABox:
+	\begin{itemize}
+		\item MAX:Student
+		\item (MAX, DL):interested
+	\end{itemize}
+\end{example}
+
+\subsection{Relationship with FOL}
+$\mathcal{ALC}$-ABoxes can be translated into FOL:
+\[
+	\tau(\mathcal{A}) \coloneqq \bigwedge_{a:C \in \mathcal{A}} \tau_{x}(C)(a) \land \bigwedge_{(a,b):r \in \mathcal{A}} r(a,b)
+.\]
+
+\begin{lemma}
+	Let $\mathcal{A}$ be an ABox and $\tau(\mathcal{A})$ its translation into FOL.
+	Then $\mathcal{A}$ and $\tau (\mathcal{A})$ have the same models.
+\end{lemma}
+\begin{proof}
+	trivial.
+\end{proof}
+
+\newpage
+\section{Knowledge Bases}
+We will now combine the TBox and the ABox to form the foundation for reasoning in an DL.
+\begin{definition}
+	A knowledge base $\mathcal{K} = (\mathcal{T}, \mathcal{A})$ consists of a TBox $\mathcal{T}$ and an ABox $\mathcal{A}$.
+	The interpretation $\mathcal{I}$ is a model of the knowledge base $\mathcal{K}$, iff it is a model of its TBox and its ABox.
+\end{definition}
+The FOL-translation of a knowledge base is easy, given its components:
+\[
+\tau(\mathcal{K}) \coloneqq \tau(\mathcal{T}) \land \tau(\mathcal{A})
+.\] 
+\begin{lemma}
+	Let $\mathcal{K}$ be a knowledge base and $\tau(\mathcal{K})$ its translation into FOL.
+	Then $\mathcal{K}$ and $\tau(\mathcal{K})$ have the same models.
+\end{lemma}
+
+\subsection{Additional constructors}
+Individual names can also be used as concept constructors.
+\begin{example}[$\mathcal{O}$ in the naming scheme.]
+	This allows \textbf{nominals} $\left\{ a \right\} $ for $a \in \mathscr{I}$ with the semantics
+	\[
+	\left\{ a \right\} ^{\mathcal{I}} \coloneqq \left\{ a^{\mathcal{I}} \right\} 
+	.\] 
+	In this case, the ABox can be expressed using GCIs:
+	\begin{itemize}
+		\item $a:C$ is expressed as $\left\{ a \right\} \sqsubseteq C$
+		\item $(a,b):r$ is expressed as $\left\{ a \right\} \sqsubseteq \exists r.\left\{ b \right\} $
+	\end{itemize}
+\end{example}
+
+\newpage
+\section{Reasoning Problems and Services}
+\begin{definition}[terminological reasoning]
+	Let $\mathcal{T}$ be a TBox and $C,D$ be (possibly) complex concept descriptions.
+	We then consider the following decision problems:
+	\begin{enumerate}
+		\item Satisfiability: $C$ is satisfiable w.r.t. $\mathcal{T}$ iff
+			$C^{\mathcal{I}} \neq \emptyset$ for some model $\mathcal{I}$ of $\mathcal{T}$.
+		\item Subsumption: $C$ is subsumed by $D$ w.r.t. $\mathcal{T}$ $\left( C \sqsubseteq_{\mathcal{T}} D \right)$ iff
+			$C^{\mathcal{I}} \subseteq D^{\mathcal{I}}$ for all models $\mathcal{I}$ of $\mathcal{T}$.
+		\item Equivalence: $C$ is equivalent to $D$ w.r.t. $\mathcal{T}$ $\left( C \equiv_{\mathcal{T}} D \right) $ iff
+			$C^{\mathcal{I}} = D^{\mathcal{I}}$ for all models $\mathcal{I}$ of $\mathcal{T}$.
+		\item TBox consistency: $\mathcal{T}$ is consistent iff it has a model.
+	\end{enumerate}
+\end{definition}
+\begin{notation}
+	In the book a slightly different notation is used:
+	\begin{itemize}
+		\item $\mathcal{T} \vDash C \sqsubseteq D$ instead of $C \sqsubseteq_{\mathcal{T}} D$
+		\item $\mathcal{T} \vDash C \equiv D$ instead of $C \equiv_{\mathcal{T}}D$
+	\end{itemize}
+\end{notation}
+\begin{note}
+	If $\mathcal{T} = \emptyset$, then satisfiability/subsumption/equivalence w.r.t. $\mathcal{T}$ is simply called satisfiability/subsumption/equivalence
+	and we just write $\sqsubseteq$ and $\equiv$.	
+\end{note}
+
+\begin{example}
+	Some examples:
+	\begin{itemize}
+		\item $A \sqcap \neg A$ and $\forall r.A \sqcap \exists r.\neg A$ are not satisfiable (unsatisfiable) \newline
+			(therefore they are also equivalent and equivalent to $\bot$).
+		\item $A \sqcap B$ is subsumed by $A$ and by $B$.
+		\item $\exists r.(A \sqcap B)$ is subsumed by $\exists r.A$ and by $\exists r.B$
+		\item $\forall r.(A \sqcap B)$ is equivalent to $\forall r.A  \sqcap \forall r.B$
+	\end{itemize}
+\end{example}
+
+\begin{lemma}
+	Properties of subsumption:
+	\begin{enumerate}
+		\item The subsumption relation $\sqsubseteq_{\mathcal{T}}$ is a pre-order on concept descriptions, i.e.,
+			\begin{itemize}
+				\item $C \sqsubseteq_{\mathcal{T}}C$ (reflexive)
+				\item $C \sqsubseteq_{\mathcal{T}} D \land D \sqsubseteq_{\mathcal{T}} E \implies C \sqsubseteq_{\mathcal{T}} E$ (transitive)
+				\item It is however not antisymmetric in general and therefore not a partial order.
+					This is because in general $C \sqsubseteq_{\mathcal{T}} D$ and $D \sqsubseteq_{\mathcal{T}} C$
+					does imply $C \equiv_{\mathcal{T}} D$ but not necessarily $C = D$.
+					They can be syntactically different descriptions for the same set.
+			\end{itemize}
+		\item The restriction constructors are monotonic w.r.t subsumption, i.e.,
+			\[
+			C \sqsubseteq_{\mathcal{T}} D \implies \exists r.C \sqsubseteq_{\mathcal{T}} \exists r.D \land \forall r.C \sqsubseteq_{\mathcal{T}} \forall r.D
+			.\] 
+		\item Subsumption reasoning in monotonic, i.e., if $\mathcal{T} \subseteq  \mathcal{T}'$, then
+			\[
+				C \sqsubseteq_{\mathcal{T}} D \implies C \sqsubseteq_{\mathcal{T}'} D
+			.\] 
+	\end{enumerate}
+\end{lemma}
