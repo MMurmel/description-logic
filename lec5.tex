@@ -1,4 +1,4 @@
-\lecture{5}{27.04.2021}{}
+lecture{5}{27.04.2021}{}
 So as long as we are not interested in the efficiency of reasoning, we do not need to develop reasoning procedures for TBoxes.
 However, this reduction is in general not polynomial, since the expanded versions may be exponential in the size of $\mathcal{T}$.
 One can easily see this with the following example on a TBox:
@@ -18,7 +18,7 @@ Like everything so far, reasoning in $\mathcal{ALC}$ can be translated into reas
 	\begin{enumerate}
 		\item $C \sqsubseteq_{\mathcal{T}} D \iff \tau(\mathcal{T}) \vDash \forall x.(\tau_x(C)(x) \Rightarrow \tau_x(D)(x))$
 		\item $ \mathcal{K}$ is consistent $ \iff \tau(\mathcal{K})$ is consistent
-		\item $a$ is an instance of $C$ w.r.t. $\mathcal{K} \iff \tau \left( \mathcal{K} \right) \vDash \tau_x(C)(a)$
+		\item $a$ is an instance of $C$ w.r.t.\ $\mathcal{K} \iff \tau \left( \mathcal{K} \right) \vDash \tau_x(C)(a)$
 	\end{enumerate}
 \end{lemma}
 

@@ -26,7 +26,7 @@ We will now show, that they really extend $\mathcal{ALC}$, i.e., there is no way
 	No $\mathcal{ALC}$-concept description is equivalent to the $\mathcal{ALCN}$-concept description $\left( \leq 1 r \right)$.
 \end{prop}
 \begin{proof}
-	Assume that $C$ is an $\mathcal{ALC}$-concept description such that $C \equiv ( \leq 1 r )$, i.e. $C^{\mathcal{I}} = \left( \leq 1 r \right)^\mathcal{I}$ holds for all interpretations $\mathcal{I}$.
+	Assume that $C$ is an $\mathcal{ALC}$-concept description such that $C \equiv ( \leq 1 r )$, i.e.\ $C^{\mathcal{I}} = \left( \leq 1 r \right)^\mathcal{I}$ holds for all interpretations $\mathcal{I}$.
 	Consider the following two interpretations $\mathcal{I}_1$ and $\mathcal{I}_2$ :
 	\begin{figure}[H]
 		\centering
@@ -175,30 +175,30 @@ This theorem tells us, that models of TBoxes are closed under disjoint union.
 \end{proof}
 
 \begin{corollary}
- 	Let $\mathcal{T}$ be an $\mathcal{ALC}$ TBox and $C$ an $\mathcal{ALC}$ concept that is satisfiable w.r.t. $\mathcal{T}$.
+ 	Let $\mathcal{T}$ be an $\mathcal{ALC}$ TBox and $C$ an $\mathcal{ALC}$ concept that is satisfiable w.r.t.\ $\mathcal{T}$.
 	Then there is a model $\mathcal{J}$ of $\mathcal{T}$ in which the extension $C^{\mathcal{J}}$ of $C$ is infinite.
 \end{corollary}
 \begin{proof}
-	Since $C$ is satisfiable w.r.t. $\mathcal{T}$, there is a model $\mathcal{I}$ of $\mathcal{T}$ and $d \in \Delta^{\mathcal{I}}$ such that $d \in C^{\mathcal{I}}$.
+	Since $C$ is satisfiable w.r.t.\ $\mathcal{T}$, there is a model $\mathcal{I}$ of $\mathcal{T}$ and $d \in \Delta^{\mathcal{I}}$ such that $d \in C^{\mathcal{I}}$.
 	For $\nu = 1,2,3,\ldots$ let $\mathcal{I}_\nu = \mathcal{I}$.
 	Let $\mathcal{J} = \biguplus_{\nu \geq 1} \mathcal{I}_\nu$.
 	We know that $\mathcal{J}$ is a model of $\mathcal{T}$ since $\mathcal{I}$ is a model of $\mathcal{T}$.
 	In $\mathcal{J}$, $C$ has infinitely many elements, since $(d,\nu) \in C^{\mathcal{J}}$ for $\nu \geq 1$.
 \end{proof}
 Therefore the only concepts that are \textbf{always} interpreted as a finite set,
-are unsatisfiable concepts (w.r.t. a TBox $\mathcal{T}$).
+are unsatisfiable concepts (w.r.t.\ a TBox $\mathcal{T}$).
 
 \section{Finite model property}
 \begin{definition}[Finite model]
-	The interpretation $\mathcal{I}$ is a model of a concept $C$ w.r.t. a TBox $\mathcal{T}$,
+	The interpretation $\mathcal{I}$ is a model of a concept $C$ w.r.t.\ a TBox $\mathcal{T}$,
 	if $\mathcal{I}$ is a model of $\mathcal{T}$ such that $C^{\mathcal{I}} \neq \emptyset$.
 	We call this model finite if $\Delta^{\mathcal{I}}$ is finite.
 	\newline
 	We call the following the \textit{Finite model property} (of $\mathcal{ALC}$):
 	\newline
 	If $\mathcal{T}$ is an $\mathcal{ALC}$-TBox and $C$ an $\mathcal{ALC}$-concept description 
-	such that $C$ is satisfiable w.r.t. $\mathcal{T}$,
-	then $C$ has a finite model w.r.t. $\mathcal{T}$.
+	such that $C$ is satisfiable w.r.t.\ $\mathcal{T}$,
+	then $C$ has a finite model w.r.t.\ $\mathcal{T}$.
 \end{definition}	
 To proof this we first need some auxiliary results.
 

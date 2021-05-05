@@ -51,14 +51,14 @@
 	We then consider the following decision problems:
 	\begin{enumerate}
 		\item Knowledge base consistency: $\mathcal{K}$ is consistent iff there exists a model of $\mathcal{K}$.
-		\item Instance: $a$ is an instance of $C$ w.r.t. $\mathcal{K}$ iff $a^{\mathcal{I}} \in C^{\mathcal{I}}$ 
+		\item Instance: $a$ is an instance of $C$ w.r.t.\ $\mathcal{K}$ iff $a^{\mathcal{I}} \in C^{\mathcal{I}}$ 
 			for all models $\mathcal{I}$ of $\mathcal{K}$.
 	\end{enumerate}
 \end{definition}
 \begin{lemma}
 	Let $\mathcal{K} = \left( \mathcal{T}, \mathcal{A} \right)$ be a knowledge base.
-	If $a$ is an instance of $C$ w.r.t. $\mathcal{K}$ and $C \sqsubseteq_{\mathcal{T}} T$,
-	then $a$ is an instance of $D$ w.r.t. $\mathcal{K}$.
+	If $a$ is an instance of $C$ w.r.t.\ $\mathcal{K}$ and $C \sqsubseteq_{\mathcal{T}} T$,
+	then $a$ is an instance of $D$ w.r.t.\ $\mathcal{K}$.
 \end{lemma}
 \begin{proof}
 	To Do !
@@ -89,13 +89,13 @@ In the following we will show, that there exist certain polynomial reductions be
 	\begin{enumerate}
 		\item $C \equiv_{\mathcal{T}} D \iff C \sqsubseteq_{\mathcal{T}} D \land D \sqsubseteq_{\mathcal{T}} C$ 
 		\item $C \sqsubseteq_{\mathcal{T}} D \iff C \equiv_{\mathcal{T}} C \sqcap D$
-		\item $C \sqsubseteq_{\mathcal{T}} D \iff C \sqcap \neg D$ is unsatisfiable w.r.t. $\mathcal{T}$
-		\item $C$ is satisfiable w.r.t. $\mathcal{T} \iff C \not\sqsubseteq_{\mathcal{T}} \bot$
-		\item $C$ is satisfiable w.r.t. $\mathcal{T} \iff \left( \mathcal{T}, \left\{ a:C \right\} \right)$ is consistent
-		\item $a$ is an instance of $C$ w.r.t. $\mathcal{K} \iff \left( \mathcal{T}, \mathcal{A} \cup \left\{ a: \neg C \right\} \right)$ is inconsistent
+		\item $C \sqsubseteq_{\mathcal{T}} D \iff C \sqcap \neg D$ is unsatisfiable w.r.t.\ $\mathcal{T}$
+		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff C \not\sqsubseteq_{\mathcal{T}} \bot$
+		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff \left( \mathcal{T}, \left\{ a:C \right\} \right)$ is consistent
+		\item $a$ is an instance of $C$ w.r.t.\ $\mathcal{K} \iff \left( \mathcal{T}, \mathcal{A} \cup \left\{ a: \neg C \right\} \right)$ is inconsistent
 		\item $\mathcal{K}$ is consistent $\iff a$ is not an instance of $\bot$ w.r.t $\mathcal{K}$
-		\item $\mathcal{T}$ is consistent $\iff \top$ is satisfiable w.r.t. $\mathcal{T}$
-		\item $C$ is satisfiable w.r.t. $\mathcal{T} \iff \mathcal{T} \cup \left\{ \top \sqsubseteq \exists r.C \right\}$,
+		\item $\mathcal{T}$ is consistent $\iff \top$ is satisfiable w.r.t.\ $\mathcal{T}$
+		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff \mathcal{T} \cup \left\{ \top \sqsubseteq \exists r.C \right\}$,
 			where $r$ is a new role that does not occur in $C$ or $\mathcal{T}$,
 			is consistent.
 	\end{enumerate}
@@ -111,7 +111,7 @@ In the following we will show, that there exist certain polynomial reductions be
 											  & \iff \forall \mathcal{I}, \mathcal{I} \vDash \mathcal{T} : C^\mathcal{I} \cap (\Delta^{\mathcal{I}} \setminus D^{\mathcal{I}}) = \emptyset\\
 											  & \iff \forall \mathcal{I}, \mathcal{I} \vDash \mathcal{T}: C^{\mathcal{I}} \cap (\neg D)^\mathcal{I} = \emptyset\\
 											  & \iff \forall \mathcal{I}, \mathcal{I} \vDash \mathcal{T}: \left( C \sqcap \neg D \right)^\mathcal{I} = \emptyset\\
-											  & \iff \left( C \sqcap \neg D \right) \text{is unsatisfiable w.r.t.} \mathcal{T} 
+											  & \iff \left( C \sqcap \neg D \right) \text{is unsatisfiable w.r.t.}\ \mathcal{T} 
 			\end{align*}
 		\item trivial 
 		\item
@@ -120,9 +120,9 @@ In the following we will show, that there exist certain polynomial reductions be
 			Then there is  a model $\mathcal{I}$ of $\mathcal{T} , \mathcal{A}$ and $\left\{ a: \neg C \right\}$.
 			But then $\mathcal{I}$ is a model of $\mathcal{K} = \left( \mathcal{T}, \mathcal{A} \right)$ such that
 			$a^{\mathcal{I}} \notin C^\mathcal{I}$.
-			Thus, $a$ is not an instance of $C$ w.r.t. $\mathcal{K}$. \newline
+			Thus, $a$ is not an instance of $C$ w.r.t.\ $\mathcal{K}$. \newline
 			"$\impliedby$": Also by its contraposition. \newline
-			Assume that $a$ in not an instance of $C$ w.r.t. $\mathcal{K}$.
+			Assume that $a$ in not an instance of $C$ w.r.t.\ $\mathcal{K}$.
 			Thus there is a model $\mathcal{I}$ of $\mathcal{K}$ with $a^\mathcal{I} \notin C^\mathcal{I}$.
 			Thus, $\mathcal{I}$ is a model of $\left( \mathcal{T}, \mathcal{A} \cup \left\{ a: \neg C \right\} \right)$.
 		\item By the contraposition: \newline
@@ -142,22 +142,22 @@ In the following we will show, that there exist certain polynomial reductions be
 			then let $e$ be an arbitrary element of $\Delta^{\mathcal{I}}$.
 			Then $e \in \left( \exists r.C \right)^{\mathcal{I}}$, and thus there is an $d \in \Delta^{\mathcal{I}}$ 
 			with $\left( e,d \right) \in r^{\mathcal{I}}$ and $d \in C^\mathcal{I}$.
-			Thus, $C$ is satisfiable w.r.t. $\mathcal{T}$.
+			Thus, $C$ is satisfiable w.r.t.\ $\mathcal{T}$.
 			\qedhere
 	\end{enumerate}
 \end{proof}
 
-Now we will show, that satisfiability w.r.t. $\mathcal{T}$ can be reduced to satisfiability (without $\mathcal{T}$) and
+Now we will show, that satisfiability w.r.t.\ $\mathcal{T}$ can be reduced to satisfiability (without $\mathcal{T}$) and
 Knowledge base consistency can be reduced to ABox consistency.
 However this reduction is in general not possible in polynomial time.
 
 \begin{prop}
 Let  $\mathcal{K} = (\mathcal{T}, \mathcal{A})$ be a knowledge base, where $\mathcal{T}$ is acyclic, and $C$ a concept description.
-The expanded versions $\widehat{C}$ and $\widehat{A}$ of $C$ and $A$ w.r.t. $\mathcal{T}$ are obtained by
+The expanded versions $\widehat{C}$ and $\widehat{A}$ of $C$ and $A$ w.r.t.\ $\mathcal{T}$ are obtained by
 replacing all defined concepts occurring in $C$ and $A$ by their definitions in the expanded version $\widehat{\mathcal{T}}$ of $\mathcal{T}$.
 Then:
 	\begin{enumerate}
-		\item $C$ is satisfiable w.r.t. $\mathcal{T} \iff \widehat{C}$ is satisfiable.
+		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff \widehat{C}$ is satisfiable.
 		\item $\mathcal{K} = (\mathcal{T},\mathcal{A})$ is consistent $\iff (\emptyset,\widehat{\mathcal{A}}$ is consistent.
 	\end{enumerate}
 \end{prop}

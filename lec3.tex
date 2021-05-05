@@ -1,6 +1,6 @@
 \lecture{3}{20.04.2021}{}
 \begin{example}
-	Here is an example on an acyclic TBox:
+	Here is an example of an acyclic TBox:
 	\begin{itemize}
 		\item Woman $\equiv$ Person $\sqcap$ Female
 		\item Man $\equiv$ Person $\sqcap \neg$ Female
@@ -71,7 +71,7 @@ While concepts make statements about sets of individuals, we now want to state k
 
 \begin{definition}[Assertions and ABoxes]
 	An assertion is of the form $a:C$ (concept assertion) or $(a,b):r$ (role assertion),
-	where $C$ is a concept description, $r$ is a role and $a,b$ are individual names from a set $\mathscr{I}$ of such names (disjoint with $\mathscr{C} \cup \mathscr{R}$).
+	where $C$ is a concept description, $r$ is a role and $a,b$ are individual names from a set $\mathscr{I}$ of such names (disjoint with $\mathscr{C} \uplus \mathscr{R}$).
 	An ABox is a finite set of assertions.
 	An Interpretation $\mathcal{I}$ is a model of an ABox $\mathcal{A}$ if it satisfies all its assertions:
 	\begin{itemize}
@@ -138,11 +138,11 @@ Individual names can also be used as concept constructors.
 	Let $\mathcal{T}$ be a TBox and $C,D$ be (possibly) complex concept descriptions.
 	We then consider the following decision problems:
 	\begin{enumerate}
-		\item Satisfiability: $C$ is satisfiable w.r.t. $\mathcal{T}$ iff
+		\item Satisfiability: $C$ is satisfiable w.r.t.\ $\mathcal{T}$ iff
 			$C^{\mathcal{I}} \neq \emptyset$ for some model $\mathcal{I}$ of $\mathcal{T}$.
-		\item Subsumption: $C$ is subsumed by $D$ w.r.t. $\mathcal{T}$ $\left( C \sqsubseteq_{\mathcal{T}} D \right)$ iff
+		\item Subsumption: $C$ is subsumed by $D$ w.r.t.\ $\mathcal{T}$ $\left( C \sqsubseteq_{\mathcal{T}} D \right)$ iff
 			$C^{\mathcal{I}} \subseteq D^{\mathcal{I}}$ for all models $\mathcal{I}$ of $\mathcal{T}$.
-		\item Equivalence: $C$ is equivalent to $D$ w.r.t. $\mathcal{T}$ $\left( C \equiv_{\mathcal{T}} D \right) $ iff
+		\item Equivalence: $C$ is equivalent to $D$ w.r.t.\ $\mathcal{T}$ $\left( C \equiv_{\mathcal{T}} D \right) $ iff
 			$C^{\mathcal{I}} = D^{\mathcal{I}}$ for all models $\mathcal{I}$ of $\mathcal{T}$.
 		\item TBox consistency: $\mathcal{T}$ is consistent iff it has a model.
 	\end{enumerate}
@@ -155,7 +155,7 @@ Individual names can also be used as concept constructors.
 	\end{itemize}
 \end{notation}
 \begin{note}
-	If $\mathcal{T} = \emptyset$, then satisfiability/subsumption/equivalence w.r.t. $\mathcal{T}$ is simply called satisfiability/subsumption/equivalence
+	If $\mathcal{T} = \emptyset$, then satisfiability/subsumption/equivalence w.r.t.\ $\mathcal{T}$ is simply called satisfiability/subsumption/equivalence
 	and we just write $\sqsubseteq$ and $\equiv$.	
 \end{note}
 
