@@ -1,4 +1,4 @@
-lecture{5}{27.04.2021}{}
+\lecture{5}{27.04.2021}{}
 So as long as we are not interested in the efficiency of reasoning, we do not need to develop reasoning procedures for TBoxes.
 However, this reduction is in general not polynomial, since the expanded versions may be exponential in the size of $\mathcal{T}$.
 One can easily see this with the following example on a TBox:
@@ -9,7 +9,7 @@ One can easily see this with the following example on a TBox:
 	A_{n-1} & \equiv \forall r.A_n \sqcap \forall s.A_{n}
 \end{align*}
 The size of this TBox is linear in $n$,
-but the expansion version $\widehat{A_0}$ of $A_0$ contains $A_n$ $2^n$ times. 
+but the expansion version $\widehat{A}_0$ of $A_0$ contains $A_n$ $2^n$ times.
 
 \subsection{Relationship with FOL}
 Like everything so far, reasoning in $\mathcal{ALC}$ can be translated into reasoning in FOL:
@@ -37,7 +37,6 @@ This problem is called \textbf{Realization}.
 \newline
 Therefore DL-systems often include solution procedures for these problems.
 
-\newpage
 \section{Further relationships with FOL}
 We will now introduce a new constructor for illustrative purposes.
 If $r$ is a role name and $C$ is a concept description, then $\exists r^+.C $
@@ -77,9 +76,9 @@ Furthermore we will show the very important property of $\mathcal{ALC}$: the fin
 \section{Bisimulation}
 \begin{definition}
 	Let $\mathcal{I}_1$ and $\mathcal{I}_2$ be interpretations.
-	The relation $ \rho \subseteq \Delta^{\mathcal{I}_{1}} \times \Delta^{\mathcal{I}_2}$ is a bisimulation between $\mathcal{I}_1$ and $\mathcal{I}_2$ iff:
+	The relation $\rho \subseteq \Delta^{\mathcal{I}_{1}} \times \Delta^{\mathcal{I}_2}$ is a bisimulation between $\mathcal{I}_1$ and $\mathcal{I}_2$ iff:
 	\begin{itemize}
-		\item $d_1 \rho d_2 \implies d_1 \in A^{\mathcal{I}_1} \text{ iff} d_2 \in A^{\mathcal{I}_2}$ for all $A \in \mathscr{C}$ 
+		\item $d_1 \rho d_2 \implies d_1 \in A^{\mathcal{I}_1} \text{ iff } d_2 \in A^{\mathcal{I}_2}$ for all $A \in \mathscr{C}$
 		\item $d_1 \rho d_2 \land  (d_1, d_1') \in r^{\mathcal{I}_1}$ implies the existence of $d_2' \in \Delta^{\mathcal{I}_2}$ such that
 			$d_1' \rho d_2' \land (d_2, d_2') \in r^{\mathcal{I}_2}$ for all $r \in \mathscr{R}$
 		\item $d_1 \rho d_2 \land  (d_2, d_2') \in r^{\mathcal{I}_2}$ implies the existence of $d_1' \in \Delta^{\mathcal{I}_1}$ such that

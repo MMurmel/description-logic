@@ -57,26 +57,36 @@
 \end{definition}
 \begin{lemma}
 	Let $\mathcal{K} = \left( \mathcal{T}, \mathcal{A} \right)$ be a knowledge base.
-	If $a$ is an instance of $C$ w.r.t.\ $\mathcal{K}$ and $C \sqsubseteq_{\mathcal{T}} T$,
+	If $a$ is an instance of $C$ w.r.t.\ $\mathcal{K}$ and $C \sqsubseteq_{\mathcal{T}} D$,
 	then $a$ is an instance of $D$ w.r.t.\ $\mathcal{K}$.
 \end{lemma}
 \begin{proof}
 	To Do !
 \end{proof}
 
-\newpage
 In the following we will show, that there exist certain polynomial reductions between the decision problems shown before:
-\begin{enumerate}
-	\item  equivalence to subsumption
-	\item subsumption to equivalence
-	\item subsumption to satisfiability
-	\item satisfiability to subsumption
-	\item satisfiability to KB consistency
-	\item KB consistency to Instance
-	\item Instance to KB consistency
-	\item TBox consistency to satisfiability
-	\item satisfiability to TBox consistency
-\end{enumerate}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[align=center,node distance=3cm, shorten >= 2pt]
+		\node[draw] (eq) {equivalence};
+		\node[draw, right of = eq] (sub) {subsumption};
+		\node[draw, right of = sub] (sat) {satisfiability};
+		\node[draw, below of = sat] (kbc) {KB consistency};
+		\node[draw, left of = kbc] (ins) {instance};
+		\node[draw, above of = sat] (tbc) {TB consistency};
+		\draw (eq) edge[above, bend left] node{1.} (sub);
+		\draw (sub) edge[below, bend left] node{2.} (eq);
+		\draw (sub) edge[above, bend left] node{3.} (sat);
+		\draw (sat) edge[below, bend left] node{4.} (sub);
+		\draw (sat) edge[right]  node{5.} (kbc);
+		\draw (kbc) edge[below, bend left] node{6.} (ins);
+		\draw (ins) edge[above, bend left] node{7.} (kbc);
+		\draw (tbc) edge[right, bend left] node{8.} (sat);
+		\draw (sat) edge[left, bend left] node{9.} (tbc);
+	\end{tikzpicture}
+	\caption{Polynomial reductions between decision problems.}
+	\label{fig:problem reductions}
+\end{figure}
 \begin{note}
 	These reductions do not only hold for $\mathcal{ALC}$, but for all DLs with the constructors negation and conjunction.
 	The last one also needs an existential quantifier.
@@ -93,14 +103,13 @@ In the following we will show, that there exist certain polynomial reductions be
 		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff C \not\sqsubseteq_{\mathcal{T}} \bot$
 		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff \left( \mathcal{T}, \left\{ a:C \right\} \right)$ is consistent
 		\item $a$ is an instance of $C$ w.r.t.\ $\mathcal{K} \iff \left( \mathcal{T}, \mathcal{A} \cup \left\{ a: \neg C \right\} \right)$ is inconsistent
-		\item $\mathcal{K}$ is consistent $\iff a$ is not an instance of $\bot$ w.r.t $\mathcal{K}$
+		\item $\mathcal{K}$ is consistent $\iff a$ is not an instance of $\bot$ w.r.t.\ $\mathcal{K}$
 		\item $\mathcal{T}$ is consistent $\iff \top$ is satisfiable w.r.t.\ $\mathcal{T}$
 		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff \mathcal{T} \cup \left\{ \top \sqsubseteq \exists r.C \right\}$,
 			where $r$ is a new role that does not occur in $C$ or $\mathcal{T}$,
 			is consistent.
 	\end{enumerate}
 \end{theorem}
-
 \begin{proof}
 	\begin{enumerate}
 		\item By definition.
@@ -113,8 +122,8 @@ In the following we will show, that there exist certain polynomial reductions be
 											  & \iff \forall \mathcal{I}, \mathcal{I} \vDash \mathcal{T}: \left( C \sqcap \neg D \right)^\mathcal{I} = \emptyset\\
 											  & \iff \left( C \sqcap \neg D \right) \text{is unsatisfiable w.r.t.}\ \mathcal{T} 
 			\end{align*}
-		\item trivial 
-		\item
+		\item trivial.
+		\item see lecture video.
 		\item "$ \implies$": By its contraposition. \newline
 			Assume that $\left( \mathcal{T}, \mathcal{A} \cup \left\{a: \neg C \right\} \right)$ is indeed consistent.
 			Then there is  a model $\mathcal{I}$ of $\mathcal{T} , \mathcal{A}$ and $\left\{ a: \neg C \right\}$.
@@ -130,7 +139,7 @@ In the following we will show, that there exist certain polynomial reductions be
 			Then $a^\mathcal{I} \notin \emptyset = \bot^\mathcal{I}$.
 			If $\mathcal{K}$ is inconsistent, then there is no model of $\mathcal{K}$.
 			Thus $a^{\mathcal{I}} \in \bot^\mathcal{I}$ holds in all models since there are none.
-		\item
+		\item see lecture video.
 		\item "$ \implies$": \newline
 			Assume that $\mathcal{I}$ is a model of $\mathcal{T}$ such that $C^\mathcal{I} \neq \emptyset$
 			(definition of satisfiability).
@@ -158,16 +167,16 @@ replacing all defined concepts occurring in $C$ and $A$ by their definitions in 
 Then:
 	\begin{enumerate}
 		\item $C$ is satisfiable w.r.t.\ $\mathcal{T} \iff \widehat{C}$ is satisfiable.
-		\item $\mathcal{K} = (\mathcal{T},\mathcal{A})$ is consistent $\iff (\emptyset,\widehat{\mathcal{A}}$ is consistent.
+		\item $\mathcal{K} = (\mathcal{T},\mathcal{A})$ is consistent $\iff (\emptyset,\widehat{\mathcal{A}}$) is consistent.
 	\end{enumerate}
 \end{prop}
 \begin{proof}
 	\begin{enumerate}
-		\item " $ \implies$":\newline
+		\item " $\implies$":\newline
 			Let $\mathcal{I}$ be a model of $\mathcal{T}$ with $C^\mathcal{I} \neq \emptyset$.
 			Then $\mathcal{I}$ is also a model of $\widehat{\mathcal{T}}$ and we have $\emptyset \neq C^\mathcal{I} = \widehat{C}^\mathcal{I}$.
 			Thus, $\widehat{C}$ is satisfiable. \newline
-			"$ \impliedby$": \newline
+			"$\impliedby$": \newline
 			Let $\mathcal{I}$ be an interpretation with $\widehat{C}^{\mathcal{I}} \neq \emptyset$.
 			Let $\mathcal{J}$ be the primitive interpretation of which $\mathcal{I}$ is an extension
 			and let $\mathcal{I}'$ be the model of $\mathcal{T}$ that extends $\mathcal{J}$.
@@ -178,4 +187,3 @@ Then:
 			\qedhere
 	\end{enumerate}
 \end{proof}
-\newpage
