@@ -44,8 +44,6 @@ Given such a formula $\phi (x)$ with the free variable $x$ and an interpretation
 .\]
 We will now show, that one can translate $\mathcal{ALC}$-concepts C into FOL formulae $\tau_{x}(C)$ (with the free variable $x$) such that their extensions coincide.
 Since $\mathcal{ALC}$-concepts are defined by induction, we will also define this translation inductively:
-
-\begin{mdframed}
 Let $A \in \mathscr{C}$, $r \in \mathscr{R}$ and $C, D$ be (possibly) complex concepts.
 \begin{align*}
 	\tau_{x}(A) &\coloneqq A(x) \\
@@ -55,7 +53,6 @@ Let $A \in \mathscr{C}$, $r \in \mathscr{R}$ and $C, D$ be (possibly) complex co
 	\tau_{x} \left( \forall r.C \right) &\coloneqq \forall y.(r(x,y) \rightarrow \tau_{y}(C)) \\
 	\tau_{x} \left( \exists r.C \right) &\coloneqq \exists y.(r(x,y) \land \tau_{y}(C)) \\
 \end{align*}
-\end{mdframed}
 
 \begin{note}
 Here, $y$ is different from $x$ and one can prove, that only two variables are needed when used in alternation.

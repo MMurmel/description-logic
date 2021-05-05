@@ -124,6 +124,9 @@ These proofs were the result of the fact, that we defined bisimulation with $\ma
 One could also define a notion of bisimulation under which $\mathcal{ALCN}$, $\mathcal{ALCI}$ or $\mathcal{ALCO}$ are invariant.
 
 \section{Closure under disjoint union}
+We will now introduce the notion of disjoint union for interpretations.
+This will enable us to combine multiple interpretations into a bigger one, containing the interpretations it was built from,
+but no interaction between them.
 \begin{definition}
 	Let $\mathfrak{R}$ be an index set and $\left( \mathcal{I}_{\nu} \right)_{\nu \in \mathfrak{R}}$ a family of interpretations $\mathcal{I}_{\nu} = \left( \Delta^{\mathcal{I}_{\nu}}, \cdot^{\mathcal{I}_{\nu}} \right)$.
 	Their disjoint union $\mathcal{J}$ is defined as follows:
@@ -140,7 +143,7 @@ One could also define a notion of bisimulation under which $\mathcal{ALCN}$, $\m
 	.\]
 \end{notation}
 \begin{note}
-	If there are some $\mathcal{I}_{\nu_1}, \mathcal{I}_{\nu_2}$ that are not disjoint,
+	If there are some $\Delta^{\mathcal{I}_{\nu_1}}, \Delta^{\mathcal{I}_{\nu_2}}$ that are not disjoint,
 	we make them artificially disjoint by adding the index $\nu$ to the tuple.
 \end{note}
 
@@ -148,7 +151,8 @@ One could also define a notion of bisimulation under which $\mathcal{ALCN}$, $\m
 	For $\nu \in \mathfrak{R}$, all $\mathcal{ALC}$-concept description $C$, and all $d \in \Delta^{\mathcal{I}_\nu}$ we have:
 	\[
 		d \in C^{\mathcal{I}_\nu} \iff (d,\nu) \in C^{\mathcal{J}}
-	.\]
+	,\]
+	where $\mathcal{J} = \biguplus_{\nu \in \mathfrak{R}} \mathcal{I}_{\nu}$.
 \end{lemma}
 \begin{proof}[Proof sketch]
 	Let $\mathcal{J} = \biguplus_{\nu \in \mathfrak{R}} \mathcal{I}_\nu$.
@@ -160,7 +164,7 @@ One could also define a notion of bisimulation under which $\mathcal{ALCN}$, $\m
 	And then lemma \ref{lemma:disjoint union 1} follows from theorem \ref{thm: bisimulation invariance}.
 \end{proof}
 
-\begin{theorem}
+\begin{theorem}\label{thm:disjoint union closure}
 	Let $\mathcal{T}$ be an $\mathcal{ALC}$ TBox and $(\mathcal{I}_\nu)_{\nu \in \mathfrak{R}}$ a family of models of $\mathcal{T}$.
 	Then its disjoint union $\mathcal{J} = \biguplus_{\nu \in \mathfrak{R}} \mathcal{I}_\nu$ is also a model of $\mathcal{T}$.
 \end{theorem}
@@ -180,17 +184,19 @@ This theorem tells us, that models of TBoxes are closed under disjoint union.
 \end{corollary}
 \begin{proof}
 	Since $C$ is satisfiable w.r.t.\ $\mathcal{T}$, there is a model $\mathcal{I}$ of $\mathcal{T}$ and $d \in \Delta^{\mathcal{I}}$ such that $d \in C^{\mathcal{I}}$.
-	For $\nu = 1,2,3,\ldots$ let $\mathcal{I}_\nu = \mathcal{I}$.
+	For $\nu \in \N^{+}$ let $\mathcal{I}_\nu = \mathcal{I}$.
 	Let $\mathcal{J} = \biguplus_{\nu \geq 1} \mathcal{I}_\nu$.
-	We know that $\mathcal{J}$ is a model of $\mathcal{T}$ since $\mathcal{I}$ is a model of $\mathcal{T}$.
+	We know that $\mathcal{J}$ is a model of $\mathcal{T}$ since $\mathcal{I}$ is a model of $\mathcal{T}$ (theorem \ref{thm:disjoint union closure}).
 	In $\mathcal{J}$, $C$ has infinitely many elements, since $(d,\nu) \in C^{\mathcal{J}}$ for $\nu \geq 1$.
 \end{proof}
 Therefore the only concepts that are \textbf{always} interpreted as a finite set,
 are unsatisfiable concepts (w.r.t.\ a TBox $\mathcal{T}$).
+As long as a concept is satisfiable one can find arbitrarily large interpretations for it.
+In other words: $\mathcal{ALC}$ can not express the finiteness of concepts.
 
 \section{Finite model property}
 \begin{definition}[Finite model]
-	The interpretation $\mathcal{I}$ is a model of a concept $C$ w.r.t.\ a TBox $\mathcal{T}$,
+	The interpretation $\mathcal{I}$ is called a model of a concept $C$ w.r.t.\ a TBox $\mathcal{T}$,
 	if $\mathcal{I}$ is a model of $\mathcal{T}$ such that $C^{\mathcal{I}} \neq \emptyset$.
 	We call this model finite if $\Delta^{\mathcal{I}}$ is finite.
 	\newline
@@ -201,13 +207,15 @@ are unsatisfiable concepts (w.r.t.\ a TBox $\mathcal{T}$).
 	then $C$ has a finite model w.r.t.\ $\mathcal{T}$.
 \end{definition}	
 To proof this we first need some auxiliary results.
+Actually, we will even show something stronger, namely, that $\mathcal{ALC}$ has the bounded model property.
+To do so, we need a notion of the size of $\mathcal{ALC}$-concepts.
 
 \begin{mdframed}[frametitle={Sizes in $\mathcal{ALC}$}]
 	We define the size of an $\mathcal{ALC}$-concept description recursively:
 	\begin{itemize}
-		\item $C = A \in \mathscr{C}$ : $\text{size}(C) \coloneqq 1$,
-		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$ : $\text{size}(C) \coloneqq 1 + \text{size}(C_1) + \text{size}(C_2)$,
-		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$ : $\text{size}(C) \coloneqq 1 + \text{size}(D)$.
+		\item $C = A \in \mathscr{C}$: $\text{size}(C) \coloneqq 1$,
+		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$: $\text{size}(C) \coloneqq 1 + \text{size}(C_1) + \text{size}(C_2)$,
+		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$: $\text{size}(C) \coloneqq 1 + \text{size}(D)$.
 	\end{itemize}
 	We also define the size of a TBox $\mathcal{T}$ as follows:
 	\[
@@ -227,3 +235,6 @@ To proof this we first need some auxiliary results.
 		\text{sub}(\mathcal{T}) \coloneqq \bigcup_{C \sqsubseteq D \in \mathcal{T}} \text{sub}(C) \cup \text{sub}(D)
 	.\]
 \end{mdframed}
+\begin{note}
+	Subconcepts are only the syntactic building blocks of a concept, \textbf{not} the concepts subsumed by it.
+\end{note}
