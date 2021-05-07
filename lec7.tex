@@ -1,9 +1,264 @@
 \lecture{7}{04.05.2021}{}
 
-\begin{lemma}
+\begin{lemma} \label{lem:card(sub)<=size}
 	For arbitrary concept descriptions $C$ and arbitrary TBoxes $ \mathcal{T}$ the following hold:
 	\begin{itemize}
 		\item $\left| \text{sub}(C) \right| \leq \text{size}(C)$ 
 		\item $\left| \text{sub}(\mathcal{T}) \right| \leq \text{size}(\mathcal{T})$
 	\end{itemize}
+\end{lemma}
+
+Furthermore, we need the notion of a so called \textit{$S$-type}.
+This will enable us to define an interesting equivalence relation, that is useful in proving the finite model property of $\mathcal{ALC}$.
+\begin{definition}[$S$-type]
+	Let $S$ be a finite set of concept descriptions and $\mathcal{I}$ an interpretation.
+	We define the $S$-type of $d \in \Delta^{\mathcal{I}}$ as
+	\[
+		t_S(d) \coloneqq \left\{ C \in S \mid d \in C^{\mathcal{I}} \right\}
+	.\]
+\end{definition}
+
+\begin{lemma}[number of $S$-types]\label{lem:number of s-types}
+	Let $S$ be a finite set of concept descriptions and $\mathcal{I} = (\Delta^{\mathcal{I}}, \cdot^{\mathcal{I}})$ an interpretation.
+	Then we have:
+	 \[
+		 \left| \left\{ t_S(d) \mid d \in \Delta^{\mathcal{I}} \right\} \right| \leq 2^{\left| S \right|}
+	.\]
+\end{lemma}
+\begin{proof}
+	$S$-types are subsets of $S$, i.e.\ elements of the power set $\mathscr{P}(S)$,
+	of which there are only $\lvert \mathscr{P}(S) \rvert = 2^{\lvert S \rvert}$.
+\end{proof}
+
+\begin{definition}[$S$-filtration]
+	Let $S$ be a finite set of concept descriptions and $\mathcal{I}$ an interpretation.
+	We define an equivalence relation $\simeq$ on $\Delta^{\mathcal{I}}$ as follows:
+	\[
+		d \simeq e \iff t_S(d) = t_S(e)
+	.\]
+	The $\simeq$-equivalence class of  $d \in \Delta^{\mathcal{I}}$ is denoted by $\left[ d \right]$.
+	The $S$-filtration of $\mathcal{I}$ is the following interpretation $\mathcal{J}$ :
+	\begin{align*}
+		\Delta^{\mathcal{J}} &\coloneqq \left\{ [d] \mid d \in \Delta^{\mathcal{I}} \right\} \\
+		A^\mathcal{J} &\coloneqq \left\{ [d] \mid \exists d' \in [d]. d' \in A^{\mathcal{I}} \right\} \text{ for all } A \in \mathscr{C} \\
+		r^\mathcal{J} &\coloneqq \left\{ \left( [d],[e] \right) \mid \exists d' \in [d], e' \in [e]. (d',e') \in r^\mathcal{I}\right\} \text{ for all } r \in \mathscr{R}
+	\end{align*}
+\end{definition}
+\begin{note}
+	By Lemma \ref{lem:number of s-types}, $\lvert \Delta^{\mathcal{J}} \rvert \leq 2^{\lvert S \rvert}$.
+	This gives us an upper bound on the size of a model.
+	Obviously, we want this $S$-filtration to behave similar to the interpretation $\mathcal{I}$.
+	For this to work we require the additional notion of closure (under subconcepts).
+\end{note}
+
+We say that the finite set $S$ of concept descriptions is \textbf{closed} iff
+\[
+	\bigcup_{} \left\{ \text{sub}(C) \mid C \in S \right\} \subseteq S
+.\]
+This will enable us to use induction on $S$, because whenever a concept is in $S$, then all of its subconcepts are also in $S$.
+
+\begin{lemma} \label{lem:filtration invariance}
+	Let $S$ be a finite, closed set of $\mathcal{ALC}$-concept descriptions,
+	$\mathcal{I}$ an interpretation, and $\mathcal{J}$ the $S$-filtration of $\mathcal{I}$.
+	Then we have
+	\[
+		d \in C^{\mathcal{I}} \iff [d] \in C^{\mathcal{J}}
+	\]
+	for all $d \in \Delta^{\mathcal{I}}$ and $C \in S$.
+\end{lemma}
+\begin{proof}
+	By induction on the structure of $C$,
+	where we restrict the attention to concept names, conjunction, and existential restriction.
+	\begin{enumerate}
+		\item Assume that $C=A$ is a concept name.
+			\begin{itemize}
+				\item "$\implies$": If $d \in A^{\mathcal{I}}$, then $[d] \in A^{\mathcal{J}}$ by definition of $\mathcal{J}$.
+				\item "$\impliedby$": If $\left[ d \right] \in A^{\mathcal{J}}$, then there is $d' \in [d]$ with $d' \in A^{\mathcal{I}}$.
+					Since $d \simeq d'$ and $A \in S$, $d' \in A^{\mathcal{I}}$ implies $d \in A^{\mathcal{I}}$.
+			\end{itemize}
+		\item Assume that $C = D \sqcap E$. Then:
+			\begin{align*}
+				d \in (D \sqcap E)^{\mathcal{I}} &\iff d \in D^\mathcal{I} \land d \in E^{\mathcal{I}} \\
+												 &\stackrel{\text{I.H.}}{\iff} [d] \in D^{\mathcal{J}} \land [d] \in E^{\mathcal{J}} \\
+												 &\iff [d] \in (D \sqcap E)^{\mathcal{J}}
+			\end{align*}
+			$C = \neg D$ and $C = D \sqcup E$ can be treated similarly.
+		\item Assume that $C = \exists r.D$.
+			Since $S$ is closed, $D \in S$ and we can use the induction hypotheses.
+			\begin{itemize}
+				\item "$\implies$": If $d \in (\exists r.D)^{\mathcal{I}}$, then there is $e \in \Delta^{\mathcal{I}}$ s.t. $(d,e) \in r^{\mathcal{I}}$ and $e \in C^{\mathcal{I}}$.
+					Then $([d],[e]) \in r^{\mathcal{J}}$ and $[e] \in C^\mathcal{J}$.
+					This shows that $[d] \in (\exists r.D)^\mathcal{J}$.
+				\item "$\impliedby$": If $[d] \in (\exists r.D)^{\mathcal{J}}$, then there is $[e] \in \Delta^{\mathcal{J}}$ s.t. $([d],[e]) \in r^{\mathcal{J}}$ and $[e] \in D^{\mathcal{J}}$.
+					Induction yields $e \in D^\mathcal{I}$.
+					In addition, we have $d' \in [d]$ and $e' \in [e]$ such that $(d', e') \in r^{\mathcal{I}}$.
+					Since $e \simeq e'$ and  $D \in S$, we know $e \in D^{\mathcal{I}} \implies e' \in D^{\mathcal{I}}$.
+					This yields $d' \in \left( \exists r.D \right)^\mathcal{I}$.
+					But then $d \simeq d'$ and  $\exists r.D \in S$ yields $d \in \left( \exists r.D \right)^\mathcal{I}$.
+					\qedhere
+			\end{itemize}
+	\end{enumerate}
+\end{proof}
+Unfortunately, this proof is not enough to immediately show the finite model property of $\mathcal{ALC}$.
+Although one might think that what was shown here is very similar to the bisimulation invariance shown earlier,
+it is however not sufficient in this case.
+
+The following proposition shows that $\mathcal{ALC}$ satisfies a property that is even stronger than the finite model property.
+\begin{theorem}[bounded model property]
+	Let $\mathcal{T}$ be an $\mathcal{ALC}$-TBox, $C$ an $\mathcal{ALC}$-concept description, and $n = \text{size}(\mathcal{T}) + \text{size}(C)$.
+	If $C$ has a model w.r.t.\ $\mathcal{T}$, then it has a model $\widehat{\mathcal{I}}$ s.t. $\lvert \Delta^{\widehat{\mathcal{I}}} \rvert \leq 2^n$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+	Let $\mathcal{I}$ be a model of $\mathcal{T}$ with $C^{\mathcal{I}} \neq \emptyset$ and $\widehat{\mathcal{I}}$ be the $S$-filtration of $\mathcal{I}$,
+	where $S \coloneqq \text{sub}(C) \cup \text{sub}(\mathcal{T})$.
+	We then show:
+	\begin{enumerate}
+		\item $\lvert \Delta^{\widehat{\mathcal{I}}} \rvert \leq 2^{n}$, by lemma \ref{lem:card(sub)<=size} and \ref{lem:number of s-types},
+		\item $C^{\widehat{\mathcal{I}}} \neq \emptyset$, by lemma \ref{lem:filtration invariance},
+		\item $\widehat{\mathcal{I}}$ is a model of $\mathcal{T}$, also by lemma \ref{lem:filtration invariance}.
+	\end{enumerate}
+\end{proof}
+
+\begin{corollary}[Finite model property]
+	Let $\mathcal{T}$ be an $\mathcal{ALC}$-TBox and $C$ an $\mathcal{ALC}$-concept description.
+	If $C$ has a model w.r.t.\ $\mathcal{T}$, that it has a finite model.
+\end{corollary}
+
+\begin{corollary}[Decidability]
+	In $\mathcal{ALC}$, satisfiability of a concept description w.r.t.\ a TBox is decidable.
+\end{corollary}
+\begin{proof}
+	Let $n \coloneqq \text{size}(T) + \text{size}(C)$.
+	If $C$ is satisfiable w.r.t.\ $\mathcal{T}$, then there is a model of cardinality at most $2^{n}$.
+	Up to isomorphism (i.e.\, up to renaming of the domain elements), there are only finitely many interpretations satisfying this bound.
+	Thus, we can enumerate all these interpretations and check whether the are models of $C$ w.r.t.\ $\mathcal{T}$.
+\end{proof}
+
+\begin{theorem}
+	$\mathcal{ALCIN}$ does not have the finite model property.
+\end{theorem}
+\begin{proof}[Proof sketch]
+	Let $C = \neg A \sqcap \exists r.A$ and $\mathcal{T} = \left\{ A \sqsubseteq \exists r.A, \top \sqsubseteq ( \leq 1r^-) \right\}$.
+	Then the following interpretation is a model of $C$ w.r.t.\ $\mathcal{T}$:
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\node[default, label= below: $\neg A$] (d0) {$d_0$};
+			\node[default, label= below: $A$, right of = d0] (d1) {$d_1$};
+			\node[default, label= below: $A$, right of = d1] (d2) {$d_2$};
+			\node[right of = d2] (dd) {$\cdots$};
+			\node[default, label= below: $A$, right of = dd] (dn) {$d_n$};
+			\node[right of = dn] (dd2) {$\cdots$};
+			\draw (d0) edge[above] node{$r$} (d1);
+			\draw (d1) edge[above] node{$r$} (d2);
+			\draw (d2) edge[above] node{$r$} (dd);
+			\draw (dd) edge[above] node{$r$} (dn);
+			\draw (dn) edge[above] node{$r$} (dd2);
+		\end{tikzpicture}
+		\caption{}
+		\label{}
+	\end{figure}
+	It is quite intuitive, that there is no smaller model of $C$ w.r.t.\ $\mathcal{T}$,
+	since no element $d \in \Delta^{\mathcal{I}}$ can be "reused" for a cycle (e.g.\ from $d_n$).
+	$d_0$ cannot be used, because it is not in $A$, and any other $d_i$ with $i \geq 1$ is prevented, because $\top \sqsubseteq ( \leq 1r^-) \in  \mathcal{T}$.
+\end{proof}
+
+\newpage
+\section{Tree model property}
+We will now show an other important property of $\mathcal{ALC}$, the \textit{Tree model property},
+i.e.\ whenever a model is satisfiable it has a model, whose graph is a tree.
+\begin{example}[Intuition]
+	Consider the following interpretation $\mathcal{I}$ :
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\node[default, label= left: $\left\{ B \right\}$] (e) {$e$};
+			\node[default, label= right: $\emptyset$, right of = e] (f) {$f$};
+			\node[default, label= above: $\left\{ A \right\}$, above right of = e] (d) {$d$};
+			\draw (e) edge[above, bend left] node{$r$} (d);
+			\draw (d) edge[left, bend left] node{$r$} (e);
+			\draw (d) edge[above] node{$s$} (f);
+			\draw (e) edge[below] node{$s$} (f);
+		\end{tikzpicture}
+	\end{figure}
+	Obviously, $\mathcal{I}$ is a model of the knowledge base $\mathcal{K}=(\mathcal{T},\mathcal{A})$ with
+	\begin{align*}
+		\mathcal{T} = \big\{ A &\sqsubseteq \exists r.B, \\
+					B &\sqsubseteq \exists r.A, \\
+					A \sqcup B &\sqsubseteq \exists s.\top \big\} \\
+	\end{align*}
+	and $\mathcal{A} = \left\{ d:A \right\}$.\\
+	We can then "unravel" $\mathcal{I}$ and get the following interpretation $\widehat{\mathcal{I}}$, 
+	that is a tree model for $\mathcal{K}$ :
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}[node distance = 1.5cm]
+			\node[default, label= above left: $\left\{ A \right\}$] (d0) {$d_0$};
+			\node[default, label= above left: $\left\{ B \right\}$, below left of = d0] (e0) {$e_0$};
+			\node[default, label= right: $\emptyset$, below right of = d0] (f0) {$f_0$};
+			\node[default, label= above left: $\left\{ A \right\}$, below left of =e0] (d1) {$d_1$};
+			\node[default, label= right: $\emptyset$, below right of = e0] (f1) {$f_1$};
+			\node[default, label= above left: $\left\{ B \right\}$, below left of = d1] (e1) {$e_1$};
+			\node[default, label= right: $\emptyset$, below right of = d1] (f2) {$f_2$};
+			\node[below left of =e1] (dd) {$\cdots$};
+			\node[below right of =e1] (dd2) {$\cdots$};
+			\draw (d0) edge[above] node{$s$} (f0);
+			\draw (d0) edge[above] node{$r$} (e0);
+			\draw (e0) edge[above] node{$s$} (f1);
+			\draw (e0) edge[above] node{$r$} (d1);
+			\draw (d1) edge[above] node{$r$} (e1);
+			\draw (d1) edge[above] node{$s$} (f2);
+			\draw (e1) edge[above] node{$r$} (dd);
+			\draw (e1) edge[above] node{$s$} (dd2);
+		\end{tikzpicture}
+	\end{figure}
+\end{example}
+
+\begin{definition}[Tree model]\label{def:tree model}
+	Let $\mathcal{T}$ be a TBox and $C$ be a concept description.
+	The interpretation $\mathcal{I}$ is a tree model of $C$ w.r.t.\ $\mathcal{T}$ iff
+	\begin{itemize}
+		\item $\mathcal{I}$ is a model of $\mathcal{T}$ and
+		\item the graph 
+			\[
+				\mathcal{G}_{\mathcal{I}} = \left( \Delta^{\mathcal{I}}, \bigcup_{r \in \mathscr{R}} r^{\mathcal{I}} \right)
+			\]
+			is a tree whose root belongs to $C^{\mathcal{I}}$.
+	\end{itemize}
+\end{definition}
+
+Furthermore, the "unraveling" step needs to be formalized.
+For this we will use the following terminology:
+
+Let $\mathcal{I}$ be an interpretation and $d \in \Delta^{\mathcal{I}}$.
+A $d$-path in $\mathcal{I}$ is a finite sequence $p = d_0,d_1,\ldots,d_{n-1}$ of $n \geq 1$ elements of $\Delta^{\mathcal{I}}$ such that
+\begin{itemize}
+	\item $d_0 = d$,
+	\item $\forall i, 1 \leq i < n .\exists r_i \in \mathscr{R}: (d_{i-1},d_i) \in r_{i}^{\mathcal{I}}$.
+\end{itemize}
+We then call $n$ the length of this path and denote by $\text{end}(p) = d_{n-1}$ its end node.
+
+\begin{definition}[Unraveling]\label{def:unraveling}
+	The unraveling of $\mathcal{I}$ at $d$ is the following interpretation $\mathcal{J}$ :
+	\begin{align*}
+		\Delta^{\mathcal{J}} &= \left\{ p \mid p \text{ is a $d$-path in $\mathcal{I}$} \right\}, \\
+		A^{\mathcal{J}} &= \left\{ p \in \Delta^{\mathcal{J}} \mid \text{end}(p) \in A^{\mathcal{I}} \right\} \text{for all } A \in \mathscr{C} \\
+		r^{\mathcal{J}} &= \left\{ (p,p') \in \Delta^{\mathcal{J}} \times \Delta^{\mathcal{J}} \mid p'=(p, \text{end}(p')) \land (\text{end}(p),\text{end}(p')) \in r^{\mathcal{I}} \right\} \\
+						&\text{for all } r \in \mathscr{R}
+	\end{align*}
+\end{definition}
+\begin{note}
+	While $\Delta^{\mathcal{J}}$ and $A^{\mathcal{J}}$ can be understood quite easily, $r^{\mathcal{J}}$ might need further explanation:
+	When defining the role relations for the tree, we take the ends of a path $p$
+	and extend it by a single element $\text{end}(p')$. If the tuple $(\text{end}(p), \text{end}(p'))$ then is in the original interpretation,
+	we add it to the tree.
+\end{note}
+
+\begin{lemma}\label{lem:tree model bisimulation}
+	Let $\mathcal{I}$ be an interpretation and $\mathcal{J}$ the unraveling of $\mathcal{I}$ at any $d \in \Delta^{\mathcal{I}}$.
+	Then the relation
+	\[
+		\rho = \left\{ (p,\text{end}(p)) \mid p \in \Delta^{\mathcal{J}} \right\}
+	\]
+	is a bisimulation between $\mathcal{J}$ and $\mathcal{I}$.
 \end{lemma}
