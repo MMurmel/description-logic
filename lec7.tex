@@ -171,12 +171,12 @@ i.e.\ whenever a model is satisfiable it has a model, whose graph is a tree.
 	Consider the following interpretation $\mathcal{I}$ :
 	\begin{figure}[H]
 		\centering
-		\begin{tikzpicture}
-			\node[default, label= left: $\left\{ B \right\}$] (e) {$e$};
-			\node[default, label= right: $\emptyset$, right of = e] (f) {$f$};
-			\node[default, label= above: $\left\{ A \right\}$, above right of = e] (d) {$d$};
+		\begin{tikzpicture}[node distance = 1.5cm]
+			\node[default, label= above: $\left\{ A \right\}$] (d) {$d$};
+			\node[default, label= left: $\left\{ B \right\}$, below left of = d] (e) {$e$};
+			\node[default, label= right: $\emptyset$, below right of = d] (f) {$f$};
 			\draw (e) edge[above, bend left] node{$r$} (d);
-			\draw (d) edge[left, bend left] node{$r$} (e);
+			\draw (d) edge[above, bend left] node{$r$} (e);
 			\draw (d) edge[above] node{$s$} (f);
 			\draw (e) edge[below] node{$s$} (f);
 		\end{tikzpicture}

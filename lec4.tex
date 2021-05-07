@@ -170,6 +170,11 @@ Then:
 		\item $\mathcal{K} = (\mathcal{T},\mathcal{A})$ is consistent $\iff (\emptyset,\widehat{\mathcal{A}}$) is consistent.
 	\end{enumerate}
 \end{prop}
+\begin{merke}[frametitle=Important Note:]
+	The problem of deciding whether $(\emptyset, \widehat{\mathcal{A}})$ is consistent is also called "ABox consistency".
+	The proposition above shows, that each of the decision problems discussed before can be reduce to ABox consistency,
+	as long as no cyclic TBox is involved.
+\end{merke}
 \begin{proof}
 	\begin{enumerate}
 		\item " $\implies$":\newline
@@ -187,3 +192,4 @@ Then:
 			\qedhere
 	\end{enumerate}
 \end{proof}
+\newpage

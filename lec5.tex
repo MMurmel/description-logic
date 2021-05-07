@@ -74,16 +74,16 @@ interesting properties of models of $\mathcal{ALC}$:
 Furthermore we will show the very important property of $\mathcal{ALC}$: the finite model theory.
 
 \section{Bisimulation}
-\begin{definition}
+\begin{definition}[Bisimulation]\label{def:bisimulation}
 	Let $\mathcal{I}_1$ and $\mathcal{I}_2$ be interpretations.
 	The relation $\rho \subseteq \Delta^{\mathcal{I}_{1}} \times \Delta^{\mathcal{I}_2}$ is a bisimulation between $\mathcal{I}_1$ and $\mathcal{I}_2$ iff:
-	\begin{itemize}
+	\begin{enumerate}[label=(\roman*)]
 		\item $d_1 \rho d_2 \implies d_1 \in A^{\mathcal{I}_1} \text{ iff } d_2 \in A^{\mathcal{I}_2}$ for all $A \in \mathscr{C}$
 		\item $d_1 \rho d_2 \land  (d_1, d_1') \in r^{\mathcal{I}_1}$ implies the existence of $d_2' \in \Delta^{\mathcal{I}_2}$ such that
 			$d_1' \rho d_2' \land (d_2, d_2') \in r^{\mathcal{I}_2}$ for all $r \in \mathscr{R}$
 		\item $d_1 \rho d_2 \land  (d_2, d_2') \in r^{\mathcal{I}_2}$ implies the existence of $d_1' \in \Delta^{\mathcal{I}_1}$ such that
 			$d_1' \rho d_2' \land (d_1, d_1') \in r^{\mathcal{I}_1}$ for all $r \in \mathscr{R}$
-	\end{itemize}
+	\end{enumerate}
 \end{definition}
 
 \begin{note}
