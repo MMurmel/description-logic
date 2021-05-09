@@ -1,0 +1,148 @@
+\lecture{8}{08.05.2021}{}
+\begin{proof}
+	By definition of the extension of concept names in $\mathcal{J}$, we have that
+	\[
+		p \in A^{\mathcal{J}} \iff \text{end}(p) \in A^{\mathcal{I}}
+	.\]
+	Thus condition (i) in definition \ref{def:bisimulation} is satisfied.
+
+	To show that condition (ii) of definition \ref{def:bisimulation} is satisfied, 
+	we assume $(p,e) \in \rho$ and $(p,p') \in r^\mathcal{J}$.
+	Since $\text{end}(p)$ is the only element in $\Delta^{\mathcal{I}}$, that is $\rho$-related to $p$,
+	we have $e = \text{end}(p)$.
+	We must show that there is a $f \in \Delta^{\mathcal{I}}$ such that $(p',f) \in \rho$ and $(e,f) \in r^{\mathcal{I}}$.
+	We define $f = \text{end}(p')$.
+	We know that then $(p',f) \in \rho$.
+	Thus, it remains to show, that $(\text{end}(p),\text{end}(p')) \in r^{\mathcal{I}}$.
+	This is an immediate consequence of the definition of $r^{\mathcal{J}}$:
+
+	To show that condition (iii) of definition \ref{def:bisimulation} is satisfied,
+	we assume $(p,e) \in \rho$ and $(e,f) \in r^{\mathcal{I}}$.
+	We must find a path $p'$ such that $(p',f) \in \rho$ and $(p,p') \in r^{\mathcal{J}}$.
+	We define $p' \coloneqq p,f$.
+	This is indeed a $d$-path, since $p$ is a $d$-path with $\text{end}(p) = e$ 
+	and $(e,f) \in r^{\mathcal{I}}$.
+	In addition, $\text{end}(p') = f$, which shows $(p',f) \in \rho$.
+	Finally, we have $p' = p,\text{end}(p')$ and $(\text{end}(p), \text{end}(p')) \in r^\mathcal{I}$.
+	This yields $(p,p') \in r^\mathcal{J}$.
+\end{proof}
+
+\begin{prop}\label{prop:tree model invariance}
+	For all $\mathcal{ALC}$-concepts $C$ and $p \in \Delta^{\mathcal{J}}$ we have
+	\[
+		p \in C^{\mathcal{J}} \iff \text{end}(p) \in C^{\mathcal{I}}
+	.\]
+\end{prop}
+This is just the bisimulation invariance of $\mathcal{ALC}$ in this special case.
+
+\begin{theorem}[tree model property]\label{tree model property}
+	$\mathcal{ALC}$ has the tree model property,
+	i.e.\ if $\mathcal{T}$ is an $\mathcal{ALC}$-TBox and $C$ an $\mathcal{ALC}$-concept description
+	such that $C$ is satisfiable w.r.t.\ $\mathcal{T}$, then $C$ has a tree model w.r.t.\ $\mathcal{T}$.
+\end{theorem}
+\begin{note}
+	$\mathcal{ALC}$ does however not have the finite tree model property.
+\end{note}
+\begin{proof}
+	Let $\mathcal{I}$ be an interpretation such that $\mathcal{I}$ is a model of $\mathcal{T}$ and $d \in C^{\mathcal{I}}$.
+	We show that the unraveling $\mathcal{J}$ of $\mathcal{I}$ at $d$ is a tree model of $C$ w.r.t.\ $\mathcal{T}$.
+	\begin{enumerate}
+		\item To prove that $\mathcal{J}$ is a model of $\mathcal{T}$,
+			consider a GCI $D \sqsubseteq E$ in $\mathcal{T}$.
+			Assume that $p \in D^{\mathcal{J}}$.
+			We must then show $p \in E^{\mathcal{J}}$.
+			By proposition \ref{prop:tree model invariance},
+			we know that $\text{end}(p) \in D^{\mathcal{I}}$.
+			Then $\text{end}(p) \in E^{\mathcal{I}}$, since $\mathcal{I}$ is a model of $\mathcal{T}$.
+			We can apply proposition \ref{prop:tree model invariance} again to obtain $p \in E^{\mathcal{J}}$.
+		\item We show that  the graph
+			\[
+				\mathcal{G}_{\mathcal{J}} = \left( \Delta^{\mathcal{J}}, \bigcup_{r \in \mathscr{R}} r^{\mathcal{J}} \right)
+			\]
+			is a tree with root $d$.
+			By this we mean the $d \in \Delta^{\mathcal{J}}$, which is actually a $d$-path.
+			By the definition of the extension of roles in $\mathcal{J}$,
+			only paths of length $> 1$ can have a predecessor,
+			and all paths of length $> 1$ also do have a predecessor.
+			Thus, $d$ is the only element of $\Delta^{\mathcal{J}}$ without predecessors,
+			i.e.\ it is the root.
+			In addition, every element $p \in \Delta^{\mathcal{J}}$ that is not the root has a unique predecessor,
+			which is obtained by removing $\text{end}(p)$ from $p$.
+			Also, there clearly cannot be cycles since successors are always longer than their predecessor.
+		\item We show that the root $d$ belongs to $C^{\mathcal{J}}$.
+			This is easy, since $d \in \Delta^{\mathcal{I}}$ belongs to $C^{\mathcal{I}}$ and $\text{end}(d)=d$.
+			Proposition \ref{prop:tree model invariance} yields $d \in C^{\mathcal{J}}$. \qedhere
+	\end{enumerate}
+\end{proof}
+
+
+\chapter{Reasoning in DLs with tableau algorithms}
+While we have already seen how different inference problems for $\mathcal{ALC}$ (and other DLs) can be reduced to each other,
+we haven't talked about implementing the decision procedures efficiently.
+Since we showed, that $\mathcal{ALC}$ has the finite model property, a naive algorithm could enumerate all models up to the known exponential bound
+and evaluate them. This is a correct decision algorithm for satisfiability
+and therefore also for satisfiability w.r.t.\ a (acyclic) TBox, subsumption and equivalence of concepts and TBox consistency.
+
+We now start by looking at an algorithm for deciding consistency of an ABox (without a TBox), since this covers most of the inference problems discussed in chapter 2.
+The so called "tableau-based consistency algorithm" tries to generate a finite model for the input ABox $\mathcal{A}_0$ by:
+\begin{itemize}
+	\item applying expansion rules to extent the ABox (with one rule for every constructor except negation) and
+	\item checking for obvious contradictions (so called clashes).
+\end{itemize}
+If an ABox is complete (no rule applies) and clash-free (no obvious contradictions), it describes a model.
+
+\begin{mdframed}[frametitle= Description of the tableau algorithm]
+Input: an $\mathcal{ALC}$-ABox $\mathcal{A}_0$ \\
+Output: "yes" if $\mathcal{A}_0$ is consistent, "no" otherwise
+
+Preprocessing: normalize the ABox
+\begin{itemize}
+	\item transform all concept description in $\mathcal{A}_0$ into negation normal form (NNF)
+	\item ensure that the ABox is non-empty by adding $a: \top$ for any $a \in \mathscr{I}$ if needed
+	\item ensure that every individual name $a$ occurs in a concept assertion (and not just role assertions), by adding $a : \top$ if needed
+\end{itemize}
+In the following an input ABox $\mathcal{A}_0$ shall be an ABox normalized in this way.
+
+The algorithm then applies the expansion rules:
+\begin{itemize}
+	\item The rules are triggered by the presence of certain assertions in the current ABox,
+	\item and extend the ABox by new assertions.
+	\item Deterministic rule: only one option for how to extend the ABox
+	\item Nondeterministic rule: several options for how to extend the ABox, where at least one of them must lead to success.
+		In an deterministic implementation this can be implemented e.g.\ by backtracking.
+\end{itemize}
+\end{mdframed}
+
+\begin{mdframed}[frametitle = expansion rules]
+	\begin{mdframed}[frametitle= The $\sqcap$-rule]
+		Condition: $\mathcal{A}$ contains $a: (C \sqcap D)$, but not both $a:C$ and $a:D$ \\
+		Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a:C, a:D \right\} $
+	\end{mdframed}
+	\begin{mdframed}[frametitle= The $\sqcup$-rule]
+		Condition: $\mathcal{A}$ contains $a: (C \sqcup D)$, but neither $a:C$ nor $a:D$\\
+		Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a:X \right\} $ for some $X \in \left\{ C,D \right\}$
+	\end{mdframed}
+	\begin{mdframed}[frametitle= The $\exists$-rule]
+		Condition: $\mathcal{A}$ contains $a:(\exists r.C)$, but no $b$ with $\left\{ (a,b) :r, b:C \right\} \subseteq \mathcal{A}$ \\
+		Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ (a,d):r, d:C \right\} $ where $d$ is new in $\mathcal{A}$
+	\end{mdframed}
+	\begin{mdframed}[frametitle= The $\forall$-rule]
+		Condition: $\mathcal{A}$ contains $a:(\forall r.C)$ and $(a,b):r$, but not $b:C$\\
+		Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ b:C\right\} $
+	\end{mdframed}
+\end{mdframed}
+
+It now remains to formally define the "obvious contradictions":
+\begin{definition}[Complete and clash-free ABox]
+	An ABox $\mathcal{A}$ contains a clash if
+	\[
+	\left\{ a:C, a: \neg C \right\} \subseteq \mathcal{A}
+	\]
+	for some individual name $a$ and for some concept $C$.
+
+	$\mathcal{A}$ is complete if it contains a clash, or none of the expansion rules is applicable.
+\end{definition}
+\begin{note}
+	Of course one could define the completeness of $\mathcal{A}$ without the condition of containing a clash.
+	This would not lead to any different results, it is just easier this way to express a condition for termination.
+\end{note}
