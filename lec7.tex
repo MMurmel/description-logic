@@ -3,8 +3,8 @@
 \begin{lemma} \label{lem:card(sub)<=size}
 	For arbitrary concept descriptions $C$ and arbitrary TBoxes $ \mathcal{T}$ the following hold:
 	\begin{itemize}
-		\item $\left| \text{sub}(C) \right| \leq \text{size}(C)$ 
-		\item $\left| \text{sub}(\mathcal{T}) \right| \leq \text{size}(\mathcal{T})$
+		\item $\left| \func{sub}(C) \right| \leq \func{size}(C)$ 
+		\item $\left| \func{sub}(\mathcal{T}) \right| \leq \func{size}(\mathcal{T})$
 	\end{itemize}
 \end{lemma}
 
@@ -53,7 +53,7 @@ This will enable us to define an interesting equivalence relation, that is usefu
 
 We say that the finite set $S$ of concept descriptions is \textbf{closed} iff
 \[
-	\bigcup_{} \left\{ \text{sub}(C) \mid C \in S \right\} \subseteq S
+	\bigcup_{} \left\{ \func{sub}(C) \mid C \in S \right\} \subseteq S
 .\]
 This will enable us to use induction on $S$, because whenever a concept is in $S$, then all of its subconcepts are also in $S$.
 
@@ -105,12 +105,12 @@ it is however not sufficient in this case.
 
 The following proposition shows that $\mathcal{ALC}$ satisfies a property that is even stronger than the finite model property.
 \begin{theorem}[bounded model property]
-	Let $\mathcal{T}$ be an $\mathcal{ALC}$-TBox, $C$ an $\mathcal{ALC}$-concept description, and $n = \text{size}(\mathcal{T}) + \text{size}(C)$.
+	Let $\mathcal{T}$ be an $\mathcal{ALC}$-TBox, $C$ an $\mathcal{ALC}$-concept description, and $n = \func{size}(\mathcal{T}) + \func{size}(C)$.
 	If $C$ has a model w.r.t.\ $\mathcal{T}$, then it has a model $\widehat{\mathcal{I}}$ s.t. $\lvert \Delta^{\widehat{\mathcal{I}}} \rvert \leq 2^n$.
 \end{theorem}
 \begin{proof}[Proof sketch]
 	Let $\mathcal{I}$ be a model of $\mathcal{T}$ with $C^{\mathcal{I}} \neq \emptyset$ and $\widehat{\mathcal{I}}$ be the $S$-filtration of $\mathcal{I}$,
-	where $S \coloneqq \text{sub}(C) \cup \text{sub}(\mathcal{T})$.
+	where $S \coloneqq \func{sub}(C) \cup \func{sub}(\mathcal{T})$.
 	We then show:
 	\begin{enumerate}
 		\item $\lvert \Delta^{\widehat{\mathcal{I}}} \rvert \leq 2^{n}$, by lemma \ref{lem:card(sub)<=size} and \ref{lem:number of s-types},
@@ -128,7 +128,7 @@ The following proposition shows that $\mathcal{ALC}$ satisfies a property that i
 	In $\mathcal{ALC}$, satisfiability of a concept description w.r.t.\ a TBox is decidable.
 \end{corollary}
 \begin{proof}
-	Let $n \coloneqq \text{size}(T) + \text{size}(C)$.
+	Let $n \coloneqq \func{size}(T) + \func{size}(C)$.
 	If $C$ is satisfiable w.r.t.\ $\mathcal{T}$, then there is a model of cardinality at most $2^{n}$.
 	Up to isomorphism (i.e.\, up to renaming of the domain elements), there are only finitely many interpretations satisfying this bound.
 	Thus, we can enumerate all these interpretations and check whether the are models of $C$ w.r.t.\ $\mathcal{T}$.
@@ -236,21 +236,21 @@ A $d$-path in $\mathcal{I}$ is a finite sequence $p = d_0,d_1,\ldots,d_{n-1}$ of
 	\item $d_0 = d$,
 	\item $\forall i, 1 \leq i < n .\exists r_i \in \mathscr{R}: (d_{i-1},d_i) \in r_{i}^{\mathcal{I}}$.
 \end{itemize}
-We then call $n$ the length of this path and denote by $\text{end}(p) = d_{n-1}$ its end node.
+We then call $n$ the length of this path and denote by $\func{end}(p) = d_{n-1}$ its end node.
 
 \begin{definition}[Unraveling]\label{def:unraveling}
 	The unraveling of $\mathcal{I}$ at $d$ is the following interpretation $\mathcal{J}$ :
 	\begin{align*}
 		\Delta^{\mathcal{J}} &= \left\{ p \mid p \text{ is a $d$-path in $\mathcal{I}$} \right\}, \\
-		A^{\mathcal{J}} &= \left\{ p \in \Delta^{\mathcal{J}} \mid \text{end}(p) \in A^{\mathcal{I}} \right\} \text{for all } A \in \mathscr{C} \\
-		r^{\mathcal{J}} &= \left\{ (p,p') \in \Delta^{\mathcal{J}} \times \Delta^{\mathcal{J}} \mid p'=(p, \text{end}(p')) \land (\text{end}(p),\text{end}(p')) \in r^{\mathcal{I}} \right\} \\
+		A^{\mathcal{J}} &= \left\{ p \in \Delta^{\mathcal{J}} \mid \func{end}(p) \in A^{\mathcal{I}} \right\} \text{for all } A \in \mathscr{C} \\
+		r^{\mathcal{J}} &= \left\{ (p,p') \in \Delta^{\mathcal{J}} \times \Delta^{\mathcal{J}} \mid p'=(p, \func{end}(p')) \land (\func{end}(p),\func{end}(p')) \in r^{\mathcal{I}} \right\} \\
 						&\text{for all } r \in \mathscr{R}
 	\end{align*}
 \end{definition}
 \begin{note}
 	While $\Delta^{\mathcal{J}}$ and $A^{\mathcal{J}}$ can be understood quite easily, $r^{\mathcal{J}}$ might need further explanation:
 	When defining the role relations for the tree, we take the ends of a path $p$
-	and extend it by a single element $\text{end}(p')$. If the tuple $(\text{end}(p), \text{end}(p'))$ then is in the original interpretation,
+	and extend it by a single element $\func{end}(p')$. If the tuple $(\func{end}(p), \func{end}(p'))$ then is in the original interpretation,
 	we add it to the tree.
 \end{note}
 
@@ -258,7 +258,7 @@ We then call $n$ the length of this path and denote by $\text{end}(p) = d_{n-1}$
 	Let $\mathcal{I}$ be an interpretation and $\mathcal{J}$ the unraveling of $\mathcal{I}$ at any $d \in \Delta^{\mathcal{I}}$.
 	Then the relation
 	\[
-		\rho = \left\{ (p,\text{end}(p)) \mid p \in \Delta^{\mathcal{J}} \right\}
+		\rho = \left\{ (p,\func{end}(p)) \mid p \in \Delta^{\mathcal{J}} \right\}
 	\]
 	is a bisimulation between $\mathcal{J}$ and $\mathcal{I}$.
 \end{lemma}

@@ -2,35 +2,35 @@
 \begin{proof}
 	By definition of the extension of concept names in $\mathcal{J}$, we have that
 	\[
-		p \in A^{\mathcal{J}} \iff \text{end}(p) \in A^{\mathcal{I}}
+		p \in A^{\mathcal{J}} \iff \func{end}(p) \in A^{\mathcal{I}}
 	.\]
 	Thus condition (i) in definition \ref{def:bisimulation} is satisfied.
 
 	To show that condition (ii) of definition \ref{def:bisimulation} is satisfied, 
 	we assume $(p,e) \in \rho$ and $(p,p') \in r^\mathcal{J}$.
-	Since $\text{end}(p)$ is the only element in $\Delta^{\mathcal{I}}$, that is $\rho$-related to $p$,
-	we have $e = \text{end}(p)$.
+	Since $\func{end}(p)$ is the only element in $\Delta^{\mathcal{I}}$, that is $\rho$-related to $p$,
+	we have $e = \func{end}(p)$.
 	We must show that there is a $f \in \Delta^{\mathcal{I}}$ such that $(p',f) \in \rho$ and $(e,f) \in r^{\mathcal{I}}$.
-	We define $f = \text{end}(p')$.
+	We define $f = \func{end}(p')$.
 	We know that then $(p',f) \in \rho$.
-	Thus, it remains to show, that $(\text{end}(p),\text{end}(p')) \in r^{\mathcal{I}}$.
+	Thus, it remains to show, that $(\func{end}(p),\func{end}(p')) \in r^{\mathcal{I}}$.
 	This is an immediate consequence of the definition of $r^{\mathcal{J}}$:
 
 	To show that condition (iii) of definition \ref{def:bisimulation} is satisfied,
 	we assume $(p,e) \in \rho$ and $(e,f) \in r^{\mathcal{I}}$.
 	We must find a path $p'$ such that $(p',f) \in \rho$ and $(p,p') \in r^{\mathcal{J}}$.
 	We define $p' \coloneqq p,f$.
-	This is indeed a $d$-path, since $p$ is a $d$-path with $\text{end}(p) = e$ 
+	This is indeed a $d$-path, since $p$ is a $d$-path with $\func{end}(p) = e$ 
 	and $(e,f) \in r^{\mathcal{I}}$.
-	In addition, $\text{end}(p') = f$, which shows $(p',f) \in \rho$.
-	Finally, we have $p' = p,\text{end}(p')$ and $(\text{end}(p), \text{end}(p')) \in r^\mathcal{I}$.
+	In addition, $\func{end}(p') = f$, which shows $(p',f) \in \rho$.
+	Finally, we have $p' = p,\func{end}(p')$ and $(\func{end}(p), \func{end}(p')) \in r^\mathcal{I}$.
 	This yields $(p,p') \in r^\mathcal{J}$.
 \end{proof}
 
 \begin{prop}\label{prop:tree model invariance}
 	For all $\mathcal{ALC}$-concepts $C$ and $p \in \Delta^{\mathcal{J}}$ we have
 	\[
-		p \in C^{\mathcal{J}} \iff \text{end}(p) \in C^{\mathcal{I}}
+		p \in C^{\mathcal{J}} \iff \func{end}(p) \in C^{\mathcal{I}}
 	.\]
 \end{prop}
 This is just the bisimulation invariance of $\mathcal{ALC}$ in this special case.
@@ -52,8 +52,8 @@ This is just the bisimulation invariance of $\mathcal{ALC}$ in this special case
 			Assume that $p \in D^{\mathcal{J}}$.
 			We must then show $p \in E^{\mathcal{J}}$.
 			By proposition \ref{prop:tree model invariance},
-			we know that $\text{end}(p) \in D^{\mathcal{I}}$.
-			Then $\text{end}(p) \in E^{\mathcal{I}}$, since $\mathcal{I}$ is a model of $\mathcal{T}$.
+			we know that $\func{end}(p) \in D^{\mathcal{I}}$.
+			Then $\func{end}(p) \in E^{\mathcal{I}}$, since $\mathcal{I}$ is a model of $\mathcal{T}$.
 			We can apply proposition \ref{prop:tree model invariance} again to obtain $p \in E^{\mathcal{J}}$.
 		\item We show that  the graph
 			\[
@@ -67,10 +67,10 @@ This is just the bisimulation invariance of $\mathcal{ALC}$ in this special case
 			Thus, $d$ is the only element of $\Delta^{\mathcal{J}}$ without predecessors,
 			i.e.\ it is the root.
 			In addition, every element $p \in \Delta^{\mathcal{J}}$ that is not the root has a unique predecessor,
-			which is obtained by removing $\text{end}(p)$ from $p$.
+			which is obtained by removing $\func{end}(p)$ from $p$.
 			Also, there clearly cannot be cycles since successors are always longer than their predecessor.
 		\item We show that the root $d$ belongs to $C^{\mathcal{J}}$.
-			This is easy, since $d \in \Delta^{\mathcal{I}}$ belongs to $C^{\mathcal{I}}$ and $\text{end}(d)=d$.
+			This is easy, since $d \in \Delta^{\mathcal{I}}$ belongs to $C^{\mathcal{I}}$ and $\func{end}(d)=d$.
 			Proposition \ref{prop:tree model invariance} yields $d \in C^{\mathcal{J}}$. \qedhere
 	\end{enumerate}
 \end{proof}

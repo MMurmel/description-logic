@@ -7,11 +7,13 @@
 \counterwithin*{definition}{chapter}
 \renewcommand{\thedefinition}{\arabic{chapter}.\arabic{definition}}
 
-% ensure right spacing around squared cup and cap
+% ensure right spacing around squared operators and relations
 \let\helpercap\sqcap
-\renewcommand{\sqcap}{\mathrel{\helpercap}}
+\renewcommand{\sqcap}{\mathbin{\helpercap}}
 \let\helpercup\sqcup
-\renewcommand{\sqcup}{\mathrel{\helpercup}}
+\renewcommand{\sqcup}{\mathbin{\helpercup}}
+\let\helpersSub\sqsubseteq
+\renewcommand{\sqsubseteq}{\mathrel{\helpersSub}}
 
 \begin{document}
 	\selectlanguage{english}

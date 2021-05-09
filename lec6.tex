@@ -213,26 +213,26 @@ To do so, we need a notion of the size of $\mathcal{ALC}$-concepts.
 \begin{mdframed}[frametitle={Sizes in $\mathcal{ALC}$}]
 	We define the size of an $\mathcal{ALC}$-concept description recursively:
 	\begin{itemize}
-		\item $C = A \in \mathscr{C}$: $\text{size}(C) \coloneqq 1$,
-		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$: $\text{size}(C) \coloneqq 1 + \text{size}(C_1) + \text{size}(C_2)$,
-		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$: $\text{size}(C) \coloneqq 1 + \text{size}(D)$.
+		\item $C = A \in \mathscr{C}$: $\func{size}(C) \coloneqq 1$,
+		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$: $\func{size}(C) \coloneqq 1 + \func{size}(C_1) + \func{size}(C_2)$,
+		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$: $\func{size}(C) \coloneqq 1 + \func{size}(D)$.
 	\end{itemize}
 	We also define the size of a TBox $\mathcal{T}$ as follows:
 	\[
-		\text{size}(\mathcal{T}) \coloneqq \sum_{C \sqsubseteq D \in \mathcal{T}} \text{size}(C) + \text{size}(D)
+		\func{size}(\mathcal{T}) \coloneqq \sum_{C \sqsubseteq D \in \mathcal{T}} \func{size}(C) + \func{size}(D)
 	.\]
 \end{mdframed}
 
 \begin{mdframed}[frametitle={Subconcepts in $\mathcal{ALC}$}]
 	We define the subconcepts of an $\mathcal{ALC}$-concept description recursively:
 	\begin{itemize}
-		\item $C = A \in \mathscr{C}$ : $\text{sub}(C) \coloneqq \left\{ A \right\}$,
-		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$ : $\text{sub}(C) \coloneqq \left\{ C \right\} \cup \text{sub}(C_1) \cup \text{sub}(C_2)$,
-		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$ : $\text{sub}(C) \coloneqq \left\{ C \right\} \cup \text{sub}(D)$.
+		\item $C = A \in \mathscr{C}$ : $\func{sub}(C) \coloneqq \left\{ A \right\}$,
+		\item $C = C_1 \sqcap C_2$ or $C = C_1 \sqcup C_2$ : $\func{sub}(C) \coloneqq \left\{ C \right\} \cup \func{sub}(C_1) \cup \func{sub}(C_2)$,
+		\item $C = \neg D$ or $C = \exists r.D$ or $C = \forall r.D$ : $\func{sub}(C) \coloneqq \left\{ C \right\} \cup \func{sub}(D)$.
 	\end{itemize}
 	We also define the subconcepts of a TBox $\mathcal{T}$ as follows:
 	\[
-		\text{sub}(\mathcal{T}) \coloneqq \bigcup_{C \sqsubseteq D \in \mathcal{T}} \text{sub}(C) \cup \text{sub}(D)
+		\func{sub}(\mathcal{T}) \coloneqq \bigcup_{C \sqsubseteq D \in \mathcal{T}} \func{sub}(C) \cup \func{sub}(D)
 	.\]
 \end{mdframed}
 \begin{note}
