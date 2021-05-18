@@ -76,33 +76,33 @@ which we know are decidable subclasses of FOL.
 \subsection{Additional constructors}
 In DL research many more constructors were introduced and investigated.
 Like explained earlier, these constructors follow a common naming scheme and may be used to extend $\mathcal{AL}$, $\mathcal{ALC}$ or other DLs.
-\begin{example}[$\mathcal{Q}$ in naming scheme]
+\begin{definition*}[$\mathcal{Q}$ in naming scheme]
 	This allows \textbf{qualified number restrictions}: 
 	$\left( \geq nr.C \right) $ and $\left( \leq nr.C \right) $ with the following semantics:
 	\begin{align*}
 		\left( \geq nr.C \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \land e \in C^{\mathcal{I}} \right\} \right| \geq n \right\} \\
 		\left( \leq nr.C \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \land e \in C^{\mathcal{I}} \right\} \right| \leq n \right\} \\
 	\end{align*}
-\end{example}
+\end{definition*}
 
-\begin{example}[$\mathcal{N}$ in naming scheme]
+\begin{definition*}[$\mathcal{N}$ in naming scheme]
 	This allows \textbf{(simple) number restrictions}:
 	$\left( \geq nr \right)$, and $\left( \leq nr \right)$ as abbreviations for $\left( \geq nr.\top \right)$ and $\left( \leq nr.\top \right)$:
 	\begin{align*}
 		\left( \geq nr \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \right\}  \right| \geq n \right\} \\
 		\left( \leq nr \right) ^{\mathcal{I}} &\coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \left| \left\{ e \mid (d,e) \in r^{\mathcal{I}} \right\}  \right| \leq n \right\} 
 	\end{align*}
-\end{example}
+\end{definition*}
 
 In addition one can also define \textbf{role constructors}.
-\begin{example}[$\mathcal{I}$ in naming scheme]
+\begin{definition*}[$\mathcal{I}$ in naming scheme]
 	This allows \textbf{inverse roles}:
 	If $r$ is a role then $r^{-}$ denotes its inverse:
 	\[
 		\left( r^{-} \right) ^{\mathcal{I}} \coloneqq \left\{ (e,d) \mid (d,e) \in r^{\mathcal{I}} \right\} 
 	.\] 
 	$r^{-}$ can then be used in any place a role can be used.
-\end{example}
+\end{definition*}
 
 \newpage
 \section{Terminological knowledge}

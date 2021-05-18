@@ -127,7 +127,7 @@ One could also define a notion of bisimulation under which $\mathcal{ALCN}$, $\m
 We will now introduce the notion of disjoint union for interpretations.
 This will enable us to combine multiple interpretations into a bigger one, containing the interpretations it was built from,
 but no interaction between them.
-\begin{definition}
+\begin{definition}[disjoint union]
 	Let $\mathfrak{R}$ be an index set and $\left( \mathcal{I}_{\nu} \right)_{\nu \in \mathfrak{R}}$ a family of interpretations $\mathcal{I}_{\nu} = \left( \Delta^{\mathcal{I}_{\nu}}, \cdot^{\mathcal{I}_{\nu}} \right)$.
 	Their disjoint union $\mathcal{J}$ is defined as follows:
 	\begin{align*}
@@ -164,7 +164,7 @@ but no interaction between them.
 	And then lemma \ref{lemma:disjoint union 1} follows from theorem \ref{thm: bisimulation invariance}.
 \end{proof}
 
-\begin{theorem}\label{thm:disjoint union closure}
+\begin{theorem}[closure under disjoint union]\label{thm:disjoint union closure}
 	Let $\mathcal{T}$ be an $\mathcal{ALC}$ TBox and $(\mathcal{I}_\nu)_{\nu \in \mathfrak{R}}$ a family of models of $\mathcal{T}$.
 	Then its disjoint union $\mathcal{J} = \biguplus_{\nu \in \mathfrak{R}} \mathcal{I}_\nu$ is also a model of $\mathcal{T}$.
 \end{theorem}

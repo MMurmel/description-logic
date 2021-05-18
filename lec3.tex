@@ -65,6 +65,7 @@ $\mathcal{ALC}$-TBoxes can be translated into FOL:
 	trivial.
 \end{proof}
 
+\newpage
 \section{Assertional knowledge}
 \subsection{$\mathcal{ALC}$ ABoxes}
 While concepts make statements about sets of individuals, we now want to state knowledge about specific individuals.
@@ -120,7 +121,7 @@ The FOL-translation of a knowledge base is easy, given its components:
 
 \subsection{Additional constructors}
 Individual names can also be used as concept constructors.
-\begin{example}[$\mathcal{O}$ in the naming scheme.]
+\begin{definition*}[$\mathcal{O}$ in the naming scheme.]
 	This allows \textbf{nominals} $\left\{ a \right\} $ for $a \in \mathscr{I}$ with the semantics
 	\[
 	\left\{ a \right\} ^{\mathcal{I}} \coloneqq \left\{ a^{\mathcal{I}} \right\} 
@@ -130,7 +131,7 @@ Individual names can also be used as concept constructors.
 		\item $a:C$ is expressed as $\left\{ a \right\} \sqsubseteq C$
 		\item $(a,b):r$ is expressed as $\left\{ a \right\} \sqsubseteq \exists r.\left\{ b \right\} $
 	\end{itemize}
-\end{example}
+\end{definition*}
 
 \newpage
 \section{Reasoning Problems and Services}
@@ -170,8 +171,7 @@ Individual names can also be used as concept constructors.
 	\end{itemize}
 \end{example}
 
-\begin{lemma}
-	Properties of subsumption:
+\begin{lemma}[Properties of subsumption]
 	\begin{enumerate}
 		\item The subsumption relation $\sqsubseteq_{\mathcal{T}}$ is a pre-order on concept descriptions, i.e.,
 			\begin{itemize}

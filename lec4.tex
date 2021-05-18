@@ -21,8 +21,7 @@
 	\end{enumerate}
 \end{proof}
 
-\begin{lemma}
-	Here are some basic equivalences:
+\begin{lemma}[some basic equivalences]
 	\begin{itemize}
 		\item $\neg \top \equiv \bot$
 		\item $C \sqcup D \equiv \neg \left( \neg C \sqcap \neg D \right)$
@@ -93,7 +92,7 @@ In the following we will show, that there exist certain polynomial reductions be
 	They correspond to the following lemma:
 \end{note}
 
-\begin{theorem}
+\begin{theorem}[polynomial reductions]
 	Let $\mathcal{K} = \left( \mathcal{T}, \mathcal{A} \right)$ be a knowledge base, 
 	$C, D$ concept descriptions and $a \in \mathscr{I}$.
 	\begin{enumerate}
@@ -160,7 +159,7 @@ Now we will show, that satisfiability w.r.t.\ $\mathcal{T}$ can be reduced to sa
 Knowledge base consistency can be reduced to ABox consistency.
 However this reduction is in general not possible in polynomial time.
 
-\begin{prop}
+\begin{prop}[reductions to ABox consistency]
 Let  $\mathcal{K} = (\mathcal{T}, \mathcal{A})$ be a knowledge base, where $\mathcal{T}$ is acyclic, and $C$ a concept description.
 The expanded versions $\widehat{C}$ and $\widehat{A}$ of $C$ and $A$ w.r.t.\ $\mathcal{T}$ are obtained by
 replacing all defined concepts occurring in $C$ and $A$ by their definitions in the expanded version $\widehat{\mathcal{T}}$ of $\mathcal{T}$.
