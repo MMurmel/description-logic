@@ -1,0 +1,125 @@
+\lecture{9}{11.05.2021}{}
+Before we can introduce the whole algorithm, we must introduce the procedure \texttt{exp}, which does the following:
+\begin{itemize}
+	\item takes as input a normalized $\mathcal{ALC}$-ABox $\mathcal{A}$, a rule $R$ and an assertion or pair of assertions $\alpha$
+		such that $R$ is applicable to $\alpha$ in  $\mathcal{A}$
+	\item returns a set $\func{\texttt{exp}}(\mathcal{A},R,\alpha)$ containing all  ABoxes that can result from applying $R$ to $\alpha$ in $\mathcal{A}$.
+\end{itemize}
+\begin{example}
+	\[
+	\begin{split}
+		&\func{\texttt{exp}}(\left\{ a : \neg D, a : C \sqcup D \right\}, \sqcup \text{-rule}, a : C \sqcup D) \\
+		&= \left\{ \left\{  a : \neg D, a : C \sqcup D, a : C\right\}, \left\{  a : \neg D, a : C \sqcup D, a : D\right\} \right\}
+	\end{split}
+	\]
+\end{example}
+
+\begin{definition}[deterministic tableau algorithm]
+	We now define the algorithm used for actual reasoning (with deterministic machines):
+	\begin{algorithm}[H]
+		\caption{consistent($\mathcal{A}$)}
+		\label{alg:consistent}
+		\begin{algorithmic}[1]
+			\Require a normalized $\mathcal{ALC}$-ABox $\mathcal{A}$
+		\If{$\func{expand}(\mathcal{A}) \neq \emptyset$}
+				\State \textbf{return} "consistent"
+			\Else{}
+				\State \textbf{return} "inconsistent"
+			\EndIf
+		\end{algorithmic}
+	\end{algorithm}
+	The subroutine $\func{expand}(\mathcal{A})$ makes use of the procedure \texttt{exp} discussed earlier:
+	\begin{algorithm}[H]
+		\caption{expand($\mathcal{A}$)}
+		\label{alg:expand}
+		\begin{algorithmic}[1]
+			\Require a normalized $\mathcal{ALC}$-ABox $\mathcal{A}$ 
+			\If{$\mathcal{A}$ is not complete}
+				\State select a rule $R$ that is applicable to $\mathcal{A}$ and an assertion or 
+				\State a pair of assertions $\alpha$ in $\mathcal{A}$ to which $R$ is applicable
+				\If{$\exists \mathcal{A}' \in \func{\texttt{exp}}(\mathcal{A},R,\alpha)$ with $\func{expand}(\mathcal{A}') \neq \emptyset$}
+					\State \textbf{return} $\func{expand}(\mathcal{A}')$
+				\Else
+						\State \textbf{return} $\emptyset$
+				\EndIf
+			\Else
+				\If{$\mathcal{A}$ contains a clash}
+					\State \textbf{return} $\emptyset$
+				\Else
+					\State \textbf{return} $\mathcal{A}$
+				\EndIf
+			\EndIf
+		\end{algorithmic}
+	\end{algorithm}
+\end{definition}
+To show that this decision procedure is correct, we will need to show:
+\begin{enumerate}
+	\item Termination
+	\item Completeness
+	\item Soundness
+\end{enumerate}
+
+To show termination some auxiliary definitions and results are needed.
+We expand the definition of subconcepts to ABoxes:
+\[
+	\func{sub}(\mathcal{A}) = \bigcup_{a:C \in \mathcal{A}} \func{sub}(C)
+.\]
+And to knowledge bases $\mathcal{K} = (\mathcal{T}, \mathcal{A})$:
+\[
+	\func{sub}(\mathcal{K}) = \func{sub}(\mathcal{T}) \cup \func{sub}(\mathcal{A})
+.\]
+Furthermore, we define the set of concepts occurring in a concept assertion as follows:
+\[
+	\func{con}_{\mathcal{A}}(a) = \left\{ C \mid a : C \in \mathcal{A} \right\}
+.\]
+
+\begin{lemma}\label{lem:cardinality bound abox subconcepts}
+	For each $\mathcal{ALC}$-ABox $\mathcal{A}$, we have:
+	\[
+		\lvert \func{sub}(\mathcal{A}) \rvert \leq \sum_{a:C \in \mathcal{A}} \func{size}(C) 
+	.\]
+\end{lemma}
+
+\begin{lemma}[Termination]
+	For each normalized $\mathcal{ALC}$-ABox $\mathcal{A}$, $\func{consistent}(\mathcal{A})$ terminates.
+\end{lemma}
+\begin{proof}
+	Let $m = \lvert \func{sub}(\mathcal{A}) \rvert$.
+	Termination follows from the following properties of the expansion rules:
+	\begin{itemize}
+		\item The expansion rules never remove an assertion from $\mathcal{A}$,
+			and each rule application adds a new assertion of the form $a:C$ for $C \in \func{sub}(\mathcal{A})$.
+			Moreover, we saw in lemma \ref{lem:card(sub)<=size} and lemma \ref{lem:cardinality bound abox subconcepts} that the size of $\func{sub}(\mathcal{A})$ is bounded by the size of $\mathcal{A}$.
+			Thus, for a given individual $a$ we can have at most $m$ rule applications that add a concept assertion for $a$,
+			and $\lvert \func{con}_{\mathcal{A}}(a) \rvert \leq m$.
+		\item A new individual name is added to $\mathcal{A}$ only when an existential rule is applied to an assertion $a:C$ with $C$ is an existential restriction.
+			Each such assertion triggers the $\exists$-rule only once.
+			Thus, a given individual name can trigger the application of the $\exists$-rule at most $m$ times.
+			This means each individual can have at most $m$ (newly added) successors.
+		\item The $\exists$- and $\forall$-rules are triggered by assertions of the form $a : \exists r.C$ and $a : \forall r.C$, and they only add concept assertions $b:C$, where $b$ is a successor of $a$.
+			Thus, for every concept assertion $b:C$ in a tree individual (see script), its predecessor has a concept assertion for a larger concept.
+			Thus, when we go from an individual to its successor in the tree, the maximum size of concept assertions decreases.
+			Since we start at the root individuals with a finite maximum size, there cannot be infinite paths in the tree. \qedhere
+	\end{itemize}
+\end{proof}
+
+\begin{lemma}[Soundness]
+	If $\func{consistent}(\mathcal{A})$ returns "consistent", then $\mathcal{A}$ is consistent.
+\end{lemma}
+\begin{proof}
+	Let $\mathcal{A}'$ be the set returned by $\func{expand}(\mathcal{A})$.
+	Since the algorithm returns "consistent", $\mathcal{A}'$ is a complete and clash-free ABox.
+	We use $\mathcal{A}'$ to define an interpretation $\mathcal{I}$ and show that it is a model of $\mathcal{A}'$.
+	\begin{align*}
+		\Delta^\mathcal{I} &= \left\{ a \mid a:C \in \mathcal{A}' \right\}\\
+		a^\mathcal{I} &= a \text{ for each individual name $a$ occurring in $\mathcal{A}'$} \\
+	A^\mathcal{I} &= \left\{ a \mid A \in \func{con}_{\mathcal{A}'}(a) \right\} \text{ for each concept name } A \in \func{sub}(\mathcal{A'}) \\
+	r^\mathcal{I} &= \left\{ (a,b) \mid (a,b):r \in \mathcal{A}' \right\} \text{ for each role $r$ occurring in $\mathcal{A}'$}
+	\end{align*}
+	Since the expansion roles never delete assertions, we have $\mathcal{A} \subset \mathcal{A}'$, so $\mathcal{I}$ is also a model of $\mathcal{A}$.
+	It remains to show that $\mathcal{I}$ is indeed a model of $\mathcal{A}'$.
+	\begin{itemize}
+		\item role assertions: For every $(a,b) : r \in \mathcal{A}'$ we have $(a^\mathcal{I},b^\mathcal{I}) = (a,b) \in r^\mathcal{I}$ by the definition of $\mathcal{I}$.
+		\item concept assertions: For all $a : C \in \mathcal{A}'$ we show that $a^\mathcal{I} = a \in C^\mathcal{I}$ by induction on the structure of $C$.
+	\end{itemize}
+\end{proof}
