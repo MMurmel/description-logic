@@ -113,13 +113,37 @@ Furthermore, we define the set of concepts occurring in a concept assertion as f
 	\begin{align*}
 		\Delta^\mathcal{I} &= \left\{ a \mid a:C \in \mathcal{A}' \right\}\\
 		a^\mathcal{I} &= a \text{ for each individual name $a$ occurring in $\mathcal{A}'$} \\
-	A^\mathcal{I} &= \left\{ a \mid A \in \func{con}_{\mathcal{A}'}(a) \right\} \text{ for each concept name } A \in \func{sub}(\mathcal{A'}) \\
-	r^\mathcal{I} &= \left\{ (a,b) \mid (a,b):r \in \mathcal{A}' \right\} \text{ for each role $r$ occurring in $\mathcal{A}'$}
+		A^\mathcal{I} &= \left\{ a \mid A \in \func{con}_{\mathcal{A}'}(a) \right\} \text{ for each concept name } A \in \func{sub}(\mathcal{A'}) \\
+		r^\mathcal{I} &= \left\{ (a,b) \mid (a,b):r \in \mathcal{A}' \right\} \text{ for each role $r$ occurring in $\mathcal{A}'$}
 	\end{align*}
-	Since the expansion roles never delete assertions, we have $\mathcal{A} \subset \mathcal{A}'$, so $\mathcal{I}$ is also a model of $\mathcal{A}$.
+	Since the expansion roles never delete assertions, we have $\mathcal{A} \subseteq \mathcal{A}'$, so $\mathcal{I}$ is also a model of $\mathcal{A}$.
 	It remains to show that $\mathcal{I}$ is indeed a model of $\mathcal{A}'$.
 	\begin{itemize}
 		\item role assertions: For every $(a,b) : r \in \mathcal{A}'$ we have $(a^\mathcal{I},b^\mathcal{I}) = (a,b) \in r^\mathcal{I}$ by the definition of $\mathcal{I}$.
-		\item concept assertions: For all $a : C \in \mathcal{A}'$ we show that $a^\mathcal{I} = a \in C^\mathcal{I}$ by induction on the structure of $C$.
+		\item concept assertions: For all $a : C \in \mathcal{A}'$ we show that $a^\mathcal{I} = a \in C^\mathcal{I}$ by induction on the structure of $C$:
+		% proof in video of lecture 10, but fits here
+			Induction basis: $C$ is a concept name.
+			By definition of $\mathcal{I}$, if $a : C \in \mathcal{A}'$, then $a = a^\mathcal{I} \in C^\mathcal{I}$.
+
+			Induction step: For every constructor:
+			\begin{itemize}
+				\item $C = \neg D$ : Since $\mathcal{A}'$ is clash free, $a : \neg D \in \mathcal{A}'$ implies that $a : D \notin \mathcal{A}'$.
+					Since all concepts in $\mathcal{A}$ are in NNF, $D$ must be a concept name.
+					By definition of $\mathcal{I}$, $a^\mathcal{I} \notin D^\mathcal{I}$,
+					which implies $a^\mathcal{I} = a \in \Delta^\mathcal{I} \setminus D^\mathcal{I} = (\neg D)^\mathcal{I} = C^\mathcal{I}$.
+				\item $C = D \sqcup E$ : If $a : D \sqcup E \in \mathcal{A}'$, then completeness of $\mathcal{A}'$ implies that
+					$\left\{ a:D, a:E \right\} \cap \mathcal{A}' \neq \emptyset$, since otherwise the $\sqcup$-rule would be applicable.
+					By induction, this implies that $a^\mathcal{I} \in D^\mathcal{I}$ or $a^\mathcal{I} \in E^\mathcal{I}$.
+					In both cases $a^\mathcal{I} \in C^\mathcal{I} \cup E^\mathcal{I} = (D \sqcup E)^\mathcal{I} = C^\mathcal{I}$.
+				\item $C = D \sqcap E$: can be treated similarly.
+				\item $C = \forall r.D$ : Let $a : \forall r.D \in \mathcal{A}'$.
+					To show that $a^\mathcal{I} \in (\forall r.D)^\mathcal{I}$, we consider $b^\mathcal{I}$ such that $(a^\mathcal{I}, b^\mathcal{I}) \in r^\mathcal{I}$.
+					We must show that $b^\mathcal{I} \in D^\mathcal{I}$.
+					Now $(a^\mathcal{I}, b^\mathcal{I}) \in r^\mathcal{I}$ implies $(a,b) : r \in \mathcal{A}'$.
+					Since $\mathcal{A}'$ is complete, the $\forall$-rule is not applicable, which implies $b : D \in \mathcal{A}'$.
+					Induction yields $b^\mathcal{I} \in D^\mathcal{I}$, which shows $a^\mathcal{I} \in (\forall r.D)^\mathcal{I} = C^\mathcal{I}$.
+				\item $C = \exists r.D$: can be treated similarly.
+					\qedhere
+			\end{itemize}
 	\end{itemize}
 \end{proof}

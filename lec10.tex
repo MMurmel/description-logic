@@ -1,0 +1,84 @@
+\lecture{10}{18.05.2021}{}
+\begin{lemma}
+	If $\mathcal{A}$ is consistent, then $\func{consistent}(\mathcal{A})$ returns "consistent".
+\end{lemma}
+\begin{proof}
+	Let $\mathcal{A}$ be consistent and consider a model $\mathcal{I} = (\Delta^\mathcal{I}, \cdot^\mathcal{I})$ of $\mathcal{A}$.
+	Since $\mathcal{A}$ is consistent, it cannot contain a clash.
+	Thus, if $\mathcal{A}$ is complete, then $\func{expand}(\mathcal{A})$ simply returns $\mathcal{A}$ and $\func{consistent}(\mathcal{A})$ returns "consistent".
+	If $\mathcal{A}$ is not complete, then $\func{expand}$ calls itself recursively until $\mathcal{A}$ is complete;
+	each call selects a rule and applies it.
+	It is thus sufficient to show that rule application preserves consistency.
+	\begin{itemize}
+		\item The $\sqcup$-rule: If $a : C \sqcup D \in \mathcal{A}$, then $a^\mathcal{I} \in (C \sqcup D)^\mathcal{I} = C^\mathcal{I} \cup D^\mathcal{I}$,
+			i.e.\ $a^\mathcal{I} \in C^\mathcal{I}$ or $a^\mathcal{I} \in D^\mathcal{I}$.
+
+			Therefore, at least one of the ABoxes $\mathcal{A}' \in \func{exp}(\mathcal{A}, \sqcup \text{-rule}, a:C \sqcup D)$ is consistent.
+			Thus, one of the calls of $\func{expand}$ is applied to a consistent ABox.
+		\item The $\sqcap$-rule: If $a : C \sqcap D \in \mathcal{A}$, then $a^\mathcal{I} \in (C \sqcap D)^\mathcal{I} = C^\mathcal{I} \cap D^\mathcal{I}$ 
+			and thus $a^\mathcal{I} \in C^\mathcal{I}$ and $a^\mathcal{I} \in D^\mathcal{I}$.
+			Thus, $\mathcal{I}$ is still a model of $\mathcal{A} \cup \left\{ a:C, a:D \right\}$, so the ABox is still consistent after application of the $\sqcap$-rule.
+		\item The $\exists$-rule: If $a : \exists r.C \in \mathcal{A}$, then $a^\mathcal{I} \in (\exists r.C)^\mathcal{I}$.
+			Thus, there is $x \in \Delta^\mathcal{I}$ such that $(a^\mathcal{I}, x) \in r^\mathcal{I}$ and $x \in C^\mathcal{I}$.
+			Application of the $\exists$-rule to $a : \exists r.C$ yields a new individual $d$ such that $(a,d) \in r^\mathcal{I}$ and $d : C$ are added to the ABox.
+			If we modify  $\mathcal{I}$ such that $d^\mathcal{I} \coloneqq x$, then $\mathcal{I}$ is still a model of the extended ABox.
+			Thus, this ABox is still consistent.
+		\item The $\forall$-rule: If $a : \forall r.C \in \mathcal{A}$ and $(a,b):r \in \mathcal{A}$, then $a^\mathcal{I} in (\forall r.C)^\mathcal{I}$ and $(a^\mathcal{I}, b^\mathcal{I) \in r^\mathcal{I}}$,
+			which implies $b^\mathcal{I} \in C^\mathcal{I}$.
+			Thus, the ABox $\mathcal{A} \cup \left\{ b:C \right\}$ obtained by applying the $\forall$-rule still has $\mathcal{I}$ as a model,
+			and thus is consistent.
+			\qedhere
+	\end{itemize}
+\end{proof}
+
+\begin{theorem}
+	The tableau algorithm is a decision procedure for the consistency of  $\mathcal{ALC}$-ABoxes.
+\end{theorem}
+We will see in Chapter 5 that the complexity of the $\mathcal{ALC}$-ABox consistency problem is \textsc{PSPACE}-complete.
+However, the algorithm presented here needs exponential time and space.
+It could be modified such that it uses only polynomial space, but we will not do this here in detail.
+For a general idea see the lecture slides.
+
+\subsubsection{Tableau algorithm w.r.t.\ acyclic TBoxes}
+We will now look briefly at a tableau algorithm w.r.t.\ acyclic TBoxes.
+Like we have already seen, this is not necessary to obtain a valid decision procedure,
+because consistency of ABoxes w.r.t.\ acyclic TBoxes can be reduced to consistency of ABoxes without TBoxes by expansion.
+However, this expansion w.r.t.\ to an acyclic TBox may result in an exponential blow-up, rendering it useless for efficient computation.
+To solve this, we will only do this expanding/unfolding as needed, a technique called \textit{lazy unfolding}.
+\begin{mdframed}[frametitle= The $ \equiv_1$-rule]
+	Condition: $a : A \in \mathcal{A}, A  \equiv C \in \mathcal{T}$ and $a:C \notin \mathcal{I}$ \\
+	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a:C \right\}$
+\end{mdframed}
+\begin{mdframed}[frametitle= The $ \equiv_2$-rule, nobreak = true]
+	Condition: $a : \neg A \in \mathcal{A}, A \equiv C \in \mathcal{T}$ and $a : \dot{\neg} C \notin \mathcal{A}$ \\
+	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a: \dot{\neg}C \right\}$
+\end{mdframed}
+In the $\equiv_2$-rule, $\dot{\neg}C$ means the NNF of $\neg C$.
+Termination, soundness and completeness for the hereby extended algorithm can be shown similarly to the case without TBox (Exercise).
+Furthermore, this algorithm can be written to run in polynomial space (without proof).
+
+\subsubsection{Tableau algorithm w.r.t.\ general TBoxes}
+To realize a tableau algorithm w.r.t.\ general TBoxes we will first need some preprocessing.
+We will also normalize the TBox:
+\begin{itemize}
+	\item transform al GCIs in $\mathcal{T}$ to the form $\top \sqsubseteq E$.
+		This transformation is justified, by the following statement:
+		\[
+		\mathcal{I} \text{ satisfies } C \sqsubseteq D \iff \mathcal{I} \text{ satisfies } \top \sqsubseteq D \sqcup \neg C
+		.\]
+	\item transform the right-hand sides $E$ of GCIs $\top \sqsubseteq E$ into NNF
+\end{itemize}
+In the following, we assume that the input TBox $\mathcal{T}$ is normalized in this way.
+
+We add a new expansion rule:
+\begin{mdframed}[frametitle= The $\sqsubseteq$-rule, nobreak = true]
+	Condition: $a : C \in \mathcal{A}, \top \sqsubseteq D \in \mathcal{T}, a : D \notin \mathcal{A}$ \\
+	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a: D \right\}$
+\end{mdframed}
+\begin{note}
+	Since the input ABox is normalized, all individuals do occur in concept assertions (and not just in role assertions).
+\end{note}
+
+Soundness and completeness of the tableau algorithm extended with this rule is relatively easy to show,
+however, this rule may even destroy termination,
+e.g.\ with input $(\left\{ A \sqsubseteq \exists r.A \right\}, \left\{ a :A \right\})$, it could just create an infinite chain of individuals $a_i$ belonging to  $A$.
