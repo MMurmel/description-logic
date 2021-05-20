@@ -18,7 +18,7 @@ Before we can introduce the whole algorithm, we must introduce the procedure \te
 	We now define the algorithm used for actual reasoning (with deterministic machines):
 	\begin{algorithm}[H]
 		\caption{consistent($\mathcal{A}$)}
-		\label{alg:consistent}
+		\label{alg:abox consistent}
 		\begin{algorithmic}[1]
 			\Require a normalized $\mathcal{ALC}$-ABox $\mathcal{A}$
 		\If{$\func{expand}(\mathcal{A}) \neq \emptyset$}
@@ -31,13 +31,13 @@ Before we can introduce the whole algorithm, we must introduce the procedure \te
 	The subroutine $\func{expand}(\mathcal{A})$ makes use of the procedure \texttt{exp} discussed earlier:
 	\begin{algorithm}[H]
 		\caption{expand($\mathcal{A}$)}
-		\label{alg:expand}
+		\label{alg:abox expand}
 		\begin{algorithmic}[1]
 			\Require a normalized $\mathcal{ALC}$-ABox $\mathcal{A}$ 
 			\If{$\mathcal{A}$ is not complete}
 				\State select a rule $R$ that is applicable to $\mathcal{A}$ and an assertion or 
 				\State a pair of assertions $\alpha$ in $\mathcal{A}$ to which $R$ is applicable
-				\If{$\exists \mathcal{A}' \in \func{\texttt{exp}}(\mathcal{A},R,\alpha)$ with $\func{expand}(\mathcal{A}') \neq \emptyset$}
+				\If{there is $\mathcal{A}' \in \func{\texttt{exp}}(\mathcal{A},R,\alpha)$ with $\func{expand}(\mathcal{A}') \neq \emptyset$}
 					\State \textbf{return} $\func{expand}(\mathcal{A}')$
 				\Else
 						\State \textbf{return} $\emptyset$
@@ -52,6 +52,9 @@ Before we can introduce the whole algorithm, we must introduce the procedure \te
 		\end{algorithmic}
 	\end{algorithm}
 \end{definition}
+
+%TODO Make terminology for forests and trees
+
 To show that this decision procedure is correct, we will need to show:
 \begin{enumerate}
 	\item Termination
@@ -80,7 +83,7 @@ Furthermore, we define the set of concepts occurring in a concept assertion as f
 	.\]
 \end{lemma}
 
-\begin{lemma}[Termination]
+\begin{lemma}[Termination]\label{lem:abox termination}
 	For each normalized $\mathcal{ALC}$-ABox $\mathcal{A}$, $\func{consistent}(\mathcal{A})$ terminates.
 \end{lemma}
 \begin{proof}
