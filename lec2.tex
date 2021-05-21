@@ -28,7 +28,25 @@ Then $\left( \exists r.C \right)^{\mathcal{I}}$ are these nodes, that have a $r$
 Similarly $\left( \forall r.C \right)^{\mathcal{I}}$ are the nodes in $\Delta^{\mathcal{I}}$, whose $r$-successors are all in $C$
 or which don't have any $r$-successors at all.
 
-% TODO make graph as example
+\begin{example}
+	Consider the following interpretation $\mathcal{I}$:
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\node[default, label= left: $A$] (d) {$d$};
+			\node[default, right of = d] (g) {$g$};
+			\node[default, label= above: $A$, above of = g] (e) {$e$};
+			\node[default, label= above: {$A, B$}, right of = e] (f) {$f$};
+			\draw (d) edge[above] node{$r$} (e);
+			\draw (g) edge[above] node{$s$} (d);
+			\draw (e) edge[right] node{$r$} (g);
+			\draw (e) edge[above] node{$s$} (f);
+			\draw (g) edge[loop right, right] node{$s$} (g);
+		\end{tikzpicture}
+	\end{figure}
+	For example: $(\forall r.A)^\mathcal{I} = \left\{ d, f \right\} \subseteq \Delta^\mathcal{I} = \left\{ d,e,f,g \right\}$
+	and $(\exists r.B)^\mathcal{I} = \emptyset$.
+\end{example}
 
 \subsection{Relationship with FOL}
 We will now show, that $\mathcal{ALC}$ really is just a fragment of FOL.
