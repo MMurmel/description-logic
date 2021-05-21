@@ -72,10 +72,11 @@ In the following, we assume that the input TBox $\mathcal{T}$ is normalized in t
 
 We add a new expansion rule:
 \begin{mdframed}[frametitle= The $\sqsubseteq$-rule, nobreak = true]
-	Condition: $a : C \in \mathcal{A}, \top \sqsubseteq D \in \mathcal{T}, a : D \notin \mathcal{A}$ \\
+	Condition: $a : C \in \mathcal{A}, \top \sqsubseteq D \in \mathcal{T}, a : D \notin \mathcal{A}$\\
 	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a: D \right\}$
 \end{mdframed}
 \begin{note}
+	This rule ensures, that all individuals $a$ are explicitly stated as belonging to the right hand sides of $\top \sqsubseteq D$.
 	Since the input ABox is normalized, all individuals do occur in concept assertions (and not just in role assertions).
 \end{note}
 

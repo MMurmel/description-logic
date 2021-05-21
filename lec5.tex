@@ -51,7 +51,7 @@ We claim, that $\exists r^+.C$ cannot be expressed in $\mathcal{ALC}$.
 \begin{proof}
 	Assume that there is an $\mathcal{ALC}$ concept $D$ such that $D \equiv \exists r^+.C$.
 	Consider the ABox $\mathcal{A} = \left\{ a:D \right\}$.
-	Let $ \mathcal{B} = \left\{ a : \forall r.\neg C, a: \forall r.\forall r.\neg C, \forall r.\forall r.\forall r.\neg C,\ldots \right\}$.
+	Let $ \mathcal{B} = \left\{ a : \forall r.\neg C, a: \forall r.\forall r.\neg C, a:\forall r.\forall r.\forall r.\neg C,\ldots \right\}$.
 	Then $\mathcal{A} \cup \mathcal{B}$ is inconsistent.
 	Since $\mathcal{A} \cup \mathcal{B}$ can be translated to FOL, compactness applies, i.e.,
 	there is a finite subset $\mathcal{C} \subseteq \mathcal{A} \cup \mathcal{B}$ such that $\mathcal{C}$ is inconsistent.
