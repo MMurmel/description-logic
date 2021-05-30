@@ -46,7 +46,7 @@ because consistency of ABoxes w.r.t.\ acyclic TBoxes can be reduced to consisten
 However, this expansion w.r.t.\ to an acyclic TBox may result in an exponential blow-up, rendering it useless for efficient computation.
 To solve this, we will only do this expanding/unfolding as needed, a technique called \textit{lazy unfolding}.
 \begin{mdframed}[frametitle= The $ \equiv_1$-rule]
-	Condition: $a : A \in \mathcal{A}, A  \equiv C \in \mathcal{T}$ and $a:C \notin \mathcal{I}$ \\
+	Condition: $a : A \in \mathcal{A}, A  \equiv C \in \mathcal{T}$ and $a:C \notin \mathcal{A}$ \\
 	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a:C \right\}$
 \end{mdframed}
 \begin{mdframed}[frametitle= The $ \equiv_2$-rule, nobreak = true]
