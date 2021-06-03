@@ -99,22 +99,22 @@ To show that this decision procedure is correct, we will again need to show:
 	Let $\mathcal{A}'$ be the set returned by $\func{expand}(\mathcal{K})$.
 	We use $\mathcal{A}'$ to construct a suitable model $\mathcal{I} = (\Delta^\mathcal{I}, \cdot^\mathcal{I})$
 	of $\mathcal{K}$ in two steps:
-	\begin{enumerate}
-		\item Construct a new Abos $\mathcal{A}''$ that contains
+	\begin{enumerate}[label=(\roman*)]
+		\item Construct a new ABox $\mathcal{A}''$ that contains
 			\begin{itemize}
 				\item those axioms in $\mathcal{A}'$ that do not involve blocked individual names
 				\item new "loop-back" role assertions
 			\end{itemize}
 		\item Use $\mathcal{A}''$ to construct a model of $\mathcal{K}$.
 	\end{enumerate}
-	1. We start by constructing $\mathcal{A}''$:
+	(i) We start by constructing $\mathcal{A}''$:
 	\begin{align*}
 		\mathcal{A}'' = &\left\{ a:C \mid a:C \in \mathcal{A}' \text{ and $a$ is not blocked} \right\} \cup \\
 						&\left\{ (a,b):r \mid (a,b):r \in \mathcal{A}' \text{ and $b$ is not blocked} \right\} \cup \\
 						&\left\{ (a,b'):r \mid (a,b):r \in \mathcal{A}', \text{ $a$ is not blocked and $b$ is blocked by  $b'$} \right\}
 	\end{align*}
 	Then the following hold:
-	\begin{itemize}
+	\begin{enumerate}
 		\item $\mathcal{A} \subseteq \mathcal{A}''$ and none of the individual names occurring in $\mathcal{A}''$ is blocked.
 			\begin{subproof}
 				$\mathcal{A} \subseteq \mathcal{A}''$: since $\mathcal{A} \subseteq \mathcal{A}'$ and for all assertion
@@ -132,41 +132,72 @@ To show that this decision procedure is correct, we will again need to show:
 				But then $b'$ is not blocked since it is equal to $a$ or an ancestor of $a$.
 			\end{subproof}
 
-		\item $\func{con}_{\mathcal{A}''}(a) =  \func{con}_{\mathcal{A}'}(a)$ for all individual $a$ occurring in $\mathcal{A}''$ 
+		\item $\func{con}_{\mathcal{A}''}(a) =  \func{con}_{\mathcal{A}'}(a)$ for all individual names $a$ occurring in $\mathcal{A}''$.
+			We call this property (P2).
 			\begin{subproof}
 				trivial by definition of  $\mathcal{A}''$
 			\end{subproof}
 
 		\item Since $\mathcal{A}'$ is clash-free, and complete, $\mathcal{A}''$ is also clash-free and complete.
 			\begin{subproof}
-				clash-free: trivial, since  $\mathcal{A}'$ is clash-free
+				Clash-free: trivial, since  $\mathcal{A}'$ is clash-free
 				and we have $\func{con}_{\mathcal{A}''}(a) =  \func{con}_{\mathcal{A}'}(a)$.
 
-				complete: by looking at the rules:
+				Complete: by looking at the rules:
 				\begin{itemize}
 					\item $\sqcap$-rule: if $a : C \sqcap D \in \mathcal{A}''$,
-						then $\func{con}_{\mathcal{A}''}(a) =  \func{con}_{\mathcal{A}'}(a)$ implies
-						$a : C \sqcap D \in \mathcal{A}''$.
+						then (P2) implies $a : C \sqcap D \in \mathcal{A}'$.
 						Thus, $\left\{ a:C, a:D \right\}\subseteq \mathcal{A}'$.
-						$\func{con}_{\mathcal{A}''}(a) =  \func{con}_{\mathcal{A}'}(a)$	yields $\left\{ a:C, a:D \right\}\subseteq \mathcal{A}''$,
+						(P2) yields $\left\{ a:C, a:D \right\}\subseteq \mathcal{A}''$,
 						and thus the $\sqcap$-rule is not applicable to $a:C \sqcap D$ in $\mathcal{A}''$.
 					\item Similar arguments can be used for the $\sqcup$-rule and the $\sqsubseteq$-rule.
 					\item $\exists$-rule: if $a: \exists r.C \in \mathcal{A}''$,
-						then $a : \exists r.C \in \mathcal{A}'$ by $\func{con}_{\mathcal{A}''}(a) =  \func{con}_{\mathcal{A}'}(a)$
-						and $a$ is not blocked in $\mathcal{A}'$.
-						Since $\mathcal{A}'$ is complete, we know that there is a $b$ such that
-						$\left\{ (a,b):r, b:C \right\} \subseteq \mathcal{A}'$.
+						then $a : \exists r.C \in \mathcal{A}'$ by (P2) and $a$ is not blocked in $\mathcal{A}'$.
+						Since $\mathcal{A}'$ is complete, we know that there is a $b$ such that $\left\{ (a,b):r, b:C \right\} \subseteq \mathcal{A}'$.
 						If $b$ is not blocked, then $\left\{ (a,b):r, b:C \right\} \subseteq \mathcal{A}''$.
 						But if $b$ is blocked, then since its predecessor $a$ is not blocked,
-						there is a $b' \in \mathcal{A}'$ such that $b$ is blocked by $b'$
-						and $b'$ is not blocked.
+						there is a $b' \in \mathcal{A}'$ such that $b$ is blocked by $b'$ and $b'$ is not blocked.
 						Hence, $(a,b'):r \in \mathcal{A}''$.
-						Since $\func{con}_{\mathcal{A}'}(b) =  \func{con}_{\mathcal{A}'}(b')$ we have
-						$b':C \in \mathcal{A}'$, and by $\func{con}_{\mathcal{A}''}(a) =  \func{con}_{\mathcal{A}'}(a)$ we get
-						$b':C \in \mathcal{A}''$.
+						Since $\func{con}_{\mathcal{A}'}(b) =  \func{con}_{\mathcal{A}'}(b')$ we have $b':C \in \mathcal{A}'$, and by (P2) we get $b':C \in \mathcal{A}''$.
 						Thus, the $\exists$-rule is not applicable to $a: \exists r.C$.
+					%lecture 12
+					\item $\forall$-rule: if $\left\{ a: \forall r.C, \left( a,b' \right) :r \right\} \subseteq \mathcal{A}''$,
+						then $a : \forall r.C \in \mathcal{A}'$ (shown before) and
+						neither $a$ nor $b'$ are blocked in $\mathcal{A}'$.
+						We distinguish two cases:
+						\begin{itemize}
+							\item If $\left( a,b' \right):r \in \mathcal{A}'$, then $b':C \in \mathcal{A}'$ since $\mathcal{A'}$ is complete.
+								Thus (P2) yields $b' :C \in \mathcal{A}''$.
+							\item if $\left( a,b' \right):r \notin \mathcal{A}'$, then there is $b$ such that
+								$\left( a,b \right):r \in \mathcal{A}'$, with $b$ blocked by $b'$,
+								and $b:C \in \mathcal{A}'$ (since $\mathcal{A}'$ is complete).
+								Then the definition of blocking implies $b':C \in \mathcal{A}'$ (since $b'$ blocks b).
+								Thus, (P2) yields $b':C \in \mathcal{A}''$.
+						\end{itemize}
+						In both cases the $\forall$-rule is not applicable to in $\mathcal{A}''$.
 						\qedhere
 				\end{itemize}
 			\end{subproof}
+	\end{enumerate}
+	(ii) We use $\mathcal{A}''$ to construct a model of $\mathcal{K}$:
+	\begin{itemize}
+		\item $\Delta^\mathcal{I} = \left\{ a \mid a \text{ is an individual name occurring in $\mathcal{A}''$} \right\}$
+			\item $a^\mathcal{I} = a$ for each individual name $a$ occurring in $\mathcal{A}''$ 
+			\item $A^\mathcal{I} = \left\{ a \mid A \in \func{con}_{\mathcal{A}''}(a) \right\}$ for each concept name $A$ occurring in $\mathcal{A}''$ 
+			\item $r^\mathcal{I} = \left\{ (a,b) \mid (a,b):r \in \mathcal{A}'' \right\}$ for each role $r$ occurring in $\mathcal{A}''$.
 	\end{itemize}
+	\begin{subproof}
+		$\mathcal{I}$ is a model of $\mathcal{A}''$: This can be shown as in the proof for Lemma \ref{lem:4.5}.
+		In particular, we can show that $a : C \in \mathcal{A}''$ implies $a^\mathcal{I} \in C^\mathcal{I}$
+		since $\mathcal{A}''$ is complete and clash-free.
+		Role assertions are trivially satisfied.
+
+		$\mathcal{I}$ is a model of $\mathcal{T}$ : We must show that the GCIs in $\mathcal{T}$ are satisfied by $\mathcal{I}$.
+		For each GCI $\top \sqsubseteq D \in \mathcal{T}$ and
+		each individual name $a$ occurring in $\mathcal{A}''$ we must show that $a^\mathcal{I}=a \in D^\mathcal{I}$.
+		Since $\mathcal{A}''$ is complete, we know that $a:D \in \mathcal{A}''$
+		(since otherwise the $\sqsubseteq$-rule would be applicable).
+		Thus, we have $a^\mathcal{I} \in D^\mathcal{I}$ as argued above.
+		\qedhere
+	\end{subproof}
 \end{proof}

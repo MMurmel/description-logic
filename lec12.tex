@@ -1,0 +1,94 @@
+\lecture{12}{01.06.2021}{}
+\begin{lemma}[Completeness]
+	If $ \mathcal{K}$ is consistent, then $\func{consistent}(\mathcal{K})$ returns "consistent".
+\end{lemma}
+\begin{proof}
+	It only remains to show that the $\sqsubseteq$-rule preserves KB consistency.
+	If $a :C \in \mathcal{A}$ and $\top \sqsubseteq D \in T$,
+	then the $\sqsubseteq$-rule adds $a:D$.
+	If $\mathcal{I}$ is a model of $\mathcal{A}$ and $\mathcal{T}$, then
+	$a^\mathcal{I} \in \top^\mathcal{I}=\Delta^\mathcal{I}$ implies that $a^\mathcal{I} \in D^\mathcal{I}$ 
+	since $\mathcal{I}$ satisfies $\top \sqsubseteq D$.
+	Thus, $\mathcal{I}$ is also a model of the extended ABox.
+\end{proof}
+
+\begin{theorem}
+	The tableau algorithm is a decision procedure for the consistency of $\mathcal{ALC}$ knowledge bases.
+\end{theorem}
+
+\subsubsection{Tableau algorithm w.r.t.\ additional constructors}
+One can also extend the tableau algorithm to deal with further constructors e.g.\ number restrictions as shown in the following.
+Of course any concept description must also be transformed into NNF:
+\begin{itemize}
+	\item $\neg \left( \geq n+1 r \right) \to ( \leq n r)$ 
+	\item $\neg \left( \geq 0 r \right) \to \bot$
+	\item $\neg \left( \leq n r \right) \to \left( \geq n + 1 r \right)$
+\end{itemize}
+And we will need to extend the algorithm by:
+\begin{itemize}
+	\item new rules: $ \geq$-rule and $ \leq$-rule
+	\item new assertions: $x=y, x \neq y$ with the obvious semantics $x^\mathcal{I} = y^\mathcal{I}$ and $x^\mathcal{I} \neq y^\mathcal{I}$.
+		These assertion are viewed as symmetric, because we do not want to distinguish $x = y$ and $y = x$.
+	 \item a new clash
+\end{itemize}
+
+\begin{mdframed}[frametitle= The $ \geq$-rule]
+	Condition: $\mathcal{A}$ contains $a:( \geq nr)$, but there are no distinct
+	$b_1, \ldots, b_n$ with $\left\{ (a,b_1):r, \ldots, (a,b_n):r \right\} \subseteq \mathcal{A}$
+
+	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ (a,d_1):r, \ldots, (a,d_n):r \right\} \cup \left\{ d_i \neq d_j \mid 1 \leq i < j \leq n \right\}$
+	where $d_1, \ldots, d_n$ are new individual names.
+\end{mdframed}
+\begin{mdframed}[frametitle= The $ \leq$-rule, nobreak = true]
+	Condition: $\mathcal{A}$ contains $a:( \leq nr)$, and there are distinct
+	$b_0, \ldots, b_n$ with $\left\{ (a,b_0):r, \ldots, (a,b_n):r \right\} \subseteq \mathcal{A}$
+
+	Action: $\mathcal{A} \leftarrow \mathcal{A}[b_j \mapsto b_i] \cup \left\{ b_i = b_j \right\}$
+	for $i \neq j$ such that, if $b_j$ is a root individual, then so is $b_i$.
+	$\mathcal{A}[b_j \mapsto b_i]$ means every occurrence of $b_j$ is replaced by $b_i$ in $\mathcal{A}$.
+\end{mdframed}
+\begin{note}
+	While the $ \geq$-rule is deterministic, the $ \leq$-rule is again a non-deterministic rule.
+\end{note}
+\begin{mdframed}[frametitle= The new clash]
+An ABox $\mathcal{A}$ contains a clash if
+\[
+\left\{ a:C, a: \neg C \right\} \subseteq \mathcal{A} \text{ or } \left\{ a \neq a \right\} \subseteq \mathcal{A}
+\]
+for some individual name $a$, and for some concept $C$.
+\end{mdframed}
+
+However, the algorithm introduced by this does not necessarily terminate.
+E.g.\ the following ABox causes a problem and is known as the \textit{yo-yo example}:
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default, label= right: {$P, ( \leq 1r),$},label= below right: {$ \exists r.P, \forall r.\exists r.P$}] (a) {$a$};
+				\node[default, label= right: {$P$}, below of = a] (y) {$y$};
+				\draw (a) edge[left] node{$r$} (y);
+				\draw (a) edge[loop above, above] node{$r$} (a);
+			\end{tikzpicture}
+			\caption{Starting ABox}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[t]{.475\textwidth}
+			\centering
+			\begin{tikzpicture}
+				\node[default, label= right: {$P, ( \leq 1r),$},label= below right: {$ \exists r.P, \forall r.\exists r.P$}] (a) {$a$};
+				\node[default, label= right: {$P, \exists r.P$}, below of = a] (y) {$y$};
+				\node[default, label= left: $P$, left of = y] (z) {$z$};
+				\draw (a) edge[left] node{$r$} (y);
+				\draw (a) edge[loop above, above] node{$r$} (a);
+				\draw (y) edge[above] node{$r$} (z);
+			\end{tikzpicture}
+			\caption{The ABox after the application of the $\forall$-rule and $\exists$-rule.}
+		\end{subfigure}
+		\caption{From the ABox shown in (b), the $ \leq$-rule is applicable and yields the ABox on the left
+		(with the only difference that the lower node is now named $z$).}
+		This forms a cycle, showing non-termination of the algorithm.
+	\end{figure}
+
+Furthermore, while our standard notion of blocking would be a solution in this example,
+that does not hold in general, as shown in the lecture.
