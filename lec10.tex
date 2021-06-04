@@ -23,7 +23,7 @@
 			Application of the $\exists$-rule to $a : \exists r.C$ yields a new individual $d$ such that $(a,d) \in r^\mathcal{I}$ and $d : C$ are added to the ABox.
 			If we modify  $\mathcal{I}$ such that $d^\mathcal{I} \coloneqq x$, then $\mathcal{I}$ is still a model of the extended ABox.
 			Thus, this ABox is still consistent.
-		\item The $\forall$-rule: If $a : \forall r.C \in \mathcal{A}$ and $(a,b):r \in \mathcal{A}$, then $a^\mathcal{I} in (\forall r.C)^\mathcal{I}$ and $(a^\mathcal{I}, b^\mathcal{I) \in r^\mathcal{I}}$,
+	\item The $\forall$-rule: If $a : \forall r.C \in \mathcal{A}$ and $(a,b):r \in \mathcal{A}$, then $a^\mathcal{I} \in (\forall r.C)^\mathcal{I}$ and $(a^\mathcal{I}, b^\mathcal{I}) \in r^\mathcal{I}$,
 			which implies $b^\mathcal{I} \in C^\mathcal{I}$.
 			Thus, the ABox $\mathcal{A} \cup \left\{ b:C \right\}$ obtained by applying the $\forall$-rule still has $\mathcal{I}$ as a model,
 			and thus is consistent.
@@ -39,7 +39,8 @@ However, the algorithm presented here needs exponential time and space.
 It could be modified such that it uses only polynomial space, but we will not do this here in detail.
 For a general idea see the lecture slides.
 
-\subsubsection{Tableau algorithm w.r.t.\ acyclic TBoxes}
+\newpage
+\section{Tableau algorithm w.r.t.\ acyclic TBoxes}
 We will now look briefly at a tableau algorithm w.r.t.\ acyclic TBoxes.
 Like we have already seen, this is not necessary to obtain a valid decision procedure,
 because consistency of ABoxes w.r.t.\ acyclic TBoxes can be reduced to consistency of ABoxes without TBoxes by expansion.
@@ -57,8 +58,9 @@ In the $\equiv_2$-rule, $\dot{\neg}C$ means the NNF of $\neg C$.
 Termination, soundness and completeness for the hereby extended algorithm can be shown similarly to the case without TBox (Exercise).
 Furthermore, this algorithm can be written to run in polynomial space (without proof).
 
-\subsubsection{Tableau algorithm w.r.t.\ general TBoxes}
-To realize a tableau algorithm w.r.t.\ general TBoxes we will first need some preprocessing.
+\newpage
+\section{Tableau algorithm w.r.t.\ K-Bases}
+To realize a tableau algorithm w.r.t.\ general TBoxes (and hence K-Bases) we will first need some preprocessing.
 We will also normalize the TBox:
 \begin{itemize}
 	\item transform al GCIs in $\mathcal{T}$ to the form $\top \sqsubseteq E$.

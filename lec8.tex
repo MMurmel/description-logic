@@ -4,7 +4,7 @@
 	\[
 		p \in A^{\mathcal{J}} \iff \func{end}(p) \in A^{\mathcal{I}}
 	.\]
-	Thus condition (i) in definition \ref{def:bisimulation} is satisfied.
+	Thus, condition (i) in definition \ref{def:bisimulation} is satisfied.
 
 	To show that condition (ii) of definition \ref{def:bisimulation} is satisfied, 
 	we assume $(p,e) \in \rho$ and $(p,p') \in r^\mathcal{J}$.
@@ -83,6 +83,7 @@ Since we showed, that $\mathcal{ALC}$ has the finite model property, a naive alg
 and evaluate them. This is a correct decision algorithm for satisfiability
 and therefore also for satisfiability w.r.t.\ a (acyclic) TBox, subsumption and equivalence of concepts and TBox consistency.
 
+\section{Tableau algorithm w.r.t.\ ABoxes}
 We now start by looking at an algorithm for deciding consistency of an ABox (without a TBox), since this covers most of the inference problems discussed in chapter 2.
 The so called "tableau-based consistency algorithm" tries to generate a finite model for the input ABox $\mathcal{A}_0$ by:
 \begin{itemize}
@@ -91,7 +92,7 @@ The so called "tableau-based consistency algorithm" tries to generate a finite m
 \end{itemize}
 If an ABox is complete (no rule applies) and clash-free (no obvious contradictions), it describes a model.
 
-\begin{mdframed}[frametitle= Description of the tableau algorithm]
+\begin{mdframed}[frametitle= Description of the tableau algorithm, nobreak=true]
 Input: an $\mathcal{ALC}$-ABox $\mathcal{A}_0$ \\
 Output: "yes" if $\mathcal{A}_0$ is consistent, "no" otherwise
 
@@ -131,6 +132,14 @@ The algorithm then applies the expansion rules:
 		Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ b:C\right\} $
 	\end{mdframed}
 \end{mdframed}
+\begin{note}
+	The expansion rules mimic the semantic of the respective constructor
+	and try to only introduce new assertions if strictly necessary.
+	This implies that the $\sqcup$-rule is non-deterministic.
+	When running the algorithm, this can lead to a branching in the search tree of ABoxes
+	and therefore a nondeterministic algorithm.
+	It returns "consistent" iff at least one of the complete ABoxes (the trees of the search tree) is clash-free.
+\end{note}
 
 It now remains to formally define the "obvious contradictions":
 \begin{definition}[Complete and clash-free ABox]

@@ -8,6 +8,7 @@
 	\end{itemize}
 \end{lemma}
 
+\subsection{$S$-type and $S$-filtration}
 Furthermore, we need the notion of a so called \textit{$S$-type}.
 This will enable us to define an interesting equivalence relation, that is useful in proving the finite model property of $\mathcal{ALC}$.
 \begin{definition}[$S$-type]
@@ -103,6 +104,7 @@ Unfortunately, this proof is not enough to immediately show the finite model pro
 Although one might think that what was shown here is very similar to the bisimulation invariance shown earlier,
 it is however not sufficient in this case.
 
+\subsection{bounded model property}
 The following proposition shows that $\mathcal{ALC}$ satisfies a property that is even stronger than the finite model property.
 \begin{theorem}[bounded model property]
 	Let $\mathcal{T}$ be an $\mathcal{ALC}$-TBox, $C$ an $\mathcal{ALC}$-concept description, and $n = \func{size}(\mathcal{T}) + \func{size}(C)$.
@@ -217,14 +219,11 @@ i.e.\ whenever a model is satisfiable it has a model, whose graph is a tree.
 \begin{definition}[Tree model]\label{def:tree model}
 	Let $\mathcal{T}$ be a TBox and $C$ be a concept description.
 	The interpretation $\mathcal{I}$ is a tree model of $C$ w.r.t.\ $\mathcal{T}$ iff
-	\begin{itemize}
-		\item $\mathcal{I}$ is a model of $\mathcal{T}$ and
-		\item the graph 
+	$\mathcal{I}$ is a model of $\mathcal{T}$ and the graph 
 			\[
 				\mathcal{G}_{\mathcal{I}} = \left( \Delta^{\mathcal{I}}, \bigcup_{r \in \mathscr{R}} r^{\mathcal{I}} \right)
 			\]
 			is a tree whose root belongs to $C^{\mathcal{I}}$.
-	\end{itemize}
 \end{definition}
 
 Furthermore, the "unraveling" step needs to be formalized.

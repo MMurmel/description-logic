@@ -1,4 +1,4 @@
-\lecture{12}{01.06.2021}{}
+%\lecture command in lec11
 \begin{lemma}[Completeness]
 	If $ \mathcal{K}$ is consistent, then $\func{consistent}(\mathcal{K})$ returns "consistent".
 \end{lemma}
@@ -16,9 +16,10 @@
 	The tableau algorithm is a decision procedure for the consistency of $\mathcal{ALC}$ knowledge bases.
 \end{theorem}
 
-\subsubsection{Tableau algorithm w.r.t.\ additional constructors}
+\newpage
+\section{Tableau algorithm w.r.t.\ number restrictions}
 One can also extend the tableau algorithm to deal with further constructors e.g.\ number restrictions as shown in the following.
-Of course any concept description must also be transformed into NNF:
+Of course any concept description containing those must also be transformed into NNF:
 \begin{itemize}
 	\item $\neg \left( \geq n+1 r \right) \to ( \leq n r)$ 
 	\item $\neg \left( \geq 0 r \right) \to \bot$
@@ -50,6 +51,8 @@ And we will need to extend the algorithm by:
 \begin{note}
 	While the $ \geq$-rule is deterministic, the $ \leq$-rule is again a non-deterministic rule.
 \end{note}
+
+\newpage
 \begin{mdframed}[frametitle= The new clash]
 An ABox $\mathcal{A}$ contains a clash if
 \[
@@ -57,7 +60,6 @@ An ABox $\mathcal{A}$ contains a clash if
 \]
 for some individual name $a$, and for some concept $C$.
 \end{mdframed}
-
 However, the algorithm introduced by this does not necessarily terminate.
 E.g.\ the following ABox causes a problem and is known as the \textit{yo-yo example}:
 	\begin{figure}[H]

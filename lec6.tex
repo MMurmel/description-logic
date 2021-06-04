@@ -15,9 +15,11 @@
 				Then there is $d_2' \in \Delta^{\mathcal{I}_2}$ such that $\left( d_2, d_2' \right) \in r^{\mathcal{I}_2}$ and $d_1' \rho d_2'$.
 				By induction we get that $d_2' \in D^{\mathcal{I}_2}$ and therefore  $d_2 \in \left( \exists r.D \right)^{\mathcal{I}_2}$.
 			\item $C = \forall r.D$ can be treated similarly.
+			\qedhere
 	\end{itemize}
 \end{proof}
 
+\newpage
 \section{Expressive power}
 We have so far introduced extensions of $\mathcal{ALC}$ by concept constructors \textbf{number restrictions}, \textbf{nominals} and the role constructor \textbf{invers roles}.
 We will now show, that they really extend $\mathcal{ALC}$, i.e., there is no way these could be expressed by plain $\mathcal{ALC}$.
@@ -123,6 +125,7 @@ We will now show, that they really extend $\mathcal{ALC}$, i.e., there is no way
 These proofs were the result of the fact, that we defined bisimulation with $\mathcal{ALC}$ in mind.
 One could also define a notion of bisimulation under which $\mathcal{ALCN}$, $\mathcal{ALCI}$ or $\mathcal{ALCO}$ are invariant.
 
+\newpage
 \section{Closure under disjoint union}
 We will now introduce the notion of disjoint union for interpretations.
 This will enable us to combine multiple interpretations into a bigger one, containing the interpretations it was built from,
@@ -194,6 +197,7 @@ are unsatisfiable concepts (w.r.t.\ a TBox $\mathcal{T}$).
 As long as a concept is satisfiable one can find arbitrarily large interpretations for it.
 In other words: $\mathcal{ALC}$ can not express the finiteness of concepts.
 
+\newpage
 \section{Finite model property}
 \begin{definition}[Finite model]
 	The interpretation $\mathcal{I}$ is called a model of a concept $C$ w.r.t.\ a TBox $\mathcal{T}$,
