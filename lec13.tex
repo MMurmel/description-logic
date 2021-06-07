@@ -1,0 +1,200 @@
+\lecture{13}{03.06.2021}{}
+We will show how termination can be regained in the following.
+Note, that non-termination is a consequence of the facts that an individual:
+\begin{itemize}
+	\item not only obtains successors by applications of the $\exists$- and $ \geq$-rule
+	\item but may also inherit successors from individuals that are merged into it.
+\end{itemize}
+
+To avoid this problem, we remove the descendants of an individual before it is merged into another one.
+We use $\func{prune}(\mathcal{A},b_j)$ removes all descendants of $b_j$ from the ABox $\mathcal{A}$.
+\begin{mdframed}[frametitle= The $ \leq$-rule with prunning]
+	Condition: $\mathcal{A}$ contains $a:( \leq nr)$, and there are distinct
+	$b_0, \ldots, b_n$ with $\left\{ (a,b_0):r, \ldots, (a,b_n):r \right\} \subseteq \mathcal{A}$
+
+	Action: $\mathcal{A} \leftarrow \func{prune}(\mathcal{A}, b_j)[b_j \mapsto b_i] \cup \left\{ b_i = b_j \right\}$
+	for $i \neq j$ such that, if $b_j$ is a root individual, then so is $b_i$.
+\end{mdframed}
+
+The tableau algorithm for $\mathcal{ALCN}$ knowledge base consistency uses
+\begin{itemize}
+	\item the $\sqcap$-rule, the $\sqcup$-rule, the $\forall$-rule,
+	\item the modified $\exists$-rule,
+	\item the $ \geq$-rule with prunning,
+	\item the following modified $\sqsubseteq$-rule and $ \geq$-rule:
+\end{itemize}
+\begin{mdframed}[frametitle= The modified $\sqsubseteq$-rule, nobreak = true]
+	Condition: $a : C \in \mathcal{A}$ or $ (b,a):r \in \mathcal{A}, \top \sqsubseteq D \in \mathcal{T}, a : D \notin \mathcal{A}$\\
+	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ a: D \right\}$
+\end{mdframed}
+\begin{mdframed}[frametitle= The modified $ \geq$-rule, nobreak = true]
+	Condition: $\mathcal{A}$ contains $a:( \geq nr)$, but there are no distinct
+	$b_1, \ldots, b_n$ with $\left\{ (a,b_1):r, \ldots, (a,b_n):r \right\} \subseteq \mathcal{A}$,
+	and $a$ is not blocked
+
+	Action: $\mathcal{A} \leftarrow \mathcal{A} \cup \left\{ (a,d_1):r, \ldots, (a,d_n):r \right\} \cup \left\{ d_i \neq d_j \mid 1 \leq i < j \leq n \right\}$
+	where $d_1, \ldots, d_n$ are new individual names.
+\end{mdframed}
+
+To show termination for the algorithm obtained by this, we first need some auxiliary results.
+\begin{notation}
+	We write  \[
+	\mathcal{A} \to \mathcal{A}'
+	\]
+	if $\mathcal{A}'$ is obtained from $\mathcal{A}$ by application of an expansion rule.
+\end{notation}
+\begin{definition*}[Well-founded order]
+	A partial order $(M, \succ)$ is called \textit{well-founded}
+	if there is no infinite descending chain
+	\[
+		m_0 \succ m_1 \succ \ldots
+	.\]
+\end{definition*}
+\begin{example}
+	$(\N, >)$ is well-founded.
+\end{example}
+Termination obviously holds if we can find a mapping $\mu$ from ABoxes into a well founded partial order  $(M, \succ)$ such that
+\[
+	\mathcal{A} \to \mathcal{A}' \implies \mu (\mathcal{A}) \succ \mu (\mathcal{A}')
+.\]
+It should therefore be our goal to find such a mapping.
+To achieve this, we will use the lexicographic product and the multiset order.
+
+\begin{definition*}[lexicographic product]
+	Given two partial ordern $(A, >_A)$ and $(B, >_B)$, the lexicographic product $>_{A \times B}$ on $A \times B$ is defined by:
+	\[
+		(x,y) >_{A \times B} (x',y') \iff (x >_A x') \lor (x = x' \land y >_B y')
+	.\]
+\end{definition*}
+\begin{theorem*}
+	The lexicographic product of two well-founded partial orders is again a well-founded partial order.
+\end{theorem*}
+
+We will also need the notion of multisets, which can be viewed as sets with (possibly) repeated elements.
+\begin{definition*}
+	A multiset $M$ over a set $A$ is a function $M : A \to \N$.
+
+	$M$ is finite if there are only finitely many x such that $M(x) > 0$.
+	$\mathcal{M}(A)$ denotes the set of all finite multisets over $\mathcal{A}$.
+\end{definition*}
+\begin{notation}
+	We use multisets like normal sets in the following sense:
+	\begin{itemize}
+		\item $x \in M \logeq M(x) > 0$,
+		\item $M \subseteq N \logeq \forall x \in A. M(x) \leq N(x)$,
+		\item $(M \cup N)(x) \coloneqq M(x) + N(x)$,
+		\item $(M-N)(x) \coloneqq M(x)  \mathop{\dot{-}} N(x)$,
+		\item $\emptyset(x) \coloneqq 0$ for all $x \in A$
+	\end{itemize}
+	where
+	\[
+		m \mathop{ \dot{-}} n \coloneqq 
+		\begin{cases}
+			m - n &\text{ if $m \geq n$} \\
+			0 &\text{ otherwise}
+		\end{cases}
+	.\]
+\end{notation}
+\begin{definition*}[Multiset order]
+	Given a partial order $>$ on a set $A$, we define the corresponding multiset order
+	$>_{\var{mul}}$ on $\mathcal{M}(A)$ as follows:
+
+	$M >_{\var{mul}} N $ iff there exist $X,Y \in \mathcal{M}(A)$ such that:
+	\begin{enumerate}
+		\item $\emptyset \neq X \subseteq M$ and
+		\item $N = (M - X) \cup Y$ and
+		\item $\forall y \in Y. \exists x \in X. x > y$
+	\end{enumerate}
+\end{definition*}
+\begin{note}
+	$N$ is obtained from $M$ by removing the elements in $X$ from $M$ 
+	and adding the elements of $Y$.
+	The restrictions then ensure, that there is no infinite descending chain.
+\end{note}
+\begin{example}
+	$\left\{5, 3, 1 \right\} >_{\var{mul}} \left\{ 4, 3, 3, 1 \right\} >_{\var{mul}} \left\{ 4, 3, 2, 2, 2, 1 \right\} >_{\var{mul}} \left\{ 4, 3, 2, 2 \right\}$
+\end{example}
+
+\begin{theorem*}
+	If $>$ is a well-founded partial order on $A$,
+	then $>_{\var{mul}}$ is a well-founded partial order on $\mathcal{M}(A)$.
+\end{theorem*}
+
+In order to forge a mapping $\mu$ from ABoxes to a multiset order, we introduce the depth of an individual.
+
+Consider an ABox $\mathcal{A}$ obtained during a run of the algorithm on input $(\mathcal{T}_0, \mathcal{A}_0)$.
+We define the \textit{depth} of an individual in $\mathcal{A}$ as follows:
+\begin{align*}
+	d_{\mathcal{A}}(a) = 0 && \text{if a is a root individual}\\
+	d_{\mathcal{A}}(x) = n && \text{if $a$ is a tree individual with distance $n$ from the root}
+\end{align*}
+\begin{lemma}
+	Let $m = \func{size}(\mathcal{T}_0, \mathcal{A}_0)$ and $\hat{m} = 2^m$.
+	\begin{itemize}
+		\item The use of blocking ensures that $d_{\mathcal{A}}(x) \leq \hat{m}$ for all individuals $x$.
+		\item $\lvert \func{con}_{\mathcal{A}}(x)  \rvert \leq m$ for all individuals $x$.
+	\end{itemize}
+\end{lemma}
+\begin{proof}
+	See proofs of Lemma 4.4 and Lemma 4.10.
+\end{proof}
+
+Each individual $x$ occurring in a concept and role assertion in $\mathcal{A}$ is mapped to
+a triple of natural numbers $\mu_{\mathcal{A}}(x) \coloneqq (n_1, n_2, n_3)$:
+\[
+\begin{split}
+	n_1 &\coloneqq \hat{m} - d_{\mathcal{A}}(x)\\
+	n_2 &\coloneqq m - \lvert \func{con}_{\mathcal{A}}(x) \rvert \\
+	n_3 &\coloneqq \left| \big\{ a: \exists r.C \in \mathcal{A} \mid \text{there is no $b$ with} \left\{ (x,b):r, b:C \right\} \subseteq \mathcal{A} \big\} \right|\\
+		&\ + \left| \Big\{ x:( \geq n r) \in \mathcal{A} \,\Big|\ \text{there are no $b_1, \ldots, b_n$ with} \right.\\
+		&\hspace{.5cm} \left. \big\{ (x,b_1):r, \ldots, (x,b_n):r \big\} \cup \big\{ b_i \neq b_j \mid 1 \leq i < j \leq n \big\} \subseteq \mathcal{A} \Big\} \right|
+\end{split}
+\]
+\begin{note}
+	By lemma 4.14, $n_1, n_2, n_3$ are natural numbers.
+\end{note}
+We will order these triples with the lexicographic product of $>$ on $\N$.
+The ABox $\mathcal{A}$ is mapped to the multiset $\mu(\mathcal{A}) = \left\{ \mu(x) \mid \text{$x$ appears in $\mathcal{A}$} \right\}$ of these triples.
+A multiset is needed, since different individuals $x$ could be mapped to the same triple.
+Then, the multiset order $\succ$ is used on these multisets.
+
+We can finally show termination:
+\begin{lemma}\label{lem:implication_multiset_order}
+	$\mathcal{A} \to \mathcal{A}'$ and $\mathcal{A}'$ clash free $ \implies \mu(\mathcal{A}) \succ \mu(\mathcal{A}')$.
+\end{lemma}
+\begin{proof}
+	We will need to go through every rule and see, if an application of the rule actually leads to a  decrease in the order. 
+	\begin{itemize}
+		\item The modified $\exists$-rule:
+			\begin{itemize}
+				\item Tuple of $a$: first component unchanged,
+					second component unchanged,
+					third component decreases
+				\item Tuple of $d$ : new tuple, but it is smaller than the original tuple for $a$ in the first component
+				\item Tuple of $x \notin \left\{ a,d \right\}$ : unchanged
+			\end{itemize}
+		\item The modified $ \geq$-rule: can be treated similarly
+		\item The modified $\sqsubseteq$-rule:
+			\begin{itemize}
+				\item Tuple of $a$ : first component unchanged,
+					second component decreases,
+					third component irrelevant, because of lexicographic order
+				\item Tuple of $x \neq a$ : first component unchanged,
+					second component unchanged,
+					third component either decreases or is unchanged
+			\end{itemize}
+		\item The $ \leq$-rule with pruning:
+			\begin{itemize}
+				\item Tuple of $a$ : first component unchanged,
+					second component unchanged,
+					third component does not change or a clash $b_i \neq b_i$ is generated
+				\item Tuple of $b_i$: may decrease in the second component
+				\item Tuple of $b_j$ : is removed
+				\item Tuple of $x \notin \left\{ b_i, b_j, a \right\}$ :
+					removed if descendant of $b_j$,
+					unchanged otherwise
+			\end{itemize}
+		\item $\sqcap$-rule, $\sqcup$-rule, $\forall$-rule: similar
+		\qedhere
+	\end{itemize}
+\end{proof}
