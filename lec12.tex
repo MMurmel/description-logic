@@ -53,7 +53,6 @@ And we will need to extend the algorithm by:
 	While the $ \geq$-rule is deterministic, the $ \leq$-rule is again a non-deterministic rule.
 \end{note}
 
-\newpage
 \begin{mdframed}[frametitle= The new clash]
 An ABox $\mathcal{A}$ contains a clash if
 \[
@@ -62,7 +61,7 @@ An ABox $\mathcal{A}$ contains a clash if
 for some individual name $a$, and for some concept $C$.
 \end{mdframed}
 However, the algorithm introduced by this does not necessarily terminate.
-E.g.\ the following ABox causes a problem and is known as the \textit{yo-yo example}:
+E.g.\ the ABox shown in figure \ref{fig:yoyo-example} causes a problem and is known as the \textit{yo-yo example}.
 	\begin{figure}[H]
 		\centering
 		\begin{subfigure}[t]{.475\textwidth}
@@ -91,6 +90,7 @@ E.g.\ the following ABox causes a problem and is known as the \textit{yo-yo exam
 		\caption{From the ABox shown in (b), the $ \leq$-rule is applicable and yields the ABox on the left
 		(with the only difference that the lower node is now named $z$).}
 		This forms a cycle, showing non-termination of the algorithm.
+		\label{fig:yoyo-example}
 	\end{figure}
 
 Furthermore, while our standard notion of blocking would be a solution in this example,
