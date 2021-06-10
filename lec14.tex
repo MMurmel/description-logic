@@ -1,0 +1,181 @@
+\lecture{14}{08.06.2021}{}
+\subsection{Soundness}
+Soundness can actually be show similarly to the proof of Lemma 4.11.
+However, the construction of $\mathcal{A}''$ needs to be modified
+to obtain a complete and clash-free ABox.
+
+Instead of just reusing blocking predecessors,
+one would need to copy blocking predecessors for every successors it blocks.
+
+\subsection{Completeness}
+It only remains to show that the $ \leq$- and $ \geq$-rule preserve KB consistency.
+\begin{proof}
+	Exercise!
+\end{proof}
+
+\chapter{Complexity}
+As common with complexity considerations,
+we will not analyze the complexity of a particular algorithm,
+but the complexity of the reasoning problem itself.
+
+We know these complexity classes:
+\[
+	\textsc{P} \subseteq \textsc{NP} \subseteq \textsc{PSpace} \subseteq \textsc{ExpTime} \subseteq \textsc{NExpTime}
+.\]
+It is not known if these inclusions are strict or not.
+The only one certainly known is, that $\textsc{P} \subset \textsc{ExpTime}$.
+We will also use the notions of a problem being
+\begin{itemize}
+	\item \textit{hard} for a class \textsc{C} : every problem in \textsc{C} can be reduced to it in polynomial time
+	\item \textit{complete} for a class \textsc{C}: hard for \textsc{C} and contained in \textsc{C} 
+\end{itemize}
+
+In the following we will concentrate on the basic reasoning problems satisfiability subsumption.
+All results established in this chapter also apply to KB consistency.
+
+\newpage
+\section{Concept satisfiability in $\mathcal{ALC}$}
+
+We will show, that concept satisfiability in $\mathcal{ALC}$
+\begin{itemize}
+	\item with acyclic TBoxes is in \textsc{PSpace}
+	\item without TBoxes is \textsc{PSpace}-hard
+\end{itemize}
+and thus, \textsc{PSpace}-complete in both cases.
+
+Furthermore, we will only concentrate on the complexity of satisfiability,
+since it immediately yields the complexity of subsumption:
+\begin{itemize}
+	\item polynomial-time reductions between satisfiability and \textit{non}-subsumption
+	\item for deterministic complexity classes \textsc{C} (such as \textsc{PSpace})
+		we know that $ \text{co-\textsc{C}} = \textsc{C}$
+\end{itemize}
+
+\subsection{complexity upper bound (case of acyclic TBox)}
+W.l.o.g.\ we assume that the concept tested for satisfiability is a concept name:
+
+$C$ is satisfiable w.r.t.\ a TBox $\mathcal{T} \iff A$ is satisfiable w.r.t.\ $\mathcal{T} \cup \left\{ A \equiv C \right\}$,
+where $A$ is a fresh concept name.
+
+An acyclic TBox $\mathcal{T}$ is in NNF if negation is applied only to primitive concept names in $\mathcal{T}$,
+but neither to defined concept names nor to compound concepts.
+
+\begin{prop}[NNF]\label{prop:5.1}
+	There is a polynomial time transformation of each acyclic TBox $\mathcal{T}$
+	into an acyclic TBox $\mathcal{T}'$ in NNF such that  for all concept names $A$ occurring in $\mathcal{T}$,
+	$A$ is satisfiable w.r.t.\ $\mathcal{T}$ iff $A$ is satisfiable w.r.t.\ $\mathcal{T}'$.
+\end{prop}
+\begin{proof}
+	Let $\mathcal{T}$ be an acyclic TBox.
+	We apply three steps:
+	\begin{itemize}
+		\item For each defined concept name $A$ in $\mathcal{T}$, we introduce a fresh name $\overline{A}$.
+			Extend $\mathcal{T}$ with concept definitions $\overline{A} \equiv \neg C$ for $A \equiv C \in \mathcal{T}$.
+		\item Convert the right-hand sides of all concept definitions into NNF,
+			not distinguishing between primitive and defined concepts.
+		\item In all concepts definitions, replace every subconcept $\neg A$,
+			where $A$ is a defined concept name, with $\overline{A}$.
+	\end{itemize}
+	The resulting TBox is as required.
+\end{proof}
+
+\begin{definition*}[Simple TBox]
+	An acyclic TBox $\mathcal{T}$ is simple if all concept definitions are of the from:
+	\[
+	A \equiv P, A \equiv \neg P, A \equiv B_1 \sqcap B_2, A \equiv B_1 \sqcup b_2, A \equiv \exists r.B_1, A \equiv \forall r.B_1
+	\]
+	where $P$ is a primitive concept and $B_1, B_2$ are defined concept names.
+\end{definition*}
+\begin{note}
+	Every simple TBox is in NNF.
+\end{note}
+
+\begin{lemma}[simple TBox]\label{lem:5.2}
+	Let $A_0$ be a concept name.
+	There is a polynomial time transformation of each acyclic TBox $\mathcal{T}$
+	into a simple TBox $\mathcal{T}'$ such that $A_0$ is satisfiable w.r.t.\ $\mathcal{T}$ 
+	iff $A_0$ is satisfiable w.r.t.\ $\mathcal{T}'$.
+\end{lemma}
+\begin{proof}
+	Let $A_0$ be a concept name and $\mathcal{T}$ an acyclic TBox.
+	By Proposition \ref{prop:5.1} we can assume that $\mathcal{T}$ is in NNF.
+	Apply the following modifications:
+	\begin{itemize}
+		\item To break down a concept definition $A \equiv C_1 \sqcap C_2$
+			with $C_1$ or $C_2$ not a defined concept name,
+			we replace $A \equiv C_1 \sqcap C_2$ with $A \equiv B_1 \sqcap B_2$ 
+			and $B_1 \equiv C_1$, $B_2 \equiv C_2$.
+			Similarly for $A \equiv C_1 \sqcup C_2, A \equiv \exists r.C_1, A \equiv \forall r.C_2$.
+		\item Delete each concept definition $A \equiv B$ with $B$ a defined concept
+			and replace every occurrence of $A $ with $B$ if $A \neq A_0$, 
+			and all occurrences of $B$ with $A$ otherwise.
+			($A = B = A_0$ cannot happen due to acyclicity!)
+			\qedhere
+	\end{itemize}
+\end{proof}
+So we will only need to test for satisfiability of simple TBoxes.
+
+We will also need the notion of a type:
+\begin{definition}[Type]
+	Let $\mathcal{T}$ be a simple TBox and $\func{Def}(\mathcal{T})$ the set of defined concept names in $\mathcal{T}$.
+	A type for $\mathcal{T}$ is a set $\tau \subseteq \func{Def}(\mathcal{T})$
+	that satisfies the following conditions:
+	\begin{enumerate}
+		\item $A \in \tau$ implies $B \notin \tau$, if $A \equiv P$ and $B \equiv \neg P$ in $\mathcal{T}$ ;
+		\item $A \in \tau$ implies $B \in \tau$ and $B' \in \tau$, if $A \equiv B \sqcap B' \in \mathcal{T}$;
+		\item $A \in \tau$ implies $B \in \tau$ or $B' \in \tau$, if $A \equiv B \sqcup B' \in \mathcal{T}$;
+	\end{enumerate}
+\end{definition}
+\begin{note}
+	The restriction to defined concepts rather than subconcepts is possible because the TBox is simple.
+\end{note}
+
+The satisfiability algorithm tries to construct a tree model
+whose depth is bounded by the \textit{role depth} of the input concept name.
+
+\begin{definition*}[role depth]
+	Let $A$ be a defined concept name,
+	then its role depth $\func{rd}(A)$ is defined as follows:
+	\begin{itemize}
+		\item If $A \equiv (\neg) P \in \mathcal{T}$, then $\func{rd}(A) = 0$,
+		\item If $A \equiv B_1 * B_2 \in \mathcal{T}$ with $* \in \left\{ \sqcap, \sqcup \right\}$,\\
+			then $\func{rd}(A) = \func{max}(\func{rd}(B_1), \func{rd}(B_2))$
+		\item If $A \equiv Qr.B \in \mathcal{T}$ with $Q \in \left\{ \exists, \forall \right\}$, \\
+			then $\func{rd}(A) = \func{rd}(B) + 1$.
+	\end{itemize}
+\end{definition*}
+\begin{note}
+	This definition is well-founded since $\mathcal{T}$ is acyclic.
+\end{note}
+For $i \geq 0$, we define
+\[
+	\func{Def}_i(\mathcal{T}) \coloneqq \left\{ A \in \func{Def}(\mathcal{T}) \mid \func{rd}(A) \leq i \right\}
+.\]
+
+We now have everything at hand for our algorithm.
+\begin{mdframed}
+	\begin{algorithm}[H]
+		\caption{$\mathcal{ALC}\func{-Worlds}(A_0, \mathcal{T})$}
+		\label{alg:alc-worlds}
+		\begin{algorithmic}[1]
+			\Require a concept name $A_0$ and a simple TBox $\mathcal{T}$
+			\State $i = \func{rd}(A_0)$
+			\State guess a set $\tau \subseteq \func{Def}_i(\mathcal{T})$ with $A_0 \in \tau$ 
+			\State $\func{recurse}(\tau, i, \mathcal{T})$
+		\end{algorithmic}
+	\end{algorithm}
+	\begin{algorithm}[H]
+		\caption{$\func{recurse}(\tau, i , \mathcal{T})$}
+		\label{alg:recurse}
+		\begin{algorithmic}[1]
+			\If{$\tau$ is not a type for $\mathcal{T}$} \Return false \EndIf
+			\If{$i = 0$} \Return true \EndIf
+			\ForAll{$A \in \tau$ with $A \equiv \exists r.B \in \mathcal{T}$}
+				\State $S = \left\{ B \right\} \cup \left\{ B' \mid \exists A': A' \in \tau \text{ and } A' \equiv \forall r.B' \in \mathcal{T} \right\}$
+				\State guess a set $\tau \subseteq \func{Def}_{i-1}(\mathcal{T})$ with $S \subseteq \tau$ 
+				\If{$\func{recurse}(\tau, i-1, \mathcal{T})$ returns false} \Return false \EndIf
+			\EndFor
+			\Return true
+		\end{algorithmic}
+	\end{algorithm}
+\end{mdframed}

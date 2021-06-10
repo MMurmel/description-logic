@@ -1,4 +1,5 @@
 \lecture{13}{03.06.2021}{}
+\subsection{Termination}
 We will show how termination can be regained in the following.
 Note, that non-termination is a consequence of the facts that an individual:
 \begin{itemize}
@@ -187,14 +188,29 @@ We can finally show termination:
 			\begin{itemize}
 				\item Tuple of $a$ : first component unchanged,
 					second component unchanged,
-					third component does not change or a clash $b_i \neq b_i$ is generated
+					third component does not change or a clash $b_i \neq b_i$ is generated,
+					in which case termination holds trivially
 				\item Tuple of $b_i$: may decrease in the second component
 				\item Tuple of $b_j$ : is removed
 				\item Tuple of $x \notin \left\{ b_i, b_j, a \right\}$ :
 					removed if descendant of $b_j$,
-					unchanged otherwise
+					unchanged otherwise.
+					To illustrate this, lets view the following graph:
+					\begin{figure}[H]
+						\centering
+						\begin{tikzpicture}
+							\node[default] (a) {$a$};
+							\node[default, below left of = a] (bi) {$b_i$};
+							\node[default, below right of = a] (bj) {$b_j$};
+							\draw (a) edge[right] node{$r$} (bj);
+							\draw (a) edge[left] node{$r$} (bi);
+						\end{tikzpicture}
+					\end{figure}
+					If $b_i$ and $b_j$ are tree individuals, then both have the same first component,
+					which stays the same by application of the rule.
+					%TODO
 			\end{itemize}
 		\item $\sqcap$-rule, $\sqcup$-rule, $\forall$-rule: similar
-		\qedhere
 	\end{itemize}
+	Therefore, there cannot be infinitely many rule applications, i.e.\ the algorithm terminates.
 \end{proof}
