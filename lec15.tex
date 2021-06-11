@@ -1,0 +1,129 @@
+\subsubsection{Termination \& \textsc{PSpace}}
+\lecture{15}{10.06.2021}{}
+Firstly, we will show, that this algorithm terminates and always runs in \textsc{PSpace}.
+For this, we will consider the recursion tree corresponding to the recursive calls of $\func{recurse}$:
+
+\begin{definition*}[recursion tree]
+	A \textit{recursion tree} is a tuple $T = (V, E, l)$ such that:
+	\begin{itemize}
+		\item $(V,E)$ is a tree whose nodes correspond to the calls of $\func{recurse}$;
+		\item $l$ is a node labeling function that assigns with each node $v \in V$ 
+			the arguments $l(v) = (\tau, i, \mathcal{T})$ of the recursive call corresponding to $v$;
+		\item $(v, v') \in E$ if the call corresponding to $v'$ occurred dur
+	\end{itemize}
+\end{definition*}
+
+The depth of the recursion tree is bounded by $\func{rd}(A_0) \leq \func{size}(\mathcal{T})$,
+its outdegree is bounded by the number of concept definitions in $\mathcal{T}$.
+Therefore this tree must be finite, which ensures termination of the algorithm.
+
+The number of entries in the recursion stack is bounded by the depth of the recursion tree,
+therefore, only polynomially many (even linearly many) entries of the recursion stack
+must be held in memory at any time.
+Furthermore, the size of each entry in the recursion stack is bounded by the size of $\mathcal{T}$.
+All in all, this yields, that  $\mathcal{ALC}\func{-Worlds}$ is in \textsc{NPSpace} (due to the guessing),
+which, by Savitch's theorem, means that it is also in  \textsc{PSpace}.
+
+\subsubsection{Soundness and Completeness}
+\medskip
+\begin{lemma}\label{lem:5.4}
+	$\mathcal{ALC}\func{-Worlds}(A_0, \mathcal{T}) = \var{true}	\iff A_0$ is satisfiable w.r.t.\ $\mathcal{T}$
+\end{lemma}
+\begin{proof}
+	"$ \implies$":
+	Let $T = (V, E, l)$ be the recursion tree of a successful run of $\mathcal{ALC}\func{-Worlds}$
+	on $A_0$ and $\mathcal{T}$, and root $v_0 \in V$.
+	For each node $v \in V \setminus \left\{ v_0 \right\}$,
+	let $\sigma(v)$ be the role name that the for all loop was processing when making the call $v$.
+	Let $\Delta^\mathcal{I} = V$ and define, for each primitive concept name $P$ and role name $r$ :
+	\begin{itemize}
+		\item $P^{\mathcal{I}} \coloneqq \left\{ v \in \Delta^\mathcal{I} \mid \exists A: A \in \tau \text{ for } l(v) = (\tau, \cdot, \cdot) \text{ and } A \equiv P \in \mathcal{T} \right\}$
+		\item $r^\mathcal{I} \coloneqq \left\{ (v,v') \mid (v,v') \in E \land \sigma(v') = r \right\}$
+	\end{itemize}
+	For $A, B \in \func{Def}(\mathcal{T})$ we set $A \prec B$ if
+	$A \equiv C \in \mathcal{T}$ and $B$ is a subconcept of $C$.
+	Let $\prec^+$ be the transitive closure of $\prec$.
+	Then, $\prec^+$ is irreflexive, and thus a strict order.
+	We define the interpretation of defined concepts by induction on $\prec^+$:
+	If  $A \equiv C \in \mathcal{T}$, then $A^\mathcal{I} = C^\mathcal{I}$,
+	where $C^\mathcal{I}$ contains only defined concepts smaller than $A$, i.e.\ is well defined.
+	
+	By its definition, $\mathcal{I}$ is a model of $\mathcal{T}$.
+	We want to show that $A_0 \neq \emptyset$ by proving that $v_0 \in A_0^\mathcal{I}$.
+	To this end, we proof the following by induction on $\prec^+$:
+	Claim: For all  $A \in \func{Def}(\mathcal{T})$ and all $v \in V$ :
+	\[
+		A \in \tau \text{ for } l(v) = (\tau, \cdot, \cdot) \implies v \in A^{\mathcal{I}}
+	.\]
+	We only show this for the case where $A \equiv \neg P$ as an example.
+	Let $A \in \tau \text{ with } l(v) = (\tau, \cdot, \cdot)$.
+	By property 1) of types, there is no $B \in \tau$ with $B \equiv P \in \mathcal{T}$.
+	By definition of $\mathcal{I}$, this implies $v \notin P^\mathcal{I}$, as required.
+	Thus, $v \in (\neg P)^\mathcal{I} = A^\mathcal{I}$.
+	\newline
+	"$ \impliedby$":
+	Assume $A_0$ is satisfiable w.r.t.\ $\mathcal{T}$.
+	Let $\mathcal{I}$ be a model of $\mathcal{T}$ and $d_0 \in \Delta^\mathcal{I}$
+	such that $d_0 \in A_0^\mathcal{I}$.
+	For $d \in \Delta^\mathcal{I}$ and $i \leq \func{rd}(A_0)$ we set:
+	\[
+		\func{tp}_i(d) \coloneqq \left\{ A \in \func{Def}_i(\mathcal{T}) \mid d \in A^\mathcal{I} \right\}
+	.\]
+	We use $\mathcal{I}$ to guide the non-deterministic choices in a run of the algorithm.
+	To do this, we pass an element $d \in \Delta^\mathcal{I}$ as a virtual fourth argument
+	to the procedure $\func{recurse}$ such that $d \in A^\mathcal{I}$ for all $A$ in first argument $\tau$.
+	Initially, we guide the algorithm to guess $\func{tp}_{\func{rd}(A_0)}(d_0)$ as the set $\tau$.
+
+	Now let $\func{recurse}$ be called with arguments $\left( \tau, i, \mathcal{T}, d \right)$
+	and assume that the for loop is processing $A \in \tau$ with $A \equiv \exists r.B \in \mathcal{T}$.
+	Then $d \in A^\mathcal{I} = (\exists r.B)^\mathcal{I}$ and thus there is a $d' \in B^\mathcal{I}$ with $(d,d') \in r^\mathcal{I}$.
+	We guide the algorithm to guess $\func{tp}_{i-1}(d')$ as the type in the recursive call
+	and use $d'$ as fourth argument for that call.
+
+	It remains to show that, guiding it in this way, the algorithm returns $\var{true}$.
+	This means, all the guessed sets need to be types,
+	which is clear since they are induced by individuals in $\mathcal{I}$ and $\mathcal{I}$ is a model of $\mathcal{T}$.
+\end{proof}
+
+\begin{theorem}
+	In $\mathcal{ALC}$, concept satisfiability and subsumption w.r.t.\ acyclic TBoxes is in \textsc{PSpace}.
+\end{theorem}
+
+\subsection{complexity lower bound (case without TBox)}
+In order to show  \textsc{PSpace}-hardness for $\mathcal{ALC}$-satisfiability,
+we will reduce an other \textsc{PSpace}-hard problem to it.
+
+While the original proof of \textsc{PSpace}-hardness used a reduction from \textsc{QBF-Sat},
+we use a game played on formulae of propositional logic, called \textit{finite Boolean game} (FBG).
+
+\begin{definition}[FBG]
+	A \textit{finite Boolean game} (FBG) is a triple $(\phi, \Gamma_1, \Gamma_2)$ with:
+	\begin{itemize}
+		\item $\phi$ a formula of propositional logic,
+		\item $\Gamma_1 \uplus \Gamma_2$ a partition of the variables used in $\phi$ into two sets of identical cardinality.
+	\end{itemize}
+	The game is played by both players alternating turns in which they determine the truth values of one variable:
+	\begin{itemize}
+		\item Player 1 controls the variables in $\Gamma_1$ and tries to make $\phi$ true,
+		\item Player 2 controls the variables in $\Gamma_2$ and tries to make $\phi$ false.
+	\end{itemize}
+\end{definition}
+
+In the FBG-Problem, one wants to decide, whether Player 1 has a winning strategy,
+i.e.\ can force a win no matter what Player 2 does.
+Lets see how these winning strategies would look like:
+
+Considering any FBG $G = (\phi, \Gamma_1, \Gamma_2)$, let $n = \lvert \Gamma_1 \uplus \Gamma_2 \rvert$,
+$\Gamma_1 = \left\{ p_1, p_3, \ldots, p_{n-1} \right\}$ and $\Gamma_2 - \left\{ p_2, p_4, \ldots, p_n \right\}$.
+We define a \textit{configuration} of $G$ as a word $t \in \left\{ 0,1 \right\}^i$, for some $i \leq n$:
+\begin{itemize}
+	\item there were already $i$ steps played in the game;
+	\item the $k$th letter of $t$ is the truth value chosen for $p_k$.
+\end{itemize}
+Obviously, the initial configuration of $G$ is the empty word $\varepsilon$.
+A Move is played as follows:
+If the current configuration is  $t$, then a truth value for $p_{\lvert t \rvert + 1}$ is selected
+\begin{itemize}
+	\item by Player 1 if $\lvert t \rvert$ is even,
+	\item by Player 2 if $\lvert t \rvert$ is odd.
+\end{itemize}

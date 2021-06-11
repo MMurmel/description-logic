@@ -106,9 +106,9 @@ but neither to defined concept names nor to compound concepts.
 			we replace $A \equiv C_1 \sqcap C_2$ with $A \equiv B_1 \sqcap B_2$ 
 			and $B_1 \equiv C_1$, $B_2 \equiv C_2$.
 			Similarly for $A \equiv C_1 \sqcup C_2, A \equiv \exists r.C_1, A \equiv \forall r.C_2$.
-		\item Delete each concept definition $A \equiv B$ with $B$ a defined concept
-			and replace every occurrence of $A $ with $B$ if $A \neq A_0$, 
-			and all occurrences of $B$ with $A$ otherwise.
+		\item Delete each concept definition $A \equiv B$, where $B$ is a defined concept,
+			and replace every occurrence of $A$ in $\mathcal{T}$ with $B$ if $A \neq A_0$.
+			Otherwise, replace all occurrences of $B$ with $A$.
 			($A = B = A_0$ cannot happen due to acyclicity!)
 			\qedhere
 	\end{itemize}
@@ -121,7 +121,7 @@ We will also need the notion of a type:
 	A type for $\mathcal{T}$ is a set $\tau \subseteq \func{Def}(\mathcal{T})$
 	that satisfies the following conditions:
 	\begin{enumerate}
-		\item $A \in \tau$ implies $B \notin \tau$, if $A \equiv P$ and $B \equiv \neg P$ in $\mathcal{T}$ ;
+		\item $A \in \tau$ implies $B \notin \tau$, if $A \equiv P, B \equiv \neg P \in \mathcal{T}$ ;
 		\item $A \in \tau$ implies $B \in \tau$ and $B' \in \tau$, if $A \equiv B \sqcap B' \in \mathcal{T}$;
 		\item $A \in \tau$ implies $B \in \tau$ or $B' \in \tau$, if $A \equiv B \sqcup B' \in \mathcal{T}$;
 	\end{enumerate}
