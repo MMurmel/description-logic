@@ -1,0 +1,139 @@
+\lecture{16}{15.06.2021}{}
+A \textit{winning strategy} for Player 1 in $G$ is a finite node-labeled tree $\left( V, E ,l \right)$ of depth $n$, where:
+ \begin{itemize}
+	 \item $l$ assigns to each node $v \in V$ a configuration $l(v)$ ;
+	 \item the root is labeled with the initial configuration $\varepsilon$;
+	 \item if $v$ is a node of depth $i < n$ with $i$ even and $l(v) = t$,
+		 then $v$ has one successor $v'$ with $l(v')  \in \left\{ t0, t1 \right\}$ ;
+	 \item if $v$ is a node of depth $i < n$ with $i$ odd and $l(v) = t$,
+		 then $v$ has two successors $v'$ and $v''$ with $l(v') = t0$ and $l(v'') = t1$;
+	 \item if $v$ is a node of depth $n$ and $l(v) = t$, then $t$ satisfies $\phi$.
+\end{itemize}
+
+We can then construct a $\mathcal{ALC}$ concept $C_G$ for every FBG $G = \left( \phi, \Gamma_1, \Gamma_2 \right)$ such that,
+Player 1 has a winning strategy iff $C_G$ is satisfiable.
+The general idea is to create $C_G$ is such a way, that the winning strategies are the tree models of $C_G$.
+We use one role name $r$ as the edge relation for the tree, and for each propositional variable $p_i$, we define a concept $P_i$.
+
+$C_G$ is a conjunction of the following concept descriptions:
+\begin{itemize}
+	\item For each node of odd depth $i$, there are two successors, one for each possible truth value of $p_{i+1}$ :
+		\[
+			C_1 = \bigsqcap_{i \in \left\{ 1,3, \ldots, n-1 \right\}} \forall r^i.(\exists r. \neg P_{i+1} \sqcap \exists r.P_{i+1})
+		\]
+		where $\forall r^i.C$ denotes the $i$-fold nesting $\forall r. \cdots \forall r.C$.
+	\item For each node of even depth $i$, there is one successor:
+		\[
+			C_2 = \bigsqcap_{i \in \left\{ 0, 2, \ldots, n-2 \right\}} \forall r^i.\exists r. \top
+		\]
+		i.e.\ the successor is contained in $P_i \sqcup \neg P_i = \top$.
+	\item One a truth value is chosen, it remains fixed:
+		\[
+			C_3 = \bigsqcap_{1 \leq i \leq j <n} \forall r^j. \left( (P_i \implies \forall r.P_i) \sqcap (\neg P_i \implies \forall r. \neg P_i) \right)
+		\]
+	\item At the leafs, the formula $\phi$ is true:
+		\[
+			C_4 = \forall r^n. \phi^*
+		\]
+		where $\phi^*$ denotes the result of converting $\phi$ into an $\mathcal{ALC}$ concept:
+		\[
+			p_i \to P_i, \land \to \sqcap, \lor \to \sqcup
+		\]
+\end{itemize}
+Thereby, $C_G = C_1 \sqcap \ldots \sqcap C_4$.
+Obviously, the size of $C_1, C_2, C_3$ is quadratic in $n$ and the size of $C_4$ is linear in  $n$ plus the size of $\phi$.
+Thus, this reduction is actually constructible in polynomial time in the description of $G$.
+
+\begin{lemma}
+	Player 1 has a winning strategy in $G$ iff $C_G$ is satisfiable.
+\end{lemma}
+\begin{proof}
+	"$ \implies$":
+	Assume that player 1 has a winning strategy $\left( V, E, l \right)$ with root $v_0 \in V$.
+	We define the interpretation $\mathcal{I}$ as follows:
+	\begin{itemize}
+		\item $\Delta^{\mathcal{I}} = V$,
+		\item $r^{\mathcal{I}} = E$,
+		\item $P_i^{\mathcal{I}} = \left\{ v \in V \mid l(v)  \text{ sets $p_i$ to 1} \right\}$ 
+			for $1 \leq i \leq n$.
+	\end{itemize}
+	It is easy to see that $v_0 \in C_G^\mathcal{I}$.
+
+	"$ \impliedby$":
+	Let $\mathcal{I}$ be a model of $C_G$, and let $d_0 \in C_G^\mathcal{I}$.
+	We define a winning strategy $\left( V,E,l \right)$ with $V \subseteq \N \times \Delta^\mathcal{I}$.
+	The construction will be such that 
+	if $(i,d) \in V$, then $d$ is reachable from $d_0$ in $\mathcal{I}$ 
+	by traveling  $i$ steps along $r^\mathcal{I}$.
+	In the following we call this property (*). 
+	Start by setting $V = \left\{ (0,d_0) \right\}$, $E = \emptyset$ and $l(0,d_0) = \varepsilon$.
+	We proceed in rounds $1, \ldots, n$.
+
+	In each odd round $i$, iterate over all nodes $(i-1,d) \in V$ and do the following:
+	\begin{itemize}
+		\item select a $d' \in \Delta^\mathcal{I}$ such that $(d, d') \in r^\mathcal{I}$
+			(exists since $d_0 \in C_2^\mathcal{I}$ and (*) by induction)
+		\item add $(i, d')$ to  $V$, $\left( (i-1,d),(i,d') \right)$ to $E$
+			and set  $l(i,d') = tj$ where  $t = l(i-1,d)$
+			and  $j = 1$ if $d' \in P_i^{\mathcal{I}}$
+			and $j = 0$ if  $d' \notin P_i^{\mathcal{I}}$.
+	\end{itemize}
+
+	In each even round, we iterate over all nodes $(i-1, d) \in V$ and do the following:
+	\begin{itemize}
+		\item select $d', d'' \in \Delta^\mathcal{I}$ such that $d' \in P_i^\mathcal{I}$,
+			$d '' \notin P_i^\mathcal{I}$ and $\left\{ (d,d'), (d,d'') \right\} \subseteq r^\mathcal{I}$ 
+			(exists since $d_0 \in C_1^{\mathcal{I}}$ and (*) is satisfied by induction).
+		\item add $(i,d')$ and $(i, d'')$ to $V$,
+			$\left( (i-1, d), (i,d') \right)$ and $\left( (i-1,d),(i,d'') \right)$ to $E$ 
+			and set $l(i,d') = t1$ and $l(i,d'') = t0$
+			where $t = l(i-1,d)$.
+	\end{itemize}
+	Since $d_0 \in C_3^\mathcal{I}$ and $d_0 \in C_4^\mathcal{I}$, it is easy to prove
+	that the resulting tree is a winning strategy for Player 1.
+\end{proof}
+
+\begin{theorem}
+	In $\mathcal{ALC}$, concept satisfiability and subsumption
+	without TBoxes and with acyclic TBoxes are \textsc{PSpace}-complete.
+\end{theorem}
+
+\subsection{complexity upper bound (case of general TBox)}
+When extending the arguments given above to general TBoxes,
+it is helpful to only look at a specific structure of concepts and TBoxes.
+
+Without loss of generality we restrict the attention to satisfiability of a concept name
+(and not a complex concept) $A_0$ w.r.t.\ a general TBox $\mathcal{T}$ in which this name occurs:
+\[
+C \text{ is satisfiable w.r.t.\ } \mathcal{T} \iff A_0 \text{ is satisfiable w.r.t.\ }\mathcal{T} \cup \left\{ A_0 \sqsubseteq C \right\}
+\]
+where $A_0$ is a new name not occurring in $C$ or $\mathcal{T}$.
+Furthermore, we can assume that the TBox consists of a single GCI of the form $\top \sqsubseteq C_{\mathcal{T}}$ :
+\[
+	\begin{split}
+		&\mathcal{I} \vDash \left\{ C_1 \sqsubseteq D_1, \ldots, C_n \sqsubseteq D_n \right\} \\ \iff &\mathcal{I} \vDash \left\{ \top \sqsubseteq (\neg C_1 \sqcup D_1) \sqcap \ldots \sqcap (\neg C_n \sqcup D_n) \right\}
+	\end{split}
+\]
+for all interpretations $\mathcal{I}$.
+We can also assume that the concept $C_{\mathcal{T}}$ in this GCI is in NNF.
+
+Using the type elimination algorithm explained in the following,
+we will prove an \textsc{ExpTime} upper bound for satisfiability w.r.t.\ general $\mathcal{ALC}$ TBoxes.
+
+\begin{definition}[type]
+	Let $\mathcal{T}$ be a general TBox satisfying the restrictions described above.
+	A type for $\mathcal{T}$ is a set $\tau \subseteq \func{sub}(\mathcal{T})$ satisfying the following conditions:
+	\begin{itemize}
+		\item $A \in \tau \implies \neg A \notin \tau$, for all $\neg A \in \func{sub}(\mathcal{T})$
+		\item $C \sqcap D \in \tau \implies C \in \tau \land D \in \tau$, for all $C \sqcap D \in \func{sub}(\mathcal{T})$
+		\item $C \sqcup D \in \tau \implies C \in \tau \lor D \in \tau$, for all $C \sqcup D \in \func{sub}(\mathcal{T})$
+		\item $C_{\mathcal{T}} \in \tau$
+	\end{itemize}
+\end{definition}
+\begin{note}
+	Since the number of subconcepts of $\mathcal{T}$ is linear in the size of $\mathcal{T}$,
+	the number of types is at most exponential in the size of $\mathcal{T}$.
+\end{note}
+
+Type elimination then starts with the set of all types and iteratively removes types
+whose existential restrictions are not realized by the current set of types.

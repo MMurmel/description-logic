@@ -96,7 +96,7 @@ we will reduce an other \textsc{PSpace}-hard problem to it.
 While the original proof of \textsc{PSpace}-hardness used a reduction from \textsc{QBF-Sat},
 we use a game played on formulae of propositional logic, called \textit{finite Boolean game} (FBG).
 
-\begin{definition}[FBG]
+\begin{definition*}[FBG]
 	A \textit{finite Boolean game} (FBG) is a triple $(\phi, \Gamma_1, \Gamma_2)$ with:
 	\begin{itemize}
 		\item $\phi$ a formula of propositional logic,
@@ -107,7 +107,7 @@ we use a game played on formulae of propositional logic, called \textit{finite B
 		\item Player 1 controls the variables in $\Gamma_1$ and tries to make $\phi$ true,
 		\item Player 2 controls the variables in $\Gamma_2$ and tries to make $\phi$ false.
 	\end{itemize}
-\end{definition}
+\end{definition*}
 
 In the FBG-Problem, one wants to decide, whether Player 1 has a winning strategy,
 i.e.\ can force a win no matter what Player 2 does.
