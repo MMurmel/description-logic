@@ -1,0 +1,189 @@
+\lecture{17}{17.06.2021}{}
+Such types are called bad.
+
+\begin{definition}[bad type]
+	Let $\Gamma$ be a set of types and $\tau \in \Gamma$.
+	Then $\tau$ is bad in $\Gamma$ if there exists an $\exists r.C \in \tau$ such that
+	\[
+		S = \left\{ C \right\} \cup \left\{ D \mid \forall r.D \in \tau \right\}
+	\]
+	is not a subset of any type in $\Gamma$.
+\end{definition}
+
+We can then define the type elimination algorithm:
+\begin{algorithm}[H]
+	\caption{$\mathcal{ALC}\func{-Elim}(A_0, \mathcal{T})$}
+	\begin{algorithmic}[1]
+		\State set $\Gamma_0$ to the set of all types of $\mathcal{T}$ 
+		\State $i = 0$
+		\Repeat
+		\State $i = i + 1$
+		\State $\Gamma_i = \left\{ \tau \in \Gamma_{i-1} \mid \tau \text{ is not bad in } \Gamma_{i-1} \right\}$
+		\Until{$\Gamma_i = \Gamma_{i-1}$}
+		\If{there is $\tau \in \Gamma_i$ with $A_0 \in \tau$}
+		\Return $\var{true}$
+		\Else{}
+		\Return $\var{false}$
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{lemma}
+	$\mathcal{ALC}\func{-Elim}(A_0, \mathcal{T}) = \var{true} \iff A_0 \text{ is satisfiable w.r.t.\ } \mathcal{T}$.
+\end{lemma}
+\begin{proof}
+	"$ \implies$":
+	Assume that $\mathcal{ALC}\func{-Elim}(A_0, \mathcal{T})$ returns $\var{true}$.
+	Then there is $\tau_0 \in \Gamma_i$ such that $A_0 \in \tau_0$.
+	Define the interpretation $\mathcal{I}$ as follows:
+	\begin{itemize}
+		\item $\Delta^\mathcal{I} = \Gamma_i$ 
+		\item $A^\mathcal{I} = \left\{ \tau \in \Gamma_i \mid A \in \tau \right\}$
+		\item $r^\mathcal{I} = \left\{ (\tau, \tau') \in \Gamma_i \times \Gamma_i \mid \forall r.C \in \tau \implies C \in \tau' \right\}$
+	\end{itemize}
+	By induction on the structure of $C$, we prove for all $C \in \func{sub}(\mathcal{T})$ and all $\tau_i \in \Gamma_i$,
+	that C 
+	\[
+		C \in \tau \implies \tau \in C^{\mathcal{I}}
+	.\]
+	\begin{subproof}
+		Most cases are easy to show.
+		We only show the case where $C = \exists r.D$.
+		\begin{itemize}
+			\item Let $\exists r.D \in \tau$.
+				Since $\tau$ was not eliminated, it is not bad.
+				Thus, there is $\tau' \in \Gamma_i$ such that
+				\[
+					S = \left\{ D \right\} \cup \left\{ E \mid \forall r.E \in \tau \right\} \subseteq \tau'
+				\]
+				By definition of $\mathcal{I}$, we have $(\tau, \tau') \in r^\mathcal{I}$.
+				Since $\tau' \in D^\mathcal{I}$ by induction, this yields that $\tau \in \left( \exists r.D \right)^\mathcal{I}$.
+				\qedhere
+		\end{itemize}
+	\end{subproof}
+	By condition (iv) in the definition of types,
+	we have $C_{\mathcal{T}} \in \tau$ for all $\tau \in \Gamma_i$,
+	and thus $\tau \in (C_{\mathcal{T}})^\mathcal{I}$ for all $\tau \in \Gamma_i$.
+	Thus, $\mathcal{I}$ is a model of $\top \sqsubseteq C_{\mathcal{T}}$.
+	Since $A_0 \in \tau_0$, we have $\tau_0 \in A_0^{\mathcal{I}}$,
+	i.e.\ $\mathcal{I}$ is also a model of $A_0$.
+
+	"$ \impliedby$":
+	If $A_0$ is satisfiable w.r.t.\ $\mathcal{T}$, then there is a model $\mathcal{I}$ of $\mathcal{T}$ 
+	and $d_0 \in \Delta^\mathcal{I}$ such that $d_0 \in A_0^\mathcal{I}$.
+	For all $d \in \Delta^\mathcal{I}$, set
+	\[
+		\func{tp}(d) \coloneqq \left\{ C \in \func{sub}(\mathcal{T}) \mid d \in C^\mathcal{I} \right\}
+	.\]
+	Note: for $d \in \Delta^\mathcal{I}$, the set $\func{tp}(d)$ is a type for $\mathcal{T}$.
+	Define $\psi = \left\{ \func{tp}(d) \mid d \in \Delta^\mathcal{I} \right\}$.
+	Let $\Gamma_0, \Gamma_1, \ldots, \Gamma_k$ be the sequence of type sets
+	computed by $\mathcal{ALC}\func{-Elim}(A_0, \mathcal{T})$.
+	By induction on $i$, we can show that
+	 \[
+	\phi \subseteq \Gamma_i \text{ for all } 0 \leq i \leq k
+	.\]
+	(Exercise).
+	Since $A_0 \in \func{tp}(d_0) \in \phi \subseteq \Gamma_k$,
+	the algorithm returns $\var{true}$.
+
+\end{proof}
+
+It remains to show, that the algorithm actually runs in exponential time:
+\begin{itemize}
+	\item the number of types for $\mathcal{T}$ is exponential in the size of $\mathcal{T}$ ;
+	\item in each execution of the repeat loop, at least one type is eliminated;
+	\item computing the set $\Gamma_i$ inside the repeat loop can be done in time
+		polynomial in the cardinality of $\Gamma_{i-1}$ (thus in time exponential in the size of $\mathcal{T}$).
+\end{itemize}
+
+\begin{theorem}
+	In $\mathcal{ALC}$, concept satisfiability and subsumption w.r.t.\ general TBoxes are in \textsc{ExpTime}.
+\end{theorem}
+
+\subsection{complexity lower bound (case of general TBox)}
+We show \textsc{ExpTime}-hardness by reducing infinite Boolean games to satisfiability w.r.t.\ general TBoxes.
+\begin{definition*}[IBG]
+	An infinite Boolean game (IBG) is a quadruple $(\phi, \Gamma_1, \Gamma_2, t_0)$ with
+	\begin{itemize}
+		\item  $\phi$ a formula of propositional logic,
+		\item $\Gamma_1 \uplus \Gamma_2$ a partition of the variables used in $\phi$ into two sets,
+		\item $t_0$ an initial truth value assignment to the variables in $\phi$.
+	\end{itemize}
+
+	The game is played by two players alternating moves
+	in which the truth value of a variable controlled by this player can be flipped or left unchanged:
+	\begin{itemize}
+		\item Player 1 wins if the formula ever becomes $\var{true}$ during the game;
+		\item Player 2 wins if the game runs forever without the  formula ever becoming $\var{true}$.
+	\end{itemize}
+\end{definition*}
+
+A configuration for an IBG $G = (\phi, \Gamma_1, \Gamma_2 ,t_0)$ is of the form $(i,t)$ with
+\begin{itemize}
+	\item $i \in \left\{ 1,2 \right\}$ determining the player to move next;
+	\item $t$ a truth assignment for the variables in $\Gamma_1 \uplus \Gamma_2$.
+\end{itemize}
+The initial configuration is of course $(1, t_0)$.
+
+A truth assignment $t'$ i a $p$-variation of a truth assignment $t$, for $p \in \Gamma_1 \uplus \Gamma_2$,
+\begin{itemize}
+	\item if $t' = t$ 
+	\item or $t'$ is obtained from $t$ by flipping the truth value of $p$.
+\end{itemize}
+It is further called a $\Gamma_i$-variation of $t$, if it is a $p$-variation of $t$ for some $p \in \Gamma_i$ where $i \in \left\{ 1,2 \right\}$.
+
+A winning strategy for Player 2 in $G$ is an infinite node-labeled tree $(V,E,l)$, where
+\begin{itemize}
+	\item $l$ assigns to each node $v \in V$ a configuration $l(v)$ ;
+	\item the root is labeled with the initial configuration;
+	\item if $l(v) = (2,t)$, then $v$ has one successor $v'$ with $l(v') = (1,t')$ for a  $\Gamma_2$-variation $t'$ of $t$;
+	\item if $l(v) = (1,t)$, then $v$ has successors $v_0, \ldots, v_{\lvert \Gamma_1 \rvert}$ with labels
+		$l(v_i) = (2,t_i)$ for $0 \leq i \leq \lvert \Gamma_1 \rvert$ such that $t_0, \ldots, t_{\lvert \Gamma_1 \rvert}$ 
+		are all $\Gamma_1$-variations of $t$ ;
+	\item if $v$ is a node with $l(v) = (i,t)$, then $t$ does not satisfy $\phi$.
+\end{itemize}
+It is known that checking for the existence of a winning strategy is an \textsc{ExpTime}-complete problem.
+
+For any initial configuration $G = (\phi, \Gamma_1, \Gamma_2, t_0)$ we construct an $\mathcal{ALC}$ TBox $\mathcal{T}_G$ 
+and a concept name $I$ such that Player 2 has a winning strategy iff $I$ is satisfiable w.r.t.\ $\mathcal{T}_G$.
+
+We assume $\Gamma_1 = \left\{ p_1, \ldots, p_m \right\}$ and $\Gamma_2 = \left\{ p_{m+1}, \ldots, p_n \right\}$.
+$\mathcal{T}_G$ consists of the following GCIs:
+\begin{itemize}
+	\item The initial configuration is as required:
+		\[
+			I \sqsubseteq T_1 \sqcap \bigsqcap_{1 \leq i \leq n ,t_0(p_i) = 0} \neg P_i \sqcap \bigsqcap_{1 \leq i \leq n, t_0(p_i) = 1} P_i
+		.\]
+	\item If it is the turn of Player 1, then there are $\lvert \Gamma_1 \rvert + 1$ successors:
+		\[
+			T_1 \sqsubseteq \exists r.(\neg F_1 \sqcap \ldots \sqcap \neg F_n) \sqcap \bigsqcap_{1 \leq i \leq m} \exists r.F_i
+		.\]
+	\item If it is the turn of Player 2, then there is one successor:
+		\[
+			T_2 \sqsubseteq \exists r.(\neg F_1 \sqcap \ldots \sqcap \neg F_n) \sqcup \bigsqcup_{m < i \leq n} \exists r.F_i
+		.\]
+	\item At most one variable is flipped in each move:
+		\[
+			\top \sqsubseteq \bigsqcap_{1 \leq i < j \leq n} \neg (F_i \sqcap F_j)
+		.\]
+	\item Variables that are flipped change their truth value:
+		\[
+			\top \sqsubseteq \bigsqcap_{1 \leq i \leq n} \bigg( \big( P_i \to \forall r.(F_i \to \neg P_i) \big) \sqcap \big( \neg P_i \to \forall r.(F_i \to P_i) \big) \bigg)
+		.\]
+	\item Variables that are not flipped keep their truth value:
+		\[
+			\top \sqsubseteq \bigsqcap_{1 \leq i \leq n} \bigg( \big( P_i \to \forall r.( \neg F_i \to P_i) \big) \sqcap \big( \neg P_i \to \forall r.(\neg F_i \to \neg P_i) \big) \bigg)
+		.\]
+		\item The players alternate:
+			\[
+			T_1 \sqsubseteq \forall r.T_2 \text{ and } T_2 \sqsubseteq \forall r.T_1
+			.\]
+		\item The formula $\phi$ is never satisfied: $\top \sqsubseteq \neg \phi^*$ 
+			where $\phi^*$ denotes the result of converting $\phi$ into an  $\mathcal{ALC}$ concept.
+\end{itemize}
+It is easy to see that $\mathcal{T}_G$ can be constructed in time polynomial in the size of $G$.
+
+\begin{lemma}
+	Player 2 has a winning strategy in $G \iff I$ is satisfiable w.r.t.\ $\mathcal{T}_G$.
+\end{lemma}

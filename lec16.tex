@@ -123,12 +123,12 @@ we will prove an \textsc{ExpTime} upper bound for satisfiability w.r.t.\ general
 \begin{definition}[type]
 	Let $\mathcal{T}$ be a general TBox satisfying the restrictions described above.
 	A type for $\mathcal{T}$ is a set $\tau \subseteq \func{sub}(\mathcal{T})$ satisfying the following conditions:
-	\begin{itemize}
+	\begin{enumerate}[label=(\roman*)]
 		\item $A \in \tau \implies \neg A \notin \tau$, for all $\neg A \in \func{sub}(\mathcal{T})$
 		\item $C \sqcap D \in \tau \implies C \in \tau \land D \in \tau$, for all $C \sqcap D \in \func{sub}(\mathcal{T})$
 		\item $C \sqcup D \in \tau \implies C \in \tau \lor D \in \tau$, for all $C \sqcup D \in \func{sub}(\mathcal{T})$
 		\item $C_{\mathcal{T}} \in \tau$
-	\end{itemize}
+	\end{enumerate}
 \end{definition}
 \begin{note}
 	Since the number of subconcepts of $\mathcal{T}$ is linear in the size of $\mathcal{T}$,
