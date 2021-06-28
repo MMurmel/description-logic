@@ -1,0 +1,224 @@
+\newpage
+\section{Concept satisfiability in $\mathcal{ALCOI}$}
+\lecture{18}{22.06.2021}{}
+We will now have a look at some basic complexity results for $\mathcal{ALCOI}$.
+Remember the semantics of the $\mathcal{O}$ and $\mathcal{I}$ constructor abbreviations:
+
+$\mathcal{I}$ stands for inverse roles, i.e.\ if $r$ is a role, then for every interpretation $\mathcal{I}$:
+\[
+	\left( r^- \right)^\mathcal{I} \coloneqq \left\{ (e,d) \mid (d,e) \in r^\mathcal{I} \right\}
+.\]
+$\mathcal{O}$ is used for nominals, i.e.\ singleton sets of individuals 
+with names $a$ from a set $\mathscr{I}$ of such names:
+\[
+	\left\{ a \right\}^\mathcal{I} \coloneqq \left\{ a^\mathcal{I} \right\}
+.\]
+Satisfiability w.r.t.\ general TBoxes in $\mathcal{ALCOI}$ remains in \textsc{ExpTime}.
+This can be shown by adapting the type elimination algorithm (without proof here).
+
+However, concept satisfiability in $\mathcal{ALCOI}$ is \textsc{ExpTime}-hard even without TBoxes.
+
+\begin{example}
+	Note, that the combination of inverse roles and nominal
+	allows us to enforce infinite chains of role successors.
+
+	Consider $C = \{ a \} \sqcap \exists u.\{ a \} \sqcap \forall u. \exists r.\exists u^-.\{ a \}$
+	and a model $\mathcal{I}$ of $C$ :
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\node[default, label= above: $C$] (n1) {$a$};
+			\draw (n1) edge[loop left, below] node{$u$} (n1);
+			\node[default, label= above: $\exists u^-.\{a\}$, right of = n1] (n2) {};
+			\node[default, label= above: $\exists u^-.\{a\}$, right of = n2] (n3) {};
+			\node[right of = n3] (n4) {$\cdots$};
+			\draw (n1) edge[above] node{$r$} (n2);
+			\draw (n2) edge[above] node{$r$} (n3);
+			\draw (n1) edge[above, bend right] node{$u$} (n2);
+			\draw (n1) edge[above, bend right] node{$u$} (n3);
+			\draw (n1) edge[above, bend right] node{$u$} (n4);
+			\draw (n3) edge[above] node{$r$} (n4);
+		\end{tikzpicture}
+	\end{figure}
+	Obviously, this model contains an infinite chain of $r$-successors,
+	but that does not mean that every model $\mathcal{I}'$ of $C$ must contain infinitely many elements:
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\node[default, label= above: $C$] (n1) {$a$};
+			\draw (n1) edge[loop left, left] node{$u$} (n1);
+			\draw (n1) edge[loop right, right] node{$r$} (n1);
+		\end{tikzpicture}
+	\end{figure}
+	However, in this cyclic case, an element of the concept $C$ would also have an infinite chain of $r$-successors.
+
+	The role name $u$ is chosen on purpose,
+	because it is a \textit{universal} role, i.e.\ it connects $a$ with every other element.
+\end{example}
+The combination of inverse roles and nominal allows us to enforce
+that all elements of the domain are reachable via some role $u$ from some nominal $a$.
+
+By reducing $\mathcal{ALC}$ concept satisfiability w.r.t.\ general TBoxes to $\mathcal{ALCOI}$ satisfiability,
+we show that the latter is \textsc{ExpTime}-hard.
+The idea of the reduction is that GCIs $C \sqsubseteq D$ can be propagated to all elements of the domain
+via the universal role $u$, by adding a value restriction $\forall u.(\neg C \sqcup D)$ to $a$.
+
+The reduction goes as follows:
+Given an $\mathcal{ALC}$ concept $C_0$ and an $\mathcal{ALC}$ TBox $\mathcal{T}$, we define
+\[
+	D_0 = C_0 \sqcap \{a\} \sqcap \exists u.\{a\} \sqcap \forall u.\left( \bigsqcap_{C \sqsubseteq D \in \mathcal{T}} \neg C \sqcup D \right) \sqcap \forall u.\left( \bigsqcap_{i<k} \forall r_i.\exists u^-.\{a\} \right)
+,\]
+where $r_0, \ldots, r_{k-1}$ are all role names occurring in $C$ and $\mathcal{T}$ and their inverses,
+and $u$ is a fresh role name.
+
+It remains to show, that this reduction is correct, i.e.,
+\[
+C_0 \text{ is satisfiable w.r.t.\ } \mathcal{T} \iff D_0 \text{ is satisfiable}
+.\]
+
+\begin{proof}
+	"$ \implies$":
+	Let $\mathcal{I}$ be a model of $C_0$ w.r.t.\ $\mathcal{T}$ and let $d_0 \in C_0^\mathcal{I}$.
+	We modify $\mathcal{I}$ as follows:
+	\begin{itemize}
+		\item $a^\mathcal{I} = d_0$ 
+		\item $u^\mathcal{I} = \Delta^\mathcal{I} \times \Delta^\mathcal{I}$
+	\end{itemize}
+	It is easy to see that this modified interpretation is a model of $D_0$.
+
+	"$ \impliedby$":
+	Let $\mathcal{I}$ be a model of $D_0$, and $d_0 \in D_0^\mathcal{I}$.
+	Let $\Delta^\mathcal{J}$ be the restriction of $\Delta^\mathcal{I}$ to those elements $d$ 
+	such that $d$ is reachable from $d_0$
+	by traveling an arbitrary number of times along the roles $r_0, \ldots, r_{k-1}$.
+	Let $ \mathcal{J}$ be the restriction of $\mathcal{I}$ to this set.
+	By induction on the structure of $\mathcal{ALCOI}$ concepts, we can easily prove:
+	\begin{mdframed}
+		For all $\mathcal{ALCOI}$ concepts $E$ that contain no nominals except $\left\{ a \right\}$ 
+		and all $d \in \Delta^{\mathcal{J}}$, we have:
+		\[
+			d \in E^\mathcal{I} \iff d \in E^{\mathcal{J}}
+		.\]
+	\end{mdframed}
+	\begin{subproof}
+		By induction on the structure of $\mathcal{ALCOI}$ concepts:
+		\begin{itemize}
+			\item The cases of $E = E_1 \sqcap E_2, E = E_1 \sqcup E_2,$ and $E = \neg E_1$ are easy to show.
+			\item $E = \exists r.E_1$:
+				If $d \in E^\mathcal{I}$, then there is $e \in \Delta^\mathcal{I}$ with $(d,e) \in r^\mathcal{I}$ and $e \in E_1^\mathcal{I}$.
+				Then $e \in \Delta^\mathcal{J}$ and thus $(d, e) \in r^\mathcal{J}$.
+				Induction yields $e \in E_1^\mathcal{J}$.
+				If $d \in E^\mathcal{J}$, then $(d,e)\in r^\mathcal{J}$ and $e \in E_1^\mathcal{J}$.
+				Then clearly $(d,e) \in r^\mathcal{I}$ and $e \in E_1^\mathcal{I}$ by induction.
+			\item $E = \forall r.E_1$: follows from $\exists$ and $\neg$.
+				\qedhere
+			\item $\exists = \left\{ b \right\}$ : but then $b=a$ and $d_0 = a^\mathcal{I} \in \Delta^\mathcal{J}$.
+		\end{itemize}
+	\end{subproof}
+	By this claim, $d_0 \in D_0^\mathcal{J}$ and thus $d_0 \in C_0^\mathcal{J}$, i.e.\ $C_0 \neq \emptyset$.
+	It remains to prove that $\mathcal{J}$ is a model of $\mathcal{T}$.
+	Let $E \sqsubseteq F \in \mathcal{T}$ and $d \in E^\mathcal{J}$.
+	By the claim $d \in E^\mathcal{I}$.
+	Since $d$ is reachable from $d_0$ along the roles $r_0, \ldots, r_{k-1}$
+	and by the definition of $D_0$, we have $d \in (\neg E \sqcup F)^\mathcal{I}$.
+	This yields $d \in F^\mathcal{I}$, i.e.\ $\mathcal{T}$ is satisfied.
+\end{proof}
+
+\begin{theorem}
+	In $\mathcal{ALCOI}$, concept satisfiability and subsumption (without TBoxes) is \textsc{ExpTime-hard}.
+\end{theorem}
+
+\section{Undecidable extensions of $\mathcal{ALC}$}
+We will now focus on extensions of $\mathcal{ALC}$ that make reasoning undecidable.
+
+The first one is a concept constructor, called \textit{role value maps}, that was already used in the first DL system \textsc{KL-ONE}.
+It was thought that reasoning in this DL was in \textsc{P}, when it was later discovered to be undecidable.
+
+\begin{definition*}[Role value maps]
+	With role value maps a concept definition can be of the form
+	\[
+		\left( r_1 \circ \cdots \circ r_k \sqsubseteq s_1 \circ \cdots \circ s_l \right)
+	,\]
+	where $r_1, \ldots, r_k$ and $s_1, \ldots, s_l$ are role names.
+	\begin{note}
+		The $\sqsubseteq$-symbol here is not to be mistaken for the syntax of a GCI.
+		This one is a concept constructor.
+	\end{note}
+
+	We define the semantics of role value maps as follows:
+	\begin{align*}
+		\begin{split}
+			&\left( r_1 \circ \cdots \circ r_k \right)^\mathcal{I} (d_0) \coloneqq \\
+			&\left\{ d_k \in \Delta^\mathcal{I} \mid \exists d_1,\ldots,d_{k-1}: (d_i, d_{i+1}) \in r_{i+1}^\mathcal{I} \text{ for } 0 \leq i < k \right\}
+		\end{split}
+		\\[3ex]
+		\begin{split}
+			&\left(r_1 \circ \cdots \circ r_k \sqsubseteq s_1 \circ \cdots \circ s_l \right)^\mathcal{I} \coloneqq \\
+			&\left\{ d \in \Delta^\mathcal{I} \mid (r_1 \circ \cdots \circ r_k)^\mathcal{I}(d) \subseteq (s_1 \circ \cdots \circ s_l)^\mathcal{I}(d)\right\}
+		\end{split}
+	\end{align*}
+\end{definition*}
+\begin{note}
+	Intuitively, by $\left( r_1 \circ \cdots \circ r_k \sqsubseteq s_1 \circ \cdots \circ s_l \right)$ we mean those  $d \in \Delta^\mathcal{I}$,
+	where all the elements reachable from $d$ via the roles  $r_1, \ldots ,r_k$
+	are a subset of the elements reachable via the roles $s_1, \ldots, s_l$.
+\end{note}
+
+\begin{example}
+	Consider this TBox about universities:
+	\begin{alignat*}{2}
+		& \var{Course} &&\sqsubseteq \exists \var{held-at}.\var{University} \\
+		& \var{Lecturer} &&\sqsubseteq \exists \var{teaches}.\var{Course} \sqcap \exists \var{employed-by}.\var{University}
+	\end{alignat*}
+
+	One could want to express, that the university at which the lecturer is employed is also the one, where he holds a course:
+	\[
+		\top \sqsubseteq \left( \var{teaches} \circ \var{held-at} \sqsubseteq \var{employed-by} \right)
+	.\]
+\end{example}
+Unfortunately though, role value maps are not only very interesting, but also cause undecidability.
+We first show undecidability in the presence of GCIs and later that the undecidability holds even without GCIs.
+
+We reduce the tiling problem to satisfiability in $\mathcal{ALC}$ with role value maps.
+\begin{definition}[tiling problem]
+	A tiling problem is a triple $P= (T, H, V)$, where $T$ is a finite set of tile types
+	and $H, V \subseteq T \times T$ represent the horizontal and vertical matching conditions.
+
+	A mapping $\tau: \N \times \N \to T$ is a solution for $P$ if for all $i, j \geq 0$ the following holds:
+	\begin{itemize}
+		\item if $\tau(i,j) = t$ and $\tau(i+1,j) = t'$, then $(t,t') \in H$ ;
+		\item if $\tau(i,j) = t$ and $\tau(i,j+1) = t'$, then $(t,t') \in V$.
+	\end{itemize}
+
+	The problem whether a given tiling problem $P$ has a solution is known to be undecidable.
+\end{definition}
+Given a tiling problem $P = (T, H, V)$, we construct a TBox $\mathcal{T}_P$ with role value maps
+such that models of $\mathcal{T}_P$ represent solutions to P.
+\begin{itemize}
+	\item Concept names: for each tile $t \in T$ a concept name $A_t$ 
+	\item Role names: $r_x$ and $r_y$ for the horizontal and vertical successor relations.
+\end{itemize}
+The TBox $\mathcal{T}_P$ consists of the following GCIs:
+\begin{enumerate}[label=(\roman*)]
+	\item Every position has a horizontal and a vertical successor:
+		\[
+			\top \sqsubseteq  \exists r_x .\top \sqcap \exists r_y. \top
+		.\]
+	\item Every position is labeled with exactly one tile type:
+		\[
+			\top \sqsubseteq \bigsqcup_{t \in T} A_t \sqcap \bigsqcap_{t,t' \in T, t \neq t'} \neg (A_t \sqcap A_{t'})
+		.\]
+	\item Adjacent tiles satisfy the matching conditions:
+		\[
+			\top \sqsubseteq \bigsqcup_{(t,t') \in H} (A_t \sqcap \forall r_x.A_{t'}) \sqcap \bigsqcup_{(t,t') \in V} (A_t \sqcap \forall r_y.A_{t'})
+		.\]
+	\item Every $r_x r_y$-successor is also a $r_y r_x$-successor and vice versa:
+		\begin{align*}
+			\top &\sqsubseteq (r_x \circ r_y \sqsubseteq r_y \circ r_x) \\
+			\top &\sqsubseteq (r_y \circ r_x \sqsubseteq r_x \circ r_y)
+		\end{align*}
+\end{enumerate}
+
+\begin{lemma}[correctness of the reduction]
+	$\top$ is satisfiable w.r.t.\ $\mathcal{T}_P \iff P$  has a solution.
+\end{lemma}

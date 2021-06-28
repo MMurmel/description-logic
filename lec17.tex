@@ -14,7 +14,7 @@ We can then define the type elimination algorithm:
 \begin{algorithm}[H]
 	\caption{$\mathcal{ALC}\func{-Elim}(A_0, \mathcal{T})$}
 	\begin{algorithmic}[1]
-		\State set $\Gamma_0$ to the set of all types of $\mathcal{T}$ 
+		\State set $\Gamma_0$ to the set of all types of $\mathcal{T}$
 		\State $i = 0$
 		\Repeat
 		\State $i = i + 1$
@@ -37,12 +37,12 @@ We can then define the type elimination algorithm:
 	Then there is $\tau_0 \in \Gamma_i$ such that $A_0 \in \tau_0$.
 	Define the interpretation $\mathcal{I}$ as follows:
 	\begin{itemize}
-		\item $\Delta^\mathcal{I} = \Gamma_i$ 
+		\item $\Delta^\mathcal{I} = \Gamma_i$
 		\item $A^\mathcal{I} = \left\{ \tau \in \Gamma_i \mid A \in \tau \right\}$
 		\item $r^\mathcal{I} = \left\{ (\tau, \tau') \in \Gamma_i \times \Gamma_i \mid \forall r.C \in \tau \implies C \in \tau' \right\}$
 	\end{itemize}
 	By induction on the structure of $C$, we prove for all $C \in \func{sub}(\mathcal{T})$ and all $\tau_i \in \Gamma_i$,
-	that C 
+	that C
 	\[
 		C \in \tau \implies \tau \in C^{\mathcal{I}}
 	.\]
@@ -69,7 +69,7 @@ We can then define the type elimination algorithm:
 	i.e.\ $\mathcal{I}$ is also a model of $A_0$.
 
 	"$ \impliedby$":
-	If $A_0$ is satisfiable w.r.t.\ $\mathcal{T}$, then there is a model $\mathcal{I}$ of $\mathcal{T}$ 
+	If $A_0$ is satisfiable w.r.t.\ $\mathcal{T}$, then there is a model $\mathcal{I}$ of $\mathcal{T}$
 	and $d_0 \in \Delta^\mathcal{I}$ such that $d_0 \in A_0^\mathcal{I}$.
 	For all $d \in \Delta^\mathcal{I}$, set
 	\[
@@ -128,7 +128,7 @@ The initial configuration is of course $(1, t_0)$.
 
 A truth assignment $t'$ i a $p$-variation of a truth assignment $t$, for $p \in \Gamma_1 \uplus \Gamma_2$,
 \begin{itemize}
-	\item if $t' = t$ 
+	\item if $t' = t$
 	\item or $t'$ is obtained from $t$ by flipping the truth value of $p$.
 \end{itemize}
 It is further called a $\Gamma_i$-variation of $t$, if it is a $p$-variation of $t$ for some $p \in \Gamma_i$ where $i \in \left\{ 1,2 \right\}$.
@@ -139,21 +139,30 @@ A winning strategy for Player 2 in $G$ is an infinite node-labeled tree $(V,E,l)
 	\item the root is labeled with the initial configuration;
 	\item if $l(v) = (2,t)$, then $v$ has one successor $v'$ with $l(v') = (1,t')$ for a  $\Gamma_2$-variation $t'$ of $t$;
 	\item if $l(v) = (1,t)$, then $v$ has successors $v_0, \ldots, v_{\lvert \Gamma_1 \rvert}$ with labels
-		$l(v_i) = (2,t_i)$ for $0 \leq i \leq \lvert \Gamma_1 \rvert$ such that $t_0, \ldots, t_{\lvert \Gamma_1 \rvert}$ 
+		$l(v_i) = (2,t_i)$ for $0 \leq i \leq \lvert \Gamma_1 \rvert$ such that $t_0, \ldots, t_{\lvert \Gamma_1 \rvert}$
 		are all $\Gamma_1$-variations of $t$ ;
 	\item if $v$ is a node with $l(v) = (i,t)$, then $t$ does not satisfy $\phi$.
 \end{itemize}
 It is known that checking for the existence of a winning strategy is an \textsc{ExpTime}-complete problem.
 
-For any initial configuration $G = (\phi, \Gamma_1, \Gamma_2, t_0)$ we construct an $\mathcal{ALC}$ TBox $\mathcal{T}_G$ 
+For any initial configuration $G = (\phi, \Gamma_1, \Gamma_2, t_0)$ we construct an $\mathcal{ALC}$ TBox $\mathcal{T}_G$
 and a concept name $I$ such that Player 2 has a winning strategy iff $I$ is satisfiable w.r.t.\ $\mathcal{T}_G$.
+
+The idea is as follows:
+\begin{itemize}
+	\item winning strategies are the tree models of $I$ w.r.t.\ $\mathcal{T}_G$
+	\item we use only one role name $r$ as edge relation for the tree
+	\item for each propositional variable $p_i$ use a concept name $P_i$, indicating its value assignment
+	\item $T_1, T_2$ to describe who is to play,
+	\item $F_1, \ldots, F_n$ to indicate which variable has been flipped to reach the current configuration.
+\end{itemize}
 
 We assume $\Gamma_1 = \left\{ p_1, \ldots, p_m \right\}$ and $\Gamma_2 = \left\{ p_{m+1}, \ldots, p_n \right\}$.
 $\mathcal{T}_G$ consists of the following GCIs:
 \begin{itemize}
 	\item The initial configuration is as required:
 		\[
-			I \sqsubseteq T_1 \sqcap \bigsqcap_{1 \leq i \leq n ,t_0(p_i) = 0} \neg P_i \sqcap \bigsqcap_{1 \leq i \leq n, t_0(p_i) = 1} P_i
+			I \sqsubseteq T_1 \sqcap \bigsqcap_{\substack{1 \leq i \leq n \\ t_0(p_i) = 0}} \neg P_i \sqcap \bigsqcap_{\substack{1 \leq i \leq n \\ t_0(p_i) = 1}} P_i
 		.\]
 	\item If it is the turn of Player 1, then there are $\lvert \Gamma_1 \rvert + 1$ successors:
 		\[
@@ -179,7 +188,7 @@ $\mathcal{T}_G$ consists of the following GCIs:
 			\[
 			T_1 \sqsubseteq \forall r.T_2 \text{ and } T_2 \sqsubseteq \forall r.T_1
 			.\]
-		\item The formula $\phi$ is never satisfied: $\top \sqsubseteq \neg \phi^*$ 
+		\item The formula $\phi$ is never satisfied: $\top \sqsubseteq \neg \phi^*$
 			where $\phi^*$ denotes the result of converting $\phi$ into an  $\mathcal{ALC}$ concept.
 \end{itemize}
 It is easy to see that $\mathcal{T}_G$ can be constructed in time polynomial in the size of $G$.
@@ -187,3 +196,10 @@ It is easy to see that $\mathcal{T}_G$ can be constructed in time polynomial in 
 \begin{lemma}
 	Player 2 has a winning strategy in $G \iff I$ is satisfiable w.r.t.\ $\mathcal{T}_G$.
 \end{lemma}
+\begin{proof}
+	Exercise (similar to the proof for FBG).
+\end{proof}
+
+\begin{theorem}
+	In $\mathcal{ALC}$, concept satisfiability and subsumption w.r.t.\ general TBoxes is \textsc{ExpTime}-complete.
+\end{theorem}
