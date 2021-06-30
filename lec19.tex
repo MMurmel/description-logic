@@ -1,0 +1,152 @@
+\lecture{19}{29.06.2021}{}[0.5cm]
+\begin{proof}
+	"$ \implies$":
+	Let $\mathcal{I}$ be a model of $\mathcal{T}_P$ (therefore it satisfies $\top$, because $\Delta^\mathcal{I} \neq \emptyset$).
+	We construct a mapping $f: \N \times \N \to \Delta^\mathcal{I}$ such that,
+	for all $i, j \geq 0$,
+	\begin{itemize}
+		\item $\left(f(i,j), f(i+1,j)\right) \in r_x^\mathcal{I}$;
+		\item $\left(f(i,j), f(i, j+1)\right) \in r_y^\mathcal{I}$.
+	\end{itemize}
+	We proceed in two steps:
+	\begin{enumerate}
+		\item First, we cut out a "staircase", i.e.\ we define $f(i,j)$ for all $i,j \in \N$
+			such that $j \in \left\{ i, i-1 \right\}$ :
+			\begin{itemize}
+				\item set $f(0,0)$ to an arbitrary element of $\Delta^\mathcal{I}$,
+				\item if $f(i, i)$ was defined last, then select a $d \in \Delta^\mathcal{I}$
+					with $\left(f(i,i),d\right) \in r_x^\mathcal{I}$,
+					and set $f(i+1,i) = d$
+				\item if $f(i, i-1)$ was defined last, then select a $d \in \Delta^\mathcal{I}$
+					such that $\left( f(i, i-1), d \right) \in r_x^\mathcal{I}$,
+					and set $f(i,i) = d$.
+			\end{itemize}
+			In both cases, the required elements exist since $\mathcal{I}$ is a model of $\mathcal{T}_P$.
+		\item In the second step, we complete the construction of $f$ as follows:
+			\begin{itemize}
+				\item if $f(i,j), f(i+1, j)$ and $f(i+1, j+1) $ are defined,
+					but $f(i, j+1)$ is undefined, select $d \in \Delta^\mathcal{I}$
+					such that $\left(f(i,j), d \right) \in r_y^\mathcal{I}$\\
+					and $\left( d, f(i+1,j+1) \right) \in r_x^\mathcal{I}$
+					and set $f(i, j+1) = d$.
+				\item if $f(i,j), f(i,j+1)$ and $f(i+1, j+1)$ are defined,
+					but $f(i+1, j)$ is undefined, select $d \in \Delta^\mathcal{I}$
+					such that $\left( f(i,j), d \right) \in r_x^\mathcal{I}$\\
+					and $\left( d, f(i+1, j+1) \right) \in r_y^\mathcal{I}$
+					and set $f(i + 1, j) = d$.
+			\end{itemize}
+			The required elements $d \in \Delta^\mathcal{I}$ exist due to the role value maps in $\mathcal{T}_P$.
+			This way, we can define the complete function $f: \N \times \N \to \Delta^\mathcal{I}$.
+			Now define $\tau: \N \times \N \to T$ by setting $\tau(i,j) = t$ if
+			$f(i,j) \in A_t^\mathcal{I}$.
+			It is easy to verify that this mapping is a solution of $P$.
+	\end{enumerate}
+
+	"$ \impliedby$":
+	Let $\tau$ be a solution of $P$.
+	Define the interpretation $\mathcal{I}$ as follows:
+	\begin{itemize}
+		\item $\Delta^\mathcal{I} = \N \times \N$
+		\item $r_x^\mathcal{I} = \left\{ \left( (i,j), (i+1, j) \right) \mid i,j \geq 0 \right\}$
+		\item $r_y^\mathcal{I} = \left\{ \left( (i,j), (i, j+1) \right) \mid i,j \geq 0 \right\}$
+		\item $A_t^\mathcal{I} = \left\{ (i,j) \mid \tau(i,j) = t \right\}$ for all $t \in T$.
+	\end{itemize}
+	It is easy to see that $\mathcal{I}$ is a model of $\mathcal{T}_P$.
+\end{proof}
+
+\begin{theorem}
+	In the extension of $\mathcal{ALC}$ with role value maps, concept satisfiability and subsumption w.r.t.\ general TBoxes are undecidable.
+\end{theorem}
+\begin{theorem}
+	In the extension of $\mathcal{ALC}$ with role value maps, concept satisfiability and subsumption (without) TBoxes are undecidable.
+\end{theorem}
+\begin{proof}
+	Basically, we show that TBoxes can be expressed within concepts.
+	Let $C$ be a concept and $\mathcal{T}$ a TBox.
+	We introduce a fresh role $u$ and define the concept $D$ as the conjunction of the following concepts:
+	\begin{itemize}
+		\item $\exists u.C$ (generates an instance of $C$)
+		\item to ensure that the element that satisfies $D$
+			can "see" through $u$ all elements relevant for satisfying $C$
+			\[
+				\bigsqcap_{r} u \circ r\sqsubseteq u
+			,\]
+			where $r \in \mathscr{R}$.
+		\item the concept \[
+				\forall u.\left( \bigsqcap_{C \sqsubseteq D \in \mathcal{T}} \neg C \sqcup D \right)
+			.\]
+	\end{itemize}
+	It is easy to see that $D$ is satisfiable iff $C$ is satisfiable w.r.t.\ $\mathcal{T}$, which is undecidable.
+\end{proof}
+
+\chapter{The $\mathcal{EL}$ family}
+We now take a look at another, quite inexpressive, DL with the goal of obtaining reasoning in \textsc{P}.
+
+The DL $\mathcal{EL}$ has the constructors
+\begin{itemize}
+	\item existential restriction $\exists r.C$ ;
+	\item conjunction : $C \sqcap D$ ;
+	\item the top concept: $\top$.
+\end{itemize}
+Obviously, every $\mathcal{EL}$ concept is satisfiable w.r.t.\ any $\mathcal{EL}$ TBox
+and thus satisfiability is not an interesting problem.
+
+Subsumption in $\mathcal{EL}$ is non-trivial, and cannot be reduced to satisfiability in $\mathcal{EL}$ due to the absence of negation.
+We show that subsumption w.r.t.\ general TBoxes in $\mathcal{EL}$ can be decided in polynomial time.
+
+\section{Subsumption in $\mathcal{EL}$ w.r.t.\ general TBoxes}
+Without loss of generality we assume the concepts tested for subsumption are concept names.
+This is justified by the following lemma.
+
+\begin{lemma}
+	Let $\mathcal{T}$ be a general $\mathcal{EL}$ TBox, $C,D$ $\mathcal{EL}$ concepts,
+	and $A,B$ concept names not occurring in $\mathcal{T}, C$ or $D$.
+	Then
+	\[
+	\mathcal{T} \vDash C \sqsubseteq D \iff \mathcal{T} \cup \left\{ A \sqsubseteq C, D \sqsubseteq B \right\} \vDash A \sqsubseteq B
+	.\]
+\end{lemma}
+\begin{proof}
+	First, assume that $\mathcal{T} \cup \left\{ A \sqsubseteq C, D \sqsubseteq B \right\} \vDash A \sqsubseteq B$.
+	Let $\mathcal{I}$ be a model of $\mathcal{T}$.
+	Consider the interpretation $\mathcal{I}'$ that coincides with $\mathcal{I}$ on all role names
+	and all concept names other than  $A$ and $B$,
+	and interprets $A,B$ as $A^{\mathcal{I}'} = C^\mathcal{I}$ and $B^{\mathcal{I}'} = D^\mathcal{I}$.
+	Since $\mathcal{T}, C, D$ do not contain $A, B$,
+	the interpretation $\mathcal{I}'$ is a model of $\mathcal{T}$ and
+	$C^\mathcal{I} = C^{\mathcal{I}'}, D^{\mathcal{I}} = D^{\mathcal{I}'}$.
+	Thus, $\mathcal{I}'$ is also a model of $\left\{ A \sqsubseteq C, D \sqsubseteq B \right\}$
+	since $A^\mathcal{I} = C^{\mathcal{I}'} = C^\mathcal{I}$
+	and $D^{\mathcal{I}'} = D^\mathcal{I} = B^\mathcal{I}$.
+	Thus, our assumption implies that $C^\mathcal{I} = A^{\mathcal{I}'} \sqsubseteq B^{\mathcal{I}'} = D^\mathcal{I}$.
+	We have shown that $\mathcal{T} \vDash C \sqsubseteq D$.
+
+	On the other hand, assume that $\mathcal{T} \vDash C \sqsubseteq D$,
+	and let $\mathcal{I}$ be a model of $\mathcal{T} \cup \left\{ A \sqsubseteq C, D \sqsubseteq B \right\}$.
+	Since $\mathcal{I}$ is a model of $\mathcal{T}$, we have $A^\mathcal{I} \subseteq C^\mathcal{I} \subseteq D^\mathcal{I} \subseteq B^\mathcal{I}$,
+	which shows $\mathcal{T} \cup \left\{ A \sqsubseteq C, D \sqsubseteq B \right\} \vDash A \sqsubseteq B$.
+\end{proof}
+
+In addition, we assume that the TBox $\mathcal{T}$ is in normal form,
+i.e.\ all GCIs in $\mathcal{T}$ have one of the following forms:
+\begin{itemize}
+	\item $A \sqsubseteq B$
+	\item $A_1 \sqcap A_2 \sqsubseteq B$
+	\item $A \sqsubseteq \exists r.B$
+	\item $\exists r. A \sqsubseteq B$
+\end{itemize}
+where $A, A_1, A_2, B$ are concept names or the top concept $\top$ and $r$ is a role name.
+\begin{mdframed}[frametitle= Normalisation of an $\mathcal{EL}$ TBox]
+	We can transform a given TBox into a normalized one by applying the following normalization rules:
+	\begin{alignat*}{3}
+		&\var{NF0} \qquad& \widehat{D} \sqsubseteq \widehat{E} &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ A \sqsubseteq \widehat{E} \\
+		&\var{NF1}_r \qquad& C \sqcap \widehat{D} \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ C \sqcap A \sqsubseteq \widehat{B} \\
+		&\var{NF1}_l \qquad& \widehat{D} \sqcap C \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ A \sqcap C \sqsubseteq \widehat{B} \\
+		&\var{NF2} \qquad& \exists r.\widehat{D} \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ \exists r.A \sqsubseteq B\\
+		&\var{NF3} \qquad& B \sqsubseteq \exists r. \widehat{D} &\longrightarrow\ && A \sqsubseteq \widehat{D},\ B \sqsubseteq \exists r.A \\
+		&\var{NF4} \qquad & B \sqsubseteq D \sqcap E &\longrightarrow\ && B \sqsubseteq D,\ B \sqsubseteq E
+	\end{alignat*}
+	where $C, D, E$ denote arbitrary $\mathcal{EL}$ concepts,
+	$\widehat{D}, \widehat{E}$ denote $\mathcal{EL}$ concepts that are neither concept names nor $\top$,
+	$B$ is a concept name, and $A$ is a new concept name.
+\end{mdframed}

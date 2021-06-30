@@ -124,6 +124,8 @@ C_0 \text{ is satisfiable w.r.t.\ } \mathcal{T} \iff D_0 \text{ is satisfiable}
 	This yields $d \in F^\mathcal{I}$, i.e.\ $\mathcal{T}$ is satisfied.
 \end{proof}
 
+% Baader counting
+\stepcounter{definition}
 \begin{theorem}
 	In $\mathcal{ALCOI}$, concept satisfiability and subsumption (without TBoxes) is \textsc{ExpTime-hard}.
 \end{theorem}
@@ -180,6 +182,11 @@ Unfortunately though, role value maps are not only very interesting, but also ca
 We first show undecidability in the presence of GCIs and later that the undecidability holds even without GCIs.
 
 We reduce the tiling problem to satisfiability in $\mathcal{ALC}$ with role value maps.
+
+%Baader
+\stepcounter{definition}
+\stepcounter{definition}
+\stepcounter{definition}
 \begin{definition}[tiling problem]
 	A tiling problem is a triple $P= (T, H, V)$, where $T$ is a finite set of tile types
 	and $H, V \subseteq T \times T$ represent the horizontal and vertical matching conditions.
@@ -218,7 +225,7 @@ The TBox $\mathcal{T}_P$ consists of the following GCIs:
 			\top &\sqsubseteq (r_y \circ r_x \sqsubseteq r_x \circ r_y)
 		\end{align*}
 \end{enumerate}
-
+\newpage
 \begin{lemma}[correctness of the reduction]
 	$\top$ is satisfiable w.r.t.\ $\mathcal{T}_P \iff P$  has a solution.
 \end{lemma}
