@@ -1,0 +1,167 @@
+\lecture{20}{01.07.2021}{}
+\begin{lemma}
+	Any $\mathcal{EL}$ TBox $\mathcal{T}$ can be transformed into a normalized $\mathcal{EL}$ TBox $\mathcal{T}'$ 
+	by a linear number of applications of tho normalization rules.
+	In addition, the size of the resulting TBox $\mathcal{T}'$ is linear in the size of $\mathcal{T}$.
+\end{lemma}
+\begin{proof}
+	We show, that the \textit{abnormality degree} of a TBox decreases with each rule application:
+
+		An occurrence of a concept $\widehat{D}$ is said to be abnormal within a general $\mathcal{EL}$ TBox if:
+		\begin{itemize}
+			\item $\widehat{D}$ is the left-hand side of a GCI $\widehat{D} \sqsubseteq \widehat{E}$ 
+				where $\widehat{D}, \widehat{E}$ are neither concept names nor $\top$ ; or
+			\item $\widehat{D}$ is neither a concept name nor $\top$,
+				and this occurrence is under a conjunction or an existential restriction operator; or
+			\item the occurrence of $\widehat{D}$ is under a conjunction operator on the right-hand side of a GCI.
+		\end{itemize}
+
+		The abnormality degree of a general $\mathcal{EL}$ TBox is the number of abnormal occurrences of a concept in this TBox:
+		\begin{itemize}
+			\item the abnormality degree of a TBox is bounded by the size of the TBox,
+			\item a TBox with abnormality degree $0$ is normalized.
+		\end{itemize}
+
+		In a first phase of rule application, we apply $\var{NF0}$ exhaustively.
+		Each application of this rule decrements the abnormality degree by at least 1.
+		The occurrence of $\widehat{D}$ on the left-hand side of this rule is abnormal,
+		while $\widehat{D}$ is no longer abnormal on the right-hand side.
+		An abnormal occurrence of a concept in $\widehat{D}$ or $\widehat{E}$
+		in the new GCIs was also one in the old one.
+		Thus, this first phase terminates after a linear number of rule applications.
+		The resulting TBox contains only GCIs that have a concept name on the left-hand side or on the right-hand side.
+		This property is preserved by the application of other rules afterwards,
+		which is the reason why in these rules we assume that one of the sides of a GCI is a concept name (or $\top$).
+		In the following "concept name" shall mean a concept name from $\mathscr{C}$ or $\top$.
+
+		In the second phase, we apply the remaining rules exhaustively.
+		Each application of such a rule decreases the abnormality degree by at least 1.
+		\begin{itemize}
+			\item $\var{NF1}_r, \var{NF1}_l, \var{NF2}, \var{NF3}$ : Again the occurrence of $\widehat{D}$ on the left-hand side
+				of the rule is abnormal, while it is no longer abnormal on the right-hand side.
+				In addition, no new abnormal occurrences are introduced.
+			\item $\var{NF4}$ : The occurrences of $D$ and $E$ are abnormal
+				and they are no longer abnormal after the rule was applied.
+		\end{itemize}
+		Summing up, this shows that over all we can have only a number of rule applications that is bounded by the size of the TBox.
+		When both phases are finished, then the resulting TBox has abnormality degree $0$, i.e.\ is normalized.
+
+		Size of the resulting TBox $\mathcal{T}'$ :
+		Note that an application of a rule adds at most $2$ to the size of the TBox.
+		Since the number of rule applications is bounded by the size of the TBox, we know that the size of $\mathcal{T}'$ 
+		is bounded by $3$ times the size of $\mathcal{T}'$.
+\end{proof}
+
+Furthermore, the TBox created by application of the normalization rules is "correct".
+However, $\mathcal{T}$ and $\mathcal{T}'$ are not equivalent due to the introduction of new concept names by the normalization rules.
+We will compute the subsumption hierarchy for the concept names occurring in $\mathcal{T}$ by classification of $\mathcal{T}'$.
+$\mathcal{T}'$ is called a conservative extension of $\mathcal{T}$.
+
+\begin{definition}
+	For a given general $\mathcal{EL}$ TBox $\mathcal{T}_0$, its signature $\func{sig}(\mathcal{T}_0)$
+	consists of the concept and role names occurring in the GCIs of $\mathcal{T}_0$.
+
+	Given general $\mathcal{EL}$ TBoxes $\mathcal{T}_1, \mathcal{T}_2$, we say that $\mathcal{T}_2$ is a conservative extension of $\mathcal{T}_1$ if
+	\begin{itemize}
+		\item $\func{sig}(\mathcal{T}_1) \subseteq \func{sig}(\mathcal{T}_2)$,
+		\item every model of $\mathcal{T}_2$ is a model of $\mathcal{T}_1$, and
+		\item for every model $\mathcal{I}_1$ of $\mathcal{T}_1$ there exists a model $\mathcal{I}_2$ of $\mathcal{T}_2$ 
+			such that $\mathcal{I}_1$ and $\mathcal{I}_2$ coincide on $\func{sig}(\mathcal{T}_1) \cup \left\{ \top \right\}$, i.e.\ :
+			\begin{itemize}
+				\item $\Delta^{\mathcal{I}_1} = \Delta^{\mathcal{I}_2}$,
+				\item $A^{\mathcal{I}_1} = A^{\mathcal{I}_2}$ for all concept names $A \in \func{sig}(\mathcal{T}_1)$, and
+				\item $r^{\mathcal{I}_1} = r^{\mathcal{I}_2}$ for all role names $r \in \func{sig}(\mathcal{T}_1)$.
+			\end{itemize}
+	\end{itemize}
+\end{definition}
+\begin{note}
+	The notion of conservative extensions is transitive.
+\end{note}
+
+\begin{lemma}
+	Let $\mathcal{T}_1$ and $\mathcal{T}_2$ be general $\mathcal{EL}$ TBoxes such that
+	 $\mathcal{T}_2$ is a conservative extension of $\mathcal{T}_1$,
+	 and $C, D$ $\mathcal{EL}$ concepts containing only concept and role names from $\func{sig}(\mathcal{T}_1)$.
+	 Then
+	  \[
+	 \mathcal{T}_1 \vDash C \sqsubseteq D \iff \mathcal{T}_2 \vDash C \sqsubseteq D
+	 .\]
+\end{lemma}
+\begin{proof}
+	First, assume that $\mathcal{T}_2 \not\vDash C \sqsubseteq D$.
+	Then, there is a model $\mathcal{I}$ of $\mathcal{T}_2$ such that $C^\mathcal{I} \not\subseteq D^\mathcal{I}$.
+	Since $\mathcal{I}$ is also a model of $\mathcal{T}_1$, this yields $\mathcal{T}_1 \not\vDash C \sqsubseteq D$.
+
+	Second, assume that $\mathcal{T}_1 \not\vDash C \sqsubseteq D$.
+	Then there is a model $\mathcal{I}_1$ of $\mathcal{T}_1$ such that $C^{\mathcal{I}_1} \not \subseteq D^{\mathcal{I}_1}$.
+	Let $\mathcal{I}_2$ be the model of $\mathcal{T}_2$ such that
+	the extensions of concept and role names in $\func{sig}(\mathcal{T}_1) \cup \left\{ \top \right\}$ coincide in $\mathcal{I}_1$ and $\mathcal{I}_2$.
+	Since $C, D$ contain only concept and role names from $\func{sig}(\mathcal{T}_1)$ and possibly $\top$,
+	we have $C^{\mathcal{I}_2} = C^{\mathcal{I}_1} \not \subseteq D^{\mathcal{I}_1} = D^{\mathcal{I}_2}$.
+	This shows $\mathcal{I}_2 \not\vDash C \sqsubseteq D$.
+\end{proof}
+
+\begin{prop}
+	Assume that $\mathcal{T}_2$ is obtained from $\mathcal{T}_1$ by applying one of the normalization rules.
+	Then $\mathcal{T}_2$ is a conservative extension of $\mathcal{T}_1$.
+\end{prop}
+\begin{proof}
+	We treat $\var{NF1}_r$ in detail.
+	The rules $\var{NF0}, \var{NF1}_l, \var{NF2}, \var{NF3}$ can be treated similarly and $\var{NF4}$ is trivial,
+	since in this case the TBoxes are actually equivalent.
+	\begin{itemize}
+		\item $\var{NF1}_r$: assume that $\mathcal{T}_2$ is obtained from $\mathcal{T}_1$ by replacing
+			$C \sqcap \widehat{D} \sqsubseteq B$ with the two GCIs $\widehat{D} \sqsubseteq A$
+			and $C \sqcap A \sqsubseteq B$,
+			where $A \notin \func{sig}(\mathcal{T}_1)$.
+			Obviously, $\func{sig}(\mathcal{T}_2) = \func{sig}(\mathcal{T}_1) \cup \left\{ A \right\}$,
+			and thus $\func{sig}(\mathcal{T}_1) \subseteq \func{sig}(\mathcal{T}_2)$.
+		\item Next, assume that $\mathcal{I}$ is a model of $\mathcal{T}_2$.
+			Then $\widehat{D}^\mathcal{I} \subseteq A^\mathcal{I}$ and $C^\mathcal{I} \cap A^\mathcal{I} \subseteq B^\mathcal{I}$.
+			Obviously, this implies 
+			$\left( C \sqcap \widehat{D} \right)^\mathcal{I} = C^\mathcal{I} \sqcap \widehat{D}^\mathcal{I} \subseteq C^\mathcal{I} \cap A^\mathcal{I} \subseteq B^\mathcal{I}$.
+			This shows that $\mathcal{I}$ satisfies $C \sqcap \widehat{D} \sqsubseteq B$,
+			and thus is a model of $\mathcal{T}_1$.
+		\item Finally assume that $\mathcal{I}_1$ is a model of $\mathcal{T}_1$.
+			Let $\mathcal{I}_2$ be the interpretation that coincides with $\mathcal{I}_1$ 
+			on all concept and role names except for $A$,
+			and has the same domain as $\mathcal{I}_1$.
+			For $A$, we define $A^\mathcal{I} = \widehat{D}^{\mathcal{I}_1}$.
+			Since $\mathcal{I}_1$ is a model of $\mathcal{T}_1$, it satisfies $C^{\mathcal{I}_1} \cap \widehat{D}^{\mathcal{I}_1} \subseteq B^{\mathcal{I}_1}$.
+			In addition, $A$ does not occur in $C, \widehat{D}$ and $B$,
+			which yields $C^{\mathcal{I}_1} = C^{\mathcal{I}_2}, \widehat{D}^{\mathcal{I}_1} = \widehat{D}^{\mathcal{I}_2}$ and $B^{\mathcal{I}_1} = B^{\mathcal{I}_2}$.
+			This yields $ \widehat{D}^{\mathcal{I}_2} = \widehat{D}^{\mathcal{I}_1} = A^{\mathcal{I}_2}$
+			and $C^{\mathcal{I}_2} \cap A^{\mathcal{I}_2} = C^{\mathcal{I}_1} \cap \widehat{D}^{\mathcal{I}_1} \subseteq B^{\mathcal{I}_1} = B^{\mathcal{I}_2}$.
+			This shows that $\mathcal{I}_2$ is a model of $\mathcal{T}_2$.
+			\qedhere
+	\end{itemize}
+\end{proof}
+
+\begin{corollary}
+	Let $\mathcal{T}$ be a general $\mathcal{EL}$ TBox and $\mathcal{T}'$ the normalized TBox obtained from $\mathcal{T}$ 
+	using the normalization rules, as described above.
+	Then we have
+	\[
+	\mathcal{T} \vDash A \sqsubseteq B \iff \mathcal{T}' \vDash A \sqsubseteq B
+	\]
+	for all concept names $A,B \in \func{sig}(\mathcal{T}) \cup \left\{ \top \right\}$.
+\end{corollary}
+We have hereby shown that it is enough to classify $\mathcal{T}'$
+in order to get a subsumption hierarchy for the concept names occurring in $\mathcal{T}$.
+
+\subsection{Classification procedure for $\mathcal{EL}$}
+As shown above, we can assume the general input TBox $\mathcal{T}$ to be in normal form.
+The procedure will start with the GCIs in $\mathcal{T}$ and add implied GCIs of a specific form using appropriate inference rules,
+
+\begin{definition}
+	A $\mathcal{T}$-sequent is a GCI of the form
+	\[
+	A \sqsubseteq B, \quad A_1 \sqcap A_2 \sqsubseteq B, \quad A \sqsubseteq \exists r.B,\quad \text{or} \quad \exists r.A \sqsubseteq B
+	,\]
+	where $A, A_1, A_2, B$ are concept names in $\func{sig}(\mathcal{T})$ or the top concept $\top$,
+	and $r$ is a role name in $\func{sig}(\mathcal{T})$.
+\end{definition}
+\begin{note}
+	The overall number of $\mathcal{T}$-sequents is polynomial in the size of $\mathcal{T}$.
+	Furthermore, every GCI in $\mathcal{T}$ is a $\mathcal{T}$-sequent.
+\end{note}

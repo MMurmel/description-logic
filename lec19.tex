@@ -95,6 +95,7 @@ Subsumption in $\mathcal{EL}$ is non-trivial, and cannot be reduced to satisfiab
 We show that subsumption w.r.t.\ general TBoxes in $\mathcal{EL}$ can be decided in polynomial time.
 
 \section{Subsumption in $\mathcal{EL}$ w.r.t.\ general TBoxes}
+\subsection{Auxiliary results}
 Without loss of generality we assume the concepts tested for subsumption are concept names.
 This is justified by the following lemma.
 
@@ -140,8 +141,8 @@ where $A, A_1, A_2, B$ are concept names or the top concept $\top$ and $r$ is a 
 	We can transform a given TBox into a normalized one by applying the following normalization rules:
 	\begin{alignat*}{3}
 		&\var{NF0} \qquad& \widehat{D} \sqsubseteq \widehat{E} &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ A \sqsubseteq \widehat{E} \\
-		&\var{NF1}_r \qquad& C \sqcap \widehat{D} \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ C \sqcap A \sqsubseteq \widehat{B} \\
-		&\var{NF1}_l \qquad& \widehat{D} \sqcap C \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ A \sqcap C \sqsubseteq \widehat{B} \\
+		&\var{NF1}_r \qquad& C \sqcap \widehat{D} \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ C \sqcap A \sqsubseteq B \\
+		&\var{NF1}_l \qquad& \widehat{D} \sqcap C \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ A \sqcap C \sqsubseteq B \\
 		&\var{NF2} \qquad& \exists r.\widehat{D} \sqsubseteq B &\longrightarrow\ &&\widehat{D} \sqsubseteq A,\ \exists r.A \sqsubseteq B\\
 		&\var{NF3} \qquad& B \sqsubseteq \exists r. \widehat{D} &\longrightarrow\ && A \sqsubseteq \widehat{D},\ B \sqsubseteq \exists r.A \\
 		&\var{NF4} \qquad & B \sqsubseteq D \sqcap E &\longrightarrow\ && B \sqsubseteq D,\ B \sqsubseteq E
