@@ -42,12 +42,13 @@ Therefore DL-systems often include solution procedures for these problems.
 We will now introduce a new constructor for illustrative purposes.
 If $r$ is a role name and $C$ is a concept description, then $\exists r^+.C $
 is a concept description, with the semantics
-\[
-\begin{split}
-	(\exists r^+.C)^\mathcal{I} \coloneqq \left\{ d \in \Delta^{\mathcal{I}} \mid \exists n \geq 1, \exists d_1,\cdots, d_n \in \Delta^\mathcal{I} : \right.\\
-		\left. (d,d_1) \in r^\mathcal{I}, \cdots, (d_{n-1},dn) \in r^\mathcal{I} \land d_n \in C^\mathcal{I}\right\}
-\end{split}
-\]
+\begin{align*}
+	\begin{split}
+		(\exists r^+.C)^\mathcal{I} \coloneqq &\left\{ d \in \Delta^{\mathcal{I}} \mid \exists n \geq 1, \exists d_1,\cdots, d_n \in \Delta^\mathcal{I} : \right.\\
+											  &\left. (d,d_1) \in r^\mathcal{I}, \cdots, (d_{n-1},d_n) \in r^\mathcal{I} \land d_n \in C^\mathcal{I}\right\}
+	\end{split}
+\end{align*}
+
 We claim, that $\exists r^+.C$ cannot be expressed in $\mathcal{ALC}$.
 \begin{proof}
 	Assume that there is an $\mathcal{ALC}$ concept $D$ such that $D \equiv \exists r^+.C$.

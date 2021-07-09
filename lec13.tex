@@ -1,5 +1,5 @@
+\subsection*{Termination}
 \lecture{13}{03.06.2021}{}
-\subsection{Termination}
 We will show how termination can be regained in the following.
 Note, that non-termination is a consequence of the facts that an individual:
 \begin{itemize}
@@ -61,7 +61,7 @@ Termination obviously holds if we can find a mapping $\mu$ from ABoxes into a we
 It should therefore be our goal to find such a mapping.
 To achieve this, we will use the lexicographic product and the multiset order.
 
-\begin{definition*}[lexicographic product]
+\begin{definition*}[Lexicographic product]
 	Given two partial ordern $(A, >_A)$ and $(B, >_B)$, the lexicographic product $>_{A \times B}$ on $A \times B$ is defined by:
 	\[
 		(x,y) >_{A \times B} (x',y') \iff (x >_A x') \lor (x = x' \land y >_B y')
@@ -72,7 +72,7 @@ To achieve this, we will use the lexicographic product and the multiset order.
 \end{theorem*}
 
 We will also need the notion of multisets, which can be viewed as sets with (possibly) repeated elements.
-\begin{definition*}
+\begin{definition*}[Multiset]
 	A multiset $M$ over a set $A$ is a function $M : A \to \N$.
 
 	$M$ is finite if there are only finitely many x such that $M(x) > 0$.
