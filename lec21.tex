@@ -1,0 +1,197 @@
+\newpage
+\lecture{21}{06.07.2021}{}
+We will use the following classification rules:
+\begin{mdframed}[frametitle=Classification rules for $\mathcal{EL}$, nobreak=true]
+	\begin{align*}
+		&\infer[\text{CR1}]{A \sqsubseteq A}\\
+		&\infer[\text{CR2}]{A \sqsubseteq \top}\\\\\\
+		&\infer[\text{CR3}]{A_1 \sqsubseteq A_3}{A_1 \sqsubseteq A_2 & A_2 \sqsubseteq A_3}\\\\
+		&\infer[\text{CR4}]{A \sqsubseteq B}{A \sqsubseteq A_1 & A \sqsubseteq A_2 & A_1 \sqcap A_2 \sqsubseteq B}\\\\
+		&\infer[\text{CR5}]{A \sqsubseteq B}{A \sqsubseteq \exists r.A_1 & A_1 \sqsubseteq B_1 & \exists r.B_1 \sqsubseteq B}
+	\end{align*}
+\end{mdframed}
+\begin{note}
+	The above rules are, of course, not concrete rules, but rule schemata.
+	We only allow instantiations of these rule schemata
+	(i.e.\ replacements of the meta-variables $A, A_1, A_2, B, B_1$ by concrete $\mathcal{EL}$ concepts and $r$ by a concrete role name),
+	in which all the GCIs occurring in the rule are $\mathcal{T}$-sequents.
+
+	An application of the rule is possible if all the $\mathcal{T}$-sequents above the line occur in the current TBox $\mathcal{T}'$,
+	and adds the $\mathcal{T}$-sequent below the line to $\mathcal{T}'$ unless it already belongs to $\mathcal{T}'$.
+\end{note}
+
+We saturate a TBox $\mathcal{T}$ by exhaustively applying the classification rules to it.
+The resulting TBox $\mathcal{T}^{*}$ is called the \textit{saturated} TBox.
+
+\stepcounter{definition}
+\begin{lemma}
+	The saturated TBox $\mathcal{T}^*$ is uniquely determined by $\mathcal{T}$,
+	and it can be computed by a polynomial number of rule applications.
+\end{lemma}
+\begin{proof}
+	Each rule application adds one new $\mathcal{T}$-sequent to the current TBox $\mathcal{T}'$.
+	Thus, after a polynomial number of rule applications, no new $\mathcal{T}$-sequent can be added,
+	and the saturation terminates.
+
+	The choice of which applicable rule to apply during saturation does not influence the resulting TBox.
+	Note that we only add $\mathcal{T}$-sequents, but never remove anything.
+	Thus, if the condition of a rule is satisfied, it stays satisfied.
+	Thus, the consequence of the rule must be added at some point during saturation,
+	either by this rule or another one.
+\end{proof}
+
+To show that polynomial-time saturation of $\mathcal{EL}$ TBoxes yields a polynomial-time classification procedure,
+it is sufficient to prove the following equivalence:
+\[
+	\mathcal{T} \vDash A \sqsubseteq B \iff A \sqsubseteq B \in \mathcal{T}^*
+\]
+for all concept names $A, B$ in $\mathcal{T}$.
+Proving this is equivalence is proving soundness and completeness of the classification procedure.
+
+\begin{lemma}[Soundness]
+	If all the GCIs in $\mathcal{T}'$ follow from $\mathcal{T}$
+	and the $\mathcal{T}$-sequents above the line of one of the rules belong to $\mathcal{T}'$,
+	then the $\mathcal{T}$-sequent below the line also follows from $\mathcal{T}$.
+\end{lemma}
+\begin{proof}
+	This is an immediate consequence of the following facts:
+	\begin{itemize}
+		\item the subsumption relation is reflexive and transitive
+		\item $\top$ subsumes any concept w.r.t.\ any TBox
+		\item $A \sqsubseteq_{\mathcal{T}} A_1, A \sqsubseteq_{\mathcal{T}} A_2$ implies $A \sqsubseteq_{\mathcal{T}} A_1 \sqcap A_2$
+		\item $A_1 \sqsubseteq_{\mathcal{T}} A_2 $ implies $\exists r.A_1 \sqsubseteq_{\mathcal{T}} \exists r.A_2$
+			 \qedhere
+	\end{itemize}
+\end{proof}
+
+For completeness, we prove its contrapositive:
+\[
+	A \sqsubseteq B \notin \mathcal{T}^* \implies \mathcal{T} \not\vDash A \sqsubseteq B
+.\]
+To do so, we will use $\mathcal{T}^*$ to construct a \textit{canonical model} of $\mathcal{T}$,
+that does not satisfy $A \sqsubseteq B$ in the case of $A \sqsubseteq B \in \mathcal{T}^*$:
+\begin{definition}[Canonical model]
+	Let $\mathcal{T}$ be a general $\mathcal{EL}$ TBox in normal form and $\mathcal{T}^*$ the saturated TBox
+	obtained by exhaustive application of the classification rules.
+	
+	The canonical interpretation $\mathcal{I}_{\mathcal{T}^*}$ induced by $\mathcal{T}^*$ is define as follows:
+	\begin{itemize}
+		\item $\Delta^{\mathcal{I}_{\mathcal{T}^*}} \coloneqq \left\{ A \mid A \text{ is a concept name in } \func{sig}(\mathcal{T}) \right\} \cup \left\{ \top \right\}$,
+		\item $A^{\mathcal{I}_{\mathcal{T}^*}} \coloneqq \left\{ B \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid B \sqsubseteq A \in \mathcal{T}^* \right\}$ for all concept names $A \in \func{sig}(\mathcal{T})$,
+		\item $r^{\mathcal{I}_{\mathcal{T}^*}} \coloneqq \left\{ (A,B) \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \times \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid A \sqsubseteq \exists r.B \in \mathcal{T}^* \right\}$ \\
+			for all role names $r \in \func{sig}(\mathcal{T})$.
+	\end{itemize}
+\end{definition}
+\begin{note}
+	By definition, we have $B \in A^{\mathcal{I}_{\mathcal{T}^*}} \iff B \sqsubseteq A \in T^*$ for all concept names $A \in \func{sig}(\mathcal{T})$.
+	And the same is true for $A = \top$.
+\end{note}
+\begin{lemma}
+	The canonical interpretation induced by $\mathcal{T}^*$ is a model of the saturated TBox $\mathcal{T}^*$.
+\end{lemma}
+\begin{proof}
+	All the GCIs in $\mathcal{T}^*$ are $\mathcal{T}$-sequents,
+	i.e.\ the are of the form described in definition 6.7.
+	Therefore, we distinguish the following cases:
+	 \begin{itemize}
+		\item $A \sqsubseteq B \in \mathcal{T}^*$:
+			If $A' \in A^{\mathcal{I}_{\mathcal{T}^*}}$, then we have $A' \sqsubseteq A \in \mathcal{T}^*$.
+			Since $\mathcal{T}^*$ is saturated, CR3 is not applicable,
+			and thus $A' \sqsubseteq B \in \mathcal{T}^*$.
+			Thus, $A' \in B^{\mathcal{I}_{\mathcal{T}^*}}$, which shows that $\mathcal{I}_{\mathcal{T}^*}$
+			satisfies  $A \sqsubseteq B$.
+		\item $A_1 \sqcap A_2 \sqsubseteq B \in \mathcal{T}^*$: can be treated similarly, using CR4.
+		\item $A \sqsubseteq \exists r.B \in \mathcal{T}^*$:
+			If  $A' \in A^{\mathcal{I}_{\mathcal{T}^*}}$, then $A' \sqsubseteq A \in \mathcal{T}^*$,
+			and thus (due to CR3) $A' \sqsubseteq \exists r.B \in \mathcal{T}^*$.
+			The definition of the interpretation of roles than yields $(A', B) \in r^{\mathcal{I}_{\mathcal{T}^*}}$.
+			Finally, due to CR1, we have $B \sqsubseteq B \in \mathcal{T}^*$, and thus $B \in B^{\mathcal{I}_{\mathcal{T}^*}}$.
+			This shows $A' \in (\exists r.B)^{\mathcal{I}_{\mathcal{T}^*}}$.
+		\item $\exists r.A \sqsubseteq B \in \mathcal{T}^*$:
+			If $A' \in (\exists r.A)^{\mathcal{I}_{\mathcal{T}^*}}$,
+			then there is $B' \in \Delta^{\mathcal{I}_{\mathcal{T}^*}}$ such that $(A', B') \in r^{\mathcal{I}_{\mathcal{T}^*}}$ 
+			and $B' \in A^{\mathcal{I}_{\mathcal{T}^*}}$.
+			This yields $A' \sqsubseteq \exists r.B' \in \mathcal{T}^*$ 
+			and $B' \sqsubseteq A \in \mathcal{T}^*$.
+			By CR5, we also have $A' \sqsubseteq B \in \mathcal{T}^*$,
+			which yields $A' \in B^{\mathcal{I}_{\mathcal{T}^*}}$.
+			\qedhere
+	\end{itemize}
+\end{proof}
+
+\begin{lemma}[Completeness]
+	Let $\mathcal{T}$ be a general $\mathcal{EL}$ TBox in normal form
+	and $\mathcal{T}^*$ the saturated TBox obtained by exhaustive application of the classification rules.
+	Then
+	\[
+	\mathcal{T} \vDash A \sqsubseteq B \implies A \sqsubseteq B \in \mathcal{T}^*
+	.\]
+\end{lemma}
+\begin{proof}
+	We show the contrapositive.
+	Assume that $A \sqsubseteq B \notin \mathcal{T}^*$.
+	Then $A \notin B^{\mathcal{I}_{\mathcal{T}^*}}$.
+	By CR1, we have $A \sqsubseteq A \in \mathcal{T}^*$, and thus $A \in A^{\mathcal{I}_{\mathcal{T}^*}}$.
+	Since $\mathcal{I}_{\mathcal{T}^*}$ is a model of  $\mathcal{T}^*$,
+	it is also a model of its subset $\mathcal{T} \subseteq \mathcal{T}^*$.
+	This shows that $\mathcal{T} \not\vDash A \sqsubseteq B$.
+\end{proof}
+
+\begin{theorem}
+		Subsumption in $\mathcal{EL}$ w.r.t.\ general TBoxes is decidable in polynomial time.
+\end{theorem}
+
+\newpage
+\section{Subsumption in $\mathcal{ELI}$ w.r.t.\ general TBoxes}
+We now take a look at subsumption in $\mathcal{ELI}$
+We will see that, in contrast to $\mathcal{EL}$, subsumption in $\mathcal{ELI}$ w.r.t.\ general TBoxes
+is no longer polynomial, but \textsc{ExpTime}-complete.
+This is caused by the ability of $\mathcal{ELI}$ to express a restricted form of value restrictions:
+\[
+\exists r^-.C \sqsubseteq D \text{ has the same models as } C \sqsubseteq \forall r.D
+.\]
+
+\subsection{Auxiliary results}
+We now show the \textsc{ExpTime} upper bound.
+Again, we can assume a general $\mathcal{ELI}$ TBox $\mathcal{T}$ to be in i.normal form (or i.normalized)
+if all its GCIs are of one of the following forms:
+\begin{itemize}
+	\item $A \sqsubseteq B$
+	\item $A_1 \sqcap A_2 \sqsubseteq B$
+	\item $A \sqsubseteq \exists r.B$
+	\item $A \sqsubseteq \forall r.B$
+\end{itemize}
+where $A, A_1, A_2, B$ are concept names or the top-concept $\top$
+and $r$ is a role name or the inverse of a role name.
+
+\begin{corollary}
+	Given a general $\mathcal{ELI}$ TBox $\mathcal{T}$, we can compute in polynomial time
+	an i.normalized $\mathcal{ELI}$ TBox $\mathcal{T}'$ that is a conservative extension of $\mathcal{T}$.
+	
+	In particular, we have
+	\[
+	\mathcal{T} \vDash A \sqsubseteq B \iff \mathcal{T}' \vDash A \sqsubseteq B
+	\]
+	for all concept names $A, B \in \func{sig}(\mathcal{T})$.
+\end{corollary}
+
+\subsection{Classification procedure for $\mathcal{ELI}$}
+We assume that the input TBox $\mathcal{T}$ is a general $\mathcal{ELI}$ TBox in i.normal form.
+We need an extended and more complex notion of sequents:
+\begin{definition}
+	A $\mathcal{T}$-i.sequent is an expression of the form
+	\[
+		K \sqsubseteq \left\{ A \right\}, K \sqsubseteq \exists r.K', \text{ or } K \sqsubseteq \forall r.\left\{ A \right\}
+	,\]
+	where $K, K'$ are sets of concept names in $\func{sig}(\mathcal{T})$,
+	$A$ is a concept name in $\func{sig}(\mathcal{T})$,
+	and $r $ is a role name in $\func{sig}(\mathcal{T})$ or the inverse of a role name in $\func{sig}(\mathcal{T})$.
+\end{definition}
+\begin{note}
+	The overall number of $\mathcal{T}$-i.sequents is exponential in the size of $\mathcal{T}$.
+	A set in a  $\mathcal{T}$-i.sequent stands for the conjunction of its elements.
+	The empty conjunction is $\top$.
+	$\mathcal{T}$-i.sequents are GCIs, and a set of $\mathcal{T}$-i.sequents is a general $\mathcal{ELI}$ TBox.
+	Every GCI in the i.normalized TBox $\mathcal{T}$ is either equivalent to a $\mathcal{T}$-i.sequent
+	or a tautology, i.e.\ satisfied in every interpretation.
+\end{note}
