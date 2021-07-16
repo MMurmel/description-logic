@@ -1,0 +1,149 @@
+\lecture{22}{08.07.2021}{}
+We use the following classification rules:
+\begin{mdframed}[frametitle=Classification rules for $\mathcal{ELI}$]
+	\begin{align*}
+		&\infer[\text{i.CR1}]{ K \sqsubseteq \left\{ A \right\}}{}\qquad\text{if $A \in K$ and $K$ occurs in $\mathcal{T}'$}\\\\
+		&\infer[\text{i.CR2}]{M \sqsubseteq C}{M \sqsubseteq \left\{ B \right\} \text{ for all } B \in K & K \sqsubseteq C}\quad\text{if $M$ occurs in $\mathcal{T}'$}\\\\
+		&\infer[\text{i.CR3}]{M_2 \sqsubseteq \left\{ A \right\}}{M_2 \sqsubseteq \exists r.M_1 & M_1 \sqsubseteq \forall r^-.\left\{ A \right\}}\\\\
+		&\infer[\text{i.CR4}]{M_1 \sqsubseteq \exists r.(M_2 \cup \left\{ A \right\})}{M_1 \sqsubseteq \exists r.M_2 & M_1 \sqsubseteq \forall r.\left\{ A \right\}}
+	\end{align*}
+\end{mdframed}
+\begin{note}
+	Again, these are not concrete rules, but rule schemata.
+	Concrete instances are are obtained by replacing
+	\begin{itemize}
+		\item $K, M, M_1, M_2$ by sets of concept names in $\func{sig}(\mathcal{T})$,
+		\item $A, B$ by a concept name in $\func{sig}(\mathcal{T})$,
+		\item $r$ by a role name or inverse of a role name in $\func{sig}(\mathcal{T})$,
+		\item $C$ by any admissible right-hand side of a $\mathcal{T}$-i.sequent.
+	\end{itemize}
+\end{note}
+\begin{note}
+	In i.CR1, only instantiations are allowed for which $K$ actually occurs explicitly in some $\mathcal{T}$-i.sequent
+	in the current TBox $\mathcal{T}'$.
+	By this, the worst case still runs in exponential time, but in the best case, the algorithm is better than exponential.
+	The analogous restriction on $M$ in rule i.CR2 is needed in the case where $K = \emptyset$.
+	In contrast, rule i.CR4 can generate new sets, and thus may cause an exponential blowup.
+\end{note}
+\begin{example}[Exponential blowup]
+	Consider the following TBox:
+	\[
+	\mathcal{T} \coloneqq \left\{ A \sqsubseteq \exists r.\top \right\} \cup \left\{ \exists r^-.A \sqsubseteq A_i \mid i= 1, \ldots, n\right\}
+	.\]
+	After i.normalization we obtain:
+	\[
+		\mathcal{T}' \coloneqq \left\{ \left\{ A \right\} \sqsubseteq \exists r.\emptyset \right\} \cup \left\{ \left\{ A \right\} \sqsubseteq \forall r.\left\{ A_i \right\} \mid i = 1, \ldots, n \right\}
+	.\]
+	It is easy to see that i.CR4 can be used to generate
+	\[
+	\left\{ A \right\} \sqsubseteq \exists r.M \text{ for all } M \subseteq \left\{ A_1, \ldots, A_n \right\}
+	.\]
+	Thus, if we add $M \sqsubseteq \forall r^-.\left\{ B \right\}$ to $\mathcal{T}'$,
+	we can derive $\left\{ A \right\} \sqsubseteq \left\{ B \right\}$ by applying i.CR3.
+	We could also just derive $\left\{ A \right\} \sqsubseteq \exists r.\left\{ A_1, \ldots, A_n \right\}$
+	by $n$ applications of rule i.CR4,
+	and then derive from this $\left\{ A \right\} \sqsubseteq \left\{ B \right\}$
+	similarly to what we did in another example shown in the lecture.
+	We can show, however, that there are examples, where no strategy for rule applications can avoid the exponential blowup.
+\end{example}
+The classification algorithm for $\mathcal{ELI}$ starts by i.Saturation of $\mathcal{T}$:
+\begin{itemize}
+	\item apply the classification rules exhaustively to the input TBox $\mathcal{T}$ 
+	\item the resulting TBox $\mathcal{T}^*$ is called the i.saturated TBox
+\end{itemize}
+The i.saturated TBox $\mathcal{T}^*$ is again uniquely determined by $\mathcal{T}$.
+
+\addtocounter{definition}{3}
+\begin{prop}[soundness and completeness]
+	For all concept names $A, B \in \func{sig}(\mathcal{T})$ such that $ \left\{ A \right\}$ occurs in $\mathcal{T}^*$ we have
+	\[
+	\mathcal{T} \vDash A \sqsubseteq B \iff \left\{ A \right\} \sqsubseteq \left\{ B \right\} \in \mathcal{T}^*.
+	.\]
+	The condition that $ \left\{ A \right\}$ occurs in $\mathcal{T}^*$ can easily be satisfied by adding $A \sqsubseteq A$ to the input TBox.
+	Thus, we get the $\mathcal{T}$-i.sequent $\left\{ A \right\} \sqsubseteq \left\{ A \right\}$.
+\end{prop}
+Soundness is an easy consequence of the next lemma and the fact that any GCI in $\mathcal{T}$ follows from $\mathcal{T}$.
+\begin{lemma}[soundness]
+	Assume that
+	\begin{itemize}
+		\item all the GCIs in $\mathcal{T}'$ follow from $\mathcal{T}$ and
+		\item the $\mathcal{T}$-i.sequent above the line of one of the classification rules belong to $\mathcal{T}'$.
+	\end{itemize}
+	Then the $\mathcal{T}$-i.sequent below the line also follows from $\mathcal{T}$.
+\end{lemma}
+\begin{proof}
+	\begin{itemize}
+		\item i.CR1: follows from the fact that a conjunction of concept names is subsumed by each of its conjuncts.
+		\item i.CR2: is due to transitivity of subsumption the fact that $E \sqsubseteq F_1$ and $E \sqsubseteq F_2$ implies $E \sqsubseteq F_1 \sqcap F_2$.
+		\item i.CR3: note that $\mathcal{T} \vDash M_1 \sqsubseteq \forall r^-.\left\{ A \right\} \iff \mathcal{T} \vDash \exists r.M_1 \sqsubseteq \left\{ A \right\}$.
+			Thus, transitivity applies.
+		\item i.CR4: Consider a model $\mathcal{I}$ of the GCIs above the line.
+			By the GCIs above the line, we know that any element of $M_1^{\mathcal{I}}$ has an
+			$r^{\mathcal{I}}$-successor that belongs to $M_2^{\mathcal{I}}$ (first GCI),
+			but this $r^{\mathcal{I}}$-successor must also belong to $A^{\mathcal{I}}$ (second GCI),
+			and thus to $\left( M \cup \left\{ A \right\} \right)^{\mathcal{I}}$.
+			This shows that element of $M_1^{\mathcal{I}}$ also belongs to $\left( \exists r.\left\{ M_2 \cup \left\{ A \right\} \right\} \right)^{\mathcal{I}}$.
+			\qedhere
+	\end{itemize}
+\end{proof}
+To show completeness we construct an appropriate canonical interpretation from the i.saturated TBox.
+\begin{definition}[canonical interpretation]
+	Let $\mathcal{T}$ be a general $\mathcal{ELI}$ TBox in i.normal form and $\mathcal{T}^*$ the i.saturated TBox
+	obtained by exhaustive application of the classification rules.
+
+	The canonical interpretation $\mathcal{I}_{\mathcal{T}^*}$ induced by $\mathcal{T}^*$ is defined as follows:
+	\begin{align*}
+		\Delta^{\mathcal{I}_{\mathcal{T}^*}} =& \left\{ M \mid M \text{ is a set of concept names in $\func{sig}(\mathcal{T})$ occurring in $\mathcal{T}^*$} \right\},\\
+		A^{\mathcal{I}_{\mathcal{T}^*}} =& \left\{ M \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid M \sqsubseteq \left\{ A \right\} \in \mathcal{T}^* \right\},\\
+		\begin{split}
+		s^{\mathcal{I}_{\mathcal{T}^*}} =& \left\{ (M,N) \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \times \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid M \sqsubseteq \exists s.N \in \mathcal{T}^* \text{ and $N$ is maximal,} \right. \\
+										&\quad\left. \text{i.e.\ there is no } N' \supsetneq N \text{ such that } M \sqsubseteq \exists s.N' \in \mathcal{T}^* \right\} \cup
+		\end{split}\\
+		\begin{split}
+		& \left\{ (N,M) \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \times \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid M \sqsubseteq \exists s^-.N \in \mathcal{T}^* \text{ and $N$ is maximal,} \right. \\
+										&\quad\left. \text{i.e.\ there is no } N' \supsetneq N \text{ such that } M \sqsubseteq \exists s^-.N' \in \mathcal{T}^* \right\}
+		\end{split}
+	\end{align*}
+	where $A$ is a concept name in $\func{sig}(\mathcal{T})$, and $s$ a role name in $\func{sig}(\mathcal{T})$.
+\end{definition}
+
+\begin{lemma}
+	Let $r$ be a role name or the inverse of a role name.
+	Then
+	\begin{align*}
+		\begin{split}
+			r^{\mathcal{I}_{\mathcal{T}^*}} =& \left\{ (M,N) \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \times \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid M \sqsubseteq \exists r.N \in \mathcal{T}^*, N \text{ is maximal}\right\}\cup\\
+											 &\left\{ (N,M) \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \times \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid M \sqsubseteq \exists r^-.N \in \mathcal{T}^*, N \text{ is maximal}\right\}
+		\end{split}
+	\end{align*}
+\end{lemma}
+\begin{proof}
+	If $r = s$ is a role name, then the identity holds by the definition of $s^{\mathcal{I}_{\mathcal{T}^*}}$.
+	Otherwise: $r = s^-$ for a role name $s$.
+	Then the identity follows from the fact that $r^- = s$,
+	the semantics of the inverse operator ${}^-$,
+	and the definition $s^{\mathcal{I}_{\mathcal{T}^*}}$.
+\end{proof}
+\begin{lemma}
+	The canonical interpretation induced by the i.saturated TBox $\mathcal{T}^*$ is a model of $\mathcal{T}^*$.
+\end{lemma}
+\begin{proof}
+	All the GCIs in $\mathcal{T}^*$ are $\mathcal{T}$-i.sequents.
+	We consider the following cases (see Definition 6.16):
+	\begin{itemize}
+		\item $K \sqsubseteq \left\{ A \right\} \in \mathcal{T}^*$:
+			let $M \in K^{\mathcal{I}_{\mathcal{T}^*}}$, i.e.\ $M \sqsubseteq \left\{ B \right\} \in \mathcal{T}^*$ for all $B \in K$.
+			Then rule i.CR2 yields $M \sqsubseteq \left\{ A \right\} \in \mathcal{T}^*$,
+			and thus $M \in A^{\mathcal{I}_{\mathcal{T}^*}}$.
+		\item $K \sqsubseteq \exists r.K' \in \mathcal{T}^*$:
+			assume that $M \in K^{\mathcal{I}_{\mathcal{T}^*}}$, i.e.\ $M \sqsubseteq \left\{ B \right\} \in \mathcal{T}^*$ for all $B \in K$.
+			Then i.CR2 yields $M \sqsubseteq \exists r.K' \in \mathcal{T}^*$,
+			and thus there is a maximal set $K'' \supseteq K'$ with $M \sqsubseteq \exists r.K'' \in \mathcal{T}^*$
+			and $(M, K'') \in r^{\mathcal{I}_{\mathcal{T}^*}}$.
+			Since $K''$ occurs in $\mathcal{T}^*$,
+			i.CR1 yields $K '' \sqsubseteq \left\{ A \right\} \in \mathcal{T}^*$ for all $A \in K''$.
+			Since $K' \subseteq K''$, this implies $K'' \in K'^{\mathcal{I}_{\mathcal{T}^*}}$.
+			This shows $M \in \left( \exists r.K' \right)^{\mathcal{I}_{\mathcal{T}^*}}$.
+		\item $K \sqsubseteq \forall r.A \in \mathcal{T}^*$:
+	\end{itemize}
+\end{proof}
