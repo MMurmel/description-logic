@@ -145,5 +145,25 @@ To show completeness we construct an appropriate canonical interpretation from t
 			Since $K' \subseteq K''$, this implies $K'' \in K'^{\mathcal{I}_{\mathcal{T}^*}}$.
 			This shows $M \in \left( \exists r.K' \right)^{\mathcal{I}_{\mathcal{T}^*}}$.
 		\item $K \sqsubseteq \forall r.A \in \mathcal{T}^*$:
+			Assume that $M_1 \in K^{\mathcal{I}_{\mathcal{T}^*}}$ and there is $M_2$ such that
+			$\left( M_1, M_2  \right) \in r^{\mathcal{I}_{\mathcal{T}^*}}$.
+			We must show $M_2 \in A^{\mathcal{I}_{\mathcal{T}^*}}$.
+			By the definition of $\mathcal{I}_{\mathcal{T}^*}$,
+			$M_1 \in K^{\mathcal{I}_{\mathcal{T}^*}}$ yields
+			$M_1 \sqsubseteq \left\{ B \right\} \in \mathcal{T}^*$ for all $B \in K$.
+			Because of i.CR2, $M_1 \sqsubseteq \forall r.\left\{ A \right\} in \mathcal{T}^*$.
+			There are two reasons, why $\left( M_1, M_2 \right)$ belongs to $r^{\mathcal{I}_{\mathcal{T}^*}}$:
+			\begin{itemize}
+				\item First, assume that $M_1 \sqsubseteq \exists r. M_2 \in \mathcal{T}^*$
+					where $M_2$ is maximal with this property.
+					Then, i.CR4 yields $M_1 \sqsubseteq \exists r.\left( M_2 \cup \left\{ A \right\} \right) \in \mathcal{T}^*$.
+					Maximality of $M_2$ yieds $A \in M_2$.
+					Since $M_2$ occurs in $\mathcal{T}^*$, i.CR1 yields $M_2 \sqsubseteq \left\{ A \right\} \in \mathcal{T}^*$,
+					and thus $M_2 \in A^{\mathcal{I}_{\mathcal{T}^*}}$ as required.
+				\item Second, assume that $M_2 \sqsubseteq \exists r^-.M_1 \in \mathcal{T}^*$, where $M_1$ is maximal.
+					Then i.CR3 yields $M_2 \sqsubseteq \left\{ A \right\} \in \mathcal{T}^*$,
+					and thus $M_2 \in A^{\mathcal{I}_{\mathcal{T}^*}}$.
+					\qedhere
+			\end{itemize}
 	\end{itemize}
 \end{proof}

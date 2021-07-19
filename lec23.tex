@@ -1,0 +1,151 @@
+\lecture{23}{13.07.2021}{}
+\begin{lemma}[completeness]
+	Let $A,B \in \func{sig}(\mathcal{T})$ be such that $\left\{ A \right\}$ occurs in $\mathcal{T}^*$.
+	Then $\mathcal{T} \vDash A \sqsubseteq B$ implies $\left\{ A \right\} \sqsubseteq \left\{ B \right\} \in \mathcal{T}^*$.
+\end{lemma}
+\begin{proof}
+	We show the contrapositive:
+	Assume that $\left\{ A \right\} \sqsubseteq \left\{ B \right\} \notin \mathcal{T}^*$.
+	Since $\left\{ A \right\}$ occurs in $\mathcal{T}^*$, we have $\left\{ A \right\} \in \Delta^{\mathcal{I}_{\mathcal{T}^*}}$.
+	Rule i.CR1 yields $\left\{ A \right\} \sqsubseteq \left\{ A \right\}$ 
+	and thus $\left\{ A \right\} \in A^{\mathcal{I}_{\mathcal{T}^*}}$.
+	However, $\left\{ A \right\} \sqsubseteq \left\{ B \right\} \notin \mathcal{T}^*$ yields
+	$\left\{ A \right\} \notin B^{\mathcal{I}_{\mathcal{T}^*}}$.
+	Since $\mathcal{I}_{\mathcal{T}^*}$ is a model of $\mathcal{T}^*$, and thus of $\mathcal{T}$,
+	this yields $\mathcal{T} \not\vDash A \sqsubseteq B$.
+\end{proof}
+
+\begin{theorem}
+	Subsumption in $\mathcal{ELI}$ w.r.t.\ general TBoxes is decidable in exponential time.
+\end{theorem}
+\begin{proof}
+	Let $\mathcal{T}_0$ be a general $\mathcal{ELI}$ TBox and $C, D$ $\mathcal{ELI}$ concepts.
+	To decide whether $\mathcal{T}_0 \vDash C \sqsubseteq D$, we first add the GCIs $A \sqsubseteq C, D \sqsubseteq B$ 
+	to $\mathcal{T}_0$, where $A, B$ are fresh concept names.
+	The resulting TBox $\mathcal{T}_1$ is then i.normalized using the normalization rules described in section 6.1.1
+	together with the rule that transforms GCIs with an existential restriction on the left
+	into equivalent GCIs with a value restriction on the right.
+	The size of the i.normalized TBox $\mathcal{T}$ obtained this way is linear in the size of $\mathcal{T}_0$ 
+	and we have $\mathcal{T}_0 \vDash C \sqsubseteq D \iff \mathcal{T} \vDash A \sqsubseteq B$.
+	Let $\mathcal{T}^*$ be the TBox obtained from $\mathcal{T}$ by an exhaustive application of the classification rules starting with $\mathcal{T}' \subseteq \mathcal{T}$,
+	where the tautological GCIs in $\mathcal{T}$ are removed, and the remaining ones are represented as $\mathcal{T}$-i.sequents.
+	The i.saturated TBox $\mathcal{T}^*$ can be computed in exponential time, since there are only exponentially $\mathcal{T}$-i.sequents
+	and every rule application adds one of them.
+	Since $\mathcal{T}_0$ contains a GCI whose left-hand side is $A$, the initial set of $\mathcal{T}$-i.sequents contains $\left\{ A \right\}$.
+	Thus, Lemma 6.25 yields
+	\[
+	\mathcal{T} \vDash A \sqsubseteq B \iff \left\{ A \right\} \sqsubseteq \left\{ B \right\} \in \mathcal{T}^*
+	.\]
+	Consequently, by checking whether $\left\{ A \right\} \sqsubseteq \left\{ B \right\} \in \mathcal{T}^*$,
+	we can decide whether $\mathcal{T}_0 \vDash C \sqsubseteq D$ holds.
+\end{proof}
+Without proof, we state that this algorithm is actually optimal, since classification in $\mathcal{ELI}$ is \textsc{ExpTime}-hard.
+
+\newpage
+\subsection{Classification algorithm for $\mathcal{ELI}$ applied to $\mathcal{EL}$}
+We can also show, that the algorithm for $\mathcal{ELI}$ runs in polynomial time if it receives a general $\mathcal{EL}$ TBox as input.
+We define $\mathcal{EL}$-$\mathcal{T}$-i.sequents as $\mathcal{T}$-i.sequents satisfying the following restrictions:
+\begin{itemize}
+	\item the only sets occurring in them are the empty set and singleton sets;
+	\item value restrictions in these $\mathcal{T}$-i.sequents are only w.r.t.\ inverses of role names;
+	\item existential restrictions in these $\mathcal{T}$-i.sequents are only w.r.t.\ role names.
+\end{itemize}
+If we start with an $\mathcal{EL}$ TBox $\mathcal{T}_0$, then the corresponding i.normalized TBox $\mathcal{T}$ 
+(written as a set of $\mathcal{T}$-i.sequents) contains only $\mathcal{EL}$-$\mathcal{T}$-i.sequents.
+
+\begin{lemma}
+	There are only polynomially many $\mathcal{EL}$-$\mathcal{T}$-i.sequents in the size of $\mathcal{T}$.
+	
+	In addition, applying a classification rule for $\mathcal{ELI}$ to a set $\mathcal{T}'$
+	of $\mathcal{EL}$-$\mathcal{T}$-i.sequents yields a set of $\mathcal{EL}$-$\mathcal{T}$-i.sequents.
+\end{lemma}
+\begin{proof}
+	The first part is easy to see.
+	\newline
+	The only rule that could generate a $\mathcal{T}$-i.sequent that is not a $\mathcal{EL}$-$\mathcal{T}$-i.sequent is i.CR4.
+	However, this rule is not applicable since the existential restriction role names
+	and the value restriction inverses of role names.
+\end{proof}
+
+\begin{prop}
+	The subsumption algorithm for $\mathcal{ELI}$ yields a polynomial-time decision procedure for subsumption in $\mathcal{EL}$.
+\end{prop}
+\begin{proof}
+	trivial.
+\end{proof}
+
+\chapter{Query answering}
+While very useful in medicine, in many practical application computing a subsumption hierarchy is actually not of big interest.
+In these circumstances query answering with certain "background knowledge" is a more relevant problem.
+
+We first consider query answering in databases from a logical point of view,
+and then extend this to ontology-mediated query answering in order to
+\begin{itemize}
+	\item allow for incomplete data;
+	\item take background knowledge into account;
+	\item deal with potentially infinite data sets.
+\end{itemize}
+
+In general, a database can be seen as a finite collection of relations over a finite domain.
+We view the database as an interpretation $\mathcal{I}$ over a relational signature with a domain $\Delta^{\mathcal{I}}$ and interpretations for the relation symbols.
+A SQL query describing answer tuples can be represented by a FOL formula  $\phi(x_1, \ldots, x_n)$ with the free variables representing the answer variables.
+The result of this query are these variable assignments $\mathcal{V}$ for which $(\mathcal{I}, \mathcal{V}) \vDash \phi(x_1, \ldots, x_n)$.
+It is known, that this logical view of databases is equivalent to the standard view (i.e.\ SQL is equivalent to FOL).
+
+\section{FOL queries}
+We can restrict our attention to queries with unary and binary relation symbols corresponding to concepts and roles in DLs.
+Furthermore, all definitions are given for arbitrary interpretations, not just finite ones.
+
+\begin{definition}[FO query]
+	A FO query is a FO formula that uses only unary and binary predicate symbols, and no function symbols or constants.
+	The use of equality is allowed.
+
+	The free variables $\vec{x}$ of an FO query $q(\vec{x})$ are called answer variables.
+	The arity of $q(\vec{x})$ is the number of answer variables.
+
+	Let $q(\vec{x})$ be an FO query of arity $k$ and $\mathcal{I}$ an interpretation.
+	We say that
+	\[
+		\vec{a} = a_1,\ldots,a_k \text{ is an answer to $q$ on  $\mathcal{I}$ if } \mathcal{I} \vDash q[\vec{a}]
+	\]
+	i.e., if $q(\vec{x})$ evaluates to $\var{true}$ in $\mathcal{I}$ under the valuation that interprets the answer variables $\vec{x}$ as the constants $\vec{a}$.
+
+	We write $\func{ans}(q,\mathcal{I})$ for the set of all answers to $q$ in $\mathcal{I}$.
+\end{definition}
+
+\begin{definition}[conjunctive query]
+	A conjunctive query (CQ) $q$ has the form
+	\[
+		\exists x_1 \cdots \exists x_k.(\alpha_1 \land \cdots \land \alpha_n)
+	\]
+	where $k \geq 0, n \geq 1, x_1, \ldots, x_k$ are variables, and
+	each $\alpha_i$ is a concept atom $A(x)$ or a role atom $r(x,y)$ 
+	with $A \in \mathscr{C}, r \in \mathscr{R}$, and $x,y$ variables.
+
+	We call $x_1, \ldots, x_k$ the quantified variables and all other variables in $q$ the answer variables.
+	The arity of $q$ is the number of answer variables.
+	
+	To express that the answer variables in a CQ $q$ are $\vec{x}$,
+	we often write $q(\vec{x})$ instead of just $q$.
+\end{definition}
+
+\begin{definition}[$\vec{a}$-math]
+	Let $q$ be a conjunctive query and $\mathcal{I}$ an interpretation.
+	We use $\func{var}(q)$ to denote the set of variables in $q$.
+
+	A match of $q$ in $\mathcal{I}$ is a mapping $\pi: \func{var}(q) \to \Delta^{\mathcal{I}}$ such that
+	\begin{itemize}
+		\item $\pi(x) \in A^{\mathcal{I}}$ for all concept atoms $A(x)$ in $q$, and
+		\item $\left( \pi(x),\pi(y) \right) \in r^{\mathcal{I}}$ for all role atoms $r(x,y)$ in $q$.
+	\end{itemize}
+	Let $\vec{x} = x_1, \ldots, x_k$  be the answer variables in $q$ and
+	$\vec{a} = a_1, \ldots, a_k$ individual names from $\mathscr{I}$.
+
+	We call the match $\pi$ of $q$ in $\mathcal{I}$ an $\vec{a}$-math if $\pi(x_i) = a_i^{\mathcal{I}}$ for $1 \leq i \leq k$.
+\end{definition}
+
+\begin{lemma}
+	\[
+		\func{ans}(q, \mathcal{I}) = \left\{ \vec{a} \mid \text{there is an $\vec{a}$-match of $q$ in $\mathcal{I}$} \right\}
+	.\]
+\end{lemma}
