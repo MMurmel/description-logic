@@ -1,0 +1,114 @@
+\subsection{data complexity of OMQA in $\mathcal{EL}$}
+\medskip
+\lecture{25}{20.07.2021}{}
+\begin{prop}
+	In $\mathcal{EL}$, the query entailment problem for conjunctive queries is \textsc{P}-hard w.r.t.\ data complexity.
+\end{prop}
+\begin{proof}
+	By \textsc{LogSpace}-reduction of path system accessibility.
+
+	A path system is of the form $P = (N, E, S, t)$ where
+	\begin{itemize}
+		\item $N$ is a finite set of nodes,
+		\item $E \sqsubseteq N \times N \times N$ is an accessibility relation
+			(its elements are called edges),
+		\item $S \subseteq N$ is a set of source nodes,
+		\item and $t \in N$ is a terminal node.
+	\end{itemize}
+	The set of accessible nodes of $P$ is the smallest set of nodes such that
+	\begin{itemize}
+		\item every element of $S$ is accessible,
+		\item if $n_1, n_2$ are accessible and $(n, n_1, n_2) \in E$, then $n$ is accessible.
+	\end{itemize}
+	The path accessibility problem is the question if for a given path system $P = (N, E, S, t)$
+	the terminal node $t$ is accessible.
+	It is known to be \textsc{P}-complete.
+
+	We provide the following reduction:
+	\begin{align*}
+		\mathcal{T} &= \left\{ \exists P_1.A \sqsubseteq B_1,\quad \exists P_2.A \sqsubseteq B_2,\quad B_1 \sqcap B_2 \sqsubseteq A,\quad \exists P_3.A \sqsubseteq A \right\}\\
+		q &= A(x)\\
+		\mathcal{A} &= \left\{ n:A \mid n \in S \right\} \cup \\
+					&\quad\,\left\{(e,j):P_1, \quad(e,k):P_2, \quad(n,e):P_3 \mid e = (n,j,k) \in E \right\}
+	\end{align*}
+	We then get
+	\[
+		(\mathcal{T}, \mathcal{A}) \vDash A(t) \iff t \text{ is accessible in } P
+	.\]
+
+	"$\implies$": By its contrapositive.
+	Assume that $t$ is not accessible in P.
+	We construct a model $\mathcal{I}$ of $\mathcal{K} = (\mathcal{T}, \mathcal{A})$
+	such that $t^{\mathcal{I}} \notin A^{\mathcal{I}}$.
+	We define $\mathcal{I}$ as follows:
+	\begin{align*}
+		&\Delta^{\mathcal{I}} \coloneqq N \cup E\\
+		&e^{\mathcal{I}} \coloneqq e\\
+		&n^{\mathcal{I}} \coloneqq n\\
+		&P_1^{\mathcal{I}}, P_2^{\mathcal{I}}, P_3^{\mathcal{I}} \text{consist exactly of the tuples required by $\mathcal{A}$}\\
+		&B_1^{\mathcal{I}} \coloneqq \left\{ e = (n,j,k) \mid j \text{ is accessible in } P \right\}\\
+		&B_2^{\mathcal{I}} \coloneqq \left\{ e = (n,j,k) \mid k \text{ is accessible in } P \right\}\\
+		&A^{\mathcal{I}} \coloneqq \left\{ n \in N \mid n \text{ is accessible in } P \right\} \cup\\
+		&\;\;\,\qquad \left\{ e = (n,j,k) \mid j \text{ and } k \text{ are accessible in } P \right\}\\
+	\end{align*}
+	for $n \in N$ and $e \in E$.
+	It is easy to see that $\mathcal{I}$ is a model of $\mathcal{K}$.
+	Since $t$ is not accessible, we have $t^{\mathcal{I}} = t \notin A^{\mathcal{I}}$.
+
+	"$\impliedby$":
+	Assume $t$ is accessible in $P$.
+	We prove by induction on the length of the derivation that yields accessibility that
+	\[
+		\text{node $n$ is accessible} \implies \mathcal{K} \vDash A(n)
+	.\]
+	\underline{base case:} $n \in S$.
+	Then $A(n) \in \mathcal{A}$ and thus $\mathcal{K} \vDash A(n)$.
+	\newline
+	\underline{induction step}: There is an edge $e=(n, j, k)$ such that $j$ and $k$ are accessible.
+	By induction we can assume that $\mathcal{K} \vDash A(j)$ and $\mathcal{K} \vDash A(k)$.
+	Thus, in every model $\mathcal{I}$ of $\mathcal{K}$ we have $j^{\mathcal{I}} \in A^{\mathcal{I}}$ and $k^\mathcal{I} \in A^{\mathcal{I}}$.
+	In addition, $\left( e^{\mathcal{I}}, j^{\mathcal{I}} \right) \in P_1^\mathcal{I}$ 
+	and $\left( e^{\mathcal{I}}, k^{\mathcal{I}} \right) \in P_2^\mathcal{I}$.
+	By the first three GCIs in $\mathcal{T}$ this yields $e^{\mathcal{I}} \in A^\mathcal{I}$.
+	Since we also have $\left( n^{\mathcal{I}}, e^{\mathcal{I}} \right) \in P_3^\mathcal{I}$,
+	the final GCI yields $n^{\mathcal{I}} \in A^{\mathcal{I}}$.
+	This shows that $\mathcal{K} \vDash A(n)$.
+
+	Sine $t$ is accessible in $P$, this yields $\mathcal{K} \vDash A(t)$.
+\end{proof}
+
+\subsection{OMQA using relational DB technology}
+While complexity results in \textsc{P} are nice for OMQA, they can still be to slow for very large ABoxes, i.e.\ data.
+In order to further optimize data complexity, we consider DLs for which the computation of certain answers
+can be reduced to answering FO queries using a relational database system.
+
+The general idea here is to reformulate the TBox and the conjunctive query into one FO query.
+Since in data complexity their size is assumed to be constant, the resulting FO query is also constant in size.
+The ABox is not changed, however it is viewed as a relational database, changing the open world approach of ABoxes
+into the closed world approach of Databases.
+A description logic for which this in possible is called \textit{FO-reducable}.
+
+The DL-Lite family was created with this very purpose in mind.
+It consists of several members, of which we will first look at $\text{DL-Lite}_{\text{core}}$.
+
+\begin{mdframed}[frametitle= Syntax of $\text{DL-Lite}_{\text{core}}$]
+	$\text{DL-Lite}_{\text{core}}$ has not only concept names and general concepts, but also an intermediate concept type,
+	called basic concepts.
+	Let $A$ be a concept name, then a basic concept is of one of the following forms:
+	\[
+		A, \quad \exists r.\top \quad\text{or}\quad \exists r^-.\top
+	.\]
+
+	General concepts are basic concepts or the negation of a basic concept.
+
+	GCIs are of the form $B \sqsubseteq C$, where $B$ is a basic concept and $C$ is a general concept.
+
+	The assertion of an ABox can be of the form $a:A$ or $(a,b):r$, where $a,b \in \mathscr{I}$, $A$ is a concept name and $r$ is a role name.
+\end{mdframed}
+
+The reformulating of the CQ and the TBox is not done formally in the lecture, but by example (see lecture slides).
+
+$\text{DL-Lite}_{\text{core}}$ is extended by $\text{DL-Lite}_{\mathcal{R}}$ (additional role inclusions $r_1 \sqsubseteq r_2$ and $r_1 \sqsubseteq \neg r_2$)
+and $\text{DL-Lite}_{\mathcal{F}}$ (additional functionality axioms: $\top \sqsubseteq ( \leq 1r)$ and $\top \sqsubseteq ( \leq 1r^-)$).
+All three of them are FO-reducable.
+FO-reducability implies data complexity in $\textsc{AC}^0$ for query answering.
