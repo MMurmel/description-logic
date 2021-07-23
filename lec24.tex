@@ -1,0 +1,193 @@
+\newpage
+\lecture{24}{15.07.2021}{}
+We will focus on the complexity of conjunctive query answering and consider the query entailment decision problem:
+\begin{definition}[query entailment]
+	Let $q$ be a conjunctive query of arity $k$, $\mathcal{I}$ an interpretation
+	and $\vec{a} = a_1, \ldots, a_k$ a tuple of individuals.
+
+	We say that $\mathcal{I}$ \textit{entails} $q(\vec{a})$ (and write $\mathcal{I} \vDash q(\vec{a})$) if $\vec{a} \in \func{ans}(q, \mathcal{I})$.
+	If $k = 0$, then we call $q$ a Boolean query and simply write $\mathcal{I} \vDash q$.
+\end{definition}
+
+\begin{prop}
+	The query entailment problem for conjunctive queries in \textsc{NP}-complete.
+\end{prop}
+\begin{proof}
+	\underline{In \textsc{NP}:}
+	guess a mapping $\pi: \func{var}(q) \to \Delta^{\mathcal{I}}$ and test whether it is an $\vec{a}$-match.
+	
+	\underline{\textsc{NP}-hard:}
+	by a reduction from 3-colorability.
+	The (undirected) graph $G = (V,E)$ is 3-colorable if there exists a mapping
+	$c: V \to \left\{ \var{red}, \var{blue}, \var{green} \right\}$ 
+	such that $\left\{ u,v \right\} \in E$ implies $c(u) \neq c(v)$.
+	For a given graph $G = (V, E)$ with $\lvert V \rvert = k$ we construct $q_G$ as follows:
+	\[
+		q_G = \exists v_1, \ldots, \exists v_k. \bigwedge_{\left\{ u,v \right\} \in E} E(u,v) 
+	,\]
+	and use interpretation $\mathcal{I}$ with $\Delta^{\mathcal{I}} = \left\{ \var{red}, \var{blue}, \var{green} \right\}$.
+	It is then easy to see that
+	\[
+	\mathcal{I} \vDash q \iff G \text{ is 3-colorable} \qedhere
+	\]
+\end{proof}
+
+The fact that query entailment is \textsc{NP}-complete does not contradict the fact that,
+in practice, there are highly efficient relational DB engines that scale very well even for huge databases.
+This is true, because the size of the data in DB systems is usually large, whereas the size of queries is small.
+But in the reduction the query had the size of the graph, and the data had constant size.
+
+In order to take this mismatch into account, in the database setting, one often considers data complexity,
+instead of the usual (combined) complexity.
+\begin{mdframed}[frametitle=Data complexity]
+	Measure the complexity in the size of the data only,
+	and assume that the query has constant size.
+\end{mdframed}
+
+\begin{prop}
+	The query entailment problem for conjunctive queries is in \textsc{P} w.r.t.\ data complexity.
+\end{prop}
+\begin{proof}
+	Generate all mappings $\pi: \func{var}(q) \to \Delta^{\mathcal{I}}$ 
+	and test whether any of them is an $\vec{a}$-match.
+	There are $\lvert \Delta^\mathcal{I} \rvert^{\lvert \func{var}(q) \rvert}$ such mappings.
+	Since the query is considered constant, these are polynomially many.
+\end{proof}
+One can even show that the query entailment problem for FO queries (and thus also conjunctive queries)
+belongs to a complexity class strictly contained in \textsc{P} w.r.t.\ data complexity.
+
+\begin{theorem}
+	The query entailments problem for FO queries is in $\textsc{AC}^{0}$ w.r.t.\ data complexity.
+\end{theorem}
+\begin{note}
+	$\textsc{AC}^0 \subset \textsc{LogSpace} \subseteq \textsc{P}$
+\end{note}
+
+\section{Ontology-mediated query answering}
+In ontology-mediated query answering (OMQA) we consider:
+\begin{itemize}
+	\item a TBox $\mathcal{T}$ that represents background knowledge,
+	\item an ABox $\mathcal{A}$ that gives an incomplete description of the data,
+	\item a conjunctive query $q$.
+\end{itemize}
+The actual date (i.e.\ the interpretation $\mathcal{I}$) is not (yet) known,
+but it must be consistent with $\mathcal{K} = (\mathcal{T},\mathcal{A})$.
+We want to compute the answers of $q$ that hold for all possible data,
+i.e.\ for all models of $\mathcal{K}$.
+These answers are called \textit{certain answers}.
+
+\begin{definition}[certain answers]
+	Let $\mathcal{K} = (\mathcal{T}, \mathcal{A})$ be a knowledge base.
+	Then $\vec{a}$ is a certain answer to $q$ on $\mathcal{K}$ if
+	\begin{itemize}
+		\item all individual names from $\vec{a}$ occur in $\mathcal{A}$ and
+		\item $\vec{a} \in \func{ans}(q,\mathcal{I})$ for every model $\mathcal{I}$ of $\mathcal{K}$.
+	\end{itemize}
+
+	We use $\func{cert}(q, \mathcal{K})$ to denot the set of all certain answers to $q$ on $\mathcal{K}$ i.e.\
+	\[
+		\func{cert}(q, \mathcal{K}) = \bigcap_{\mathcal{I} \text{ model of } \mathcal{K}} \func{ans}(q,\mathcal{I})
+	.\]
+\end{definition}
+\begin{note}
+	$\vec{a} \in \func{cert}(q,\mathcal{K}) \iff \mathcal{K} \vDash q(\vec{a})$
+\end{note}
+
+In the context of OMQA, we consider the following query entailment problem:
+\begin{definition}[OMQA query entailment]
+	Let $q$ be a conjunctive query of arity $k$, $\mathcal{K}$ a knowledge base
+	and $\vec{a} = a_1, \ldots, a_k$ a tuple of individuals occurring in $\mathcal{K}$.
+
+	We say that $\mathcal{K}$ \textit{entails} $q(\vec{a})$ (and write $\mathcal{K} \vDash q(\vec{a})$)
+	if $\vec{a} \in \func{cert}(q, \mathcal{K})$.
+	If $k=0$, then we simply write $\mathcal{K} \vDash q$.
+\end{definition}
+
+\begin{mdframed}[frametitle= Data complexity in OMQA]
+	Consider only \textit{simple} ABoxes, whose assertions are of the form
+	$a:A$ and $(a,b):r$ where $A \in \mathscr{C}$ and $r \in \mathscr{R}$.
+
+	Measure the complexity in the size of the ABox only,
+	and assume that the TBox and the query have constant size.
+\end{mdframed}
+
+The complexity of OMQA query entailment of course depends on which query language
+and which DL for formulating the KB are used.
+
+\underline{Query language:}
+\newline
+We will only consider conjunctive queries,
+because for FO queries, OMQA query entailment would be undecidable
+(Because it is equivalent to reasoning in FOL).
+
+\underline{Description Logic:}
+\begin{itemize}
+	\item $\mathcal{ALC}$: \textsc{coNP}-complete
+	\item $\mathcal{EL}$: \textsc{P}-complete
+	\item DL-Lite: $\textsc{AC}^0$
+\end{itemize}
+In the following, we will only focus on the corresponding hardness results.
+
+\subsection{data complexity of OMQA in $\mathcal{ALC}$}
+\medskip
+\begin{prop}
+	In $\mathcal{ALC}$, the query entailment problem of conjunctive queries is \textsc{coNP}-hard w.r.t.\ data complexity.
+\end{prop}
+\begin{proof}
+	By reduction of non-3-colorability.
+	Because of data complexity, the resulting TBox and the query will not depend on the input graph, i.e.\ be constant:
+	\begin{alignat*}{2}
+	\mathcal{T} &=\big\{&\top &\sqsubseteq R \sqcup G \sqcup B \big.\\
+				&&R \sqcap \exists r.R &\sqsubseteq D\\
+				&&G \sqcap \exists r.G &\sqsubseteq D\\
+				&&\big. B \sqcap \exists r.B &\sqsubseteq D \big\}\\
+		q &= \exists x. D(x)
+	\end{alignat*}
+
+	The input graph $G=(V,E)$ is translated into the ABox
+	\[
+		\mathcal{A}_G \coloneqq \left\{ (u,v):r \mid \left\{u,v\right\} \in E\right\}
+	.\]
+	We have $(\mathcal{T}, \mathcal{A}_G) \vDash q \iff G$ is not 3-colorable.
+	
+	"$\implies$": By its contrapositive.
+	Assume that $G$ is 3-colorable and let $c: V \to \left\{ \var{red}, \var{blue}, \var{green} \right\}$ 
+	be the coloring.
+	Let $\mathcal{I}_c$ be the interpretation with
+	\begin{itemize}
+		\item $\Delta^{\mathcal{I}_c} \coloneqq V$
+		\item $v^{\mathcal{I}_c} = v$ 
+		\item $r^{\mathcal{I}_c} \coloneqq \left\{ (u,v) \mid \left\{ u, v \right\} \in E \right\}$
+	\end{itemize}
+	where $v$ is an individual name.
+	For the concepts we have:
+	\begin{itemize}
+		\item $R^{\mathcal{I}_c} \coloneqq \left\{ v \in V \mid c(v) = \var{red}\right\}$
+		\item $B^{\mathcal{I}_c} \coloneqq \left\{ v \in V \mid c(v) = \var{blue}\right\}$
+		\item $G^{\mathcal{I}_c} \coloneqq \left\{ v \in V \mid c(v) = \var{green}\right\}$
+		\item $D^{\mathcal{I}_c} \coloneqq \emptyset$
+	\end{itemize}
+	Then $\mathcal{I}_c$ is a model of $(\mathcal{T}, \mathcal{A}_G)$,
+	but $\mathcal{I}_c \not\vDash q$, which shows $(\mathcal{T}, \mathcal{A}_G) \not\vDash q$.
+
+	"$ \impliedby$": By its contrapositive.
+	Assume that $(\mathcal{T}, \mathcal{A}_G) \not\vDash q$.
+	Then there is a model $\mathcal{I}$ of $(\mathcal{T}, \mathcal{A}_G)$ such that $\mathcal{I} \not\vDash q$.
+	This means that $D^{\mathcal{I}} = \emptyset$.
+	We define the mapping $c_{\mathcal{I}}: V \to \left\{ \var{red}, \var{blue}, \var{green} \right\}$ as follows:
+	\[
+		c_{\mathcal{I}}(v) \coloneqq
+		\begin{cases}
+			\var{red},& \text{if } v^\mathcal{I} \in R^\mathcal{I}; \text{ otherwise} \\
+			\var{blue},& \text{if } v^\mathcal{I} \in B^\mathcal{I}; \text{ otherwise} \\
+			\var{green},& \text{if } v^\mathcal{I} \in G^\mathcal{I} \\
+		\end{cases}
+	\]
+	Claim: $c_{\mathcal{I}}$ is a 3-coloring of $G$.
+	\begin{subproof}
+		Let $\left\{ u,v \right\} \in E$, and assume that $c_{\mathcal{I}}(u) = c_{\mathcal{I}}(v) $.
+		Then $(u^{\mathcal{I}}, v^{\mathcal{I}}) \in r^{\mathcal{I}}$ and $u^{\mathcal{I}}$ belongs to one of the concepts
+		$\circ \sqcap \exists r.\circ$, where $\circ \in \left\{ R, B, G \right\}$.
+		Consequently, $u^{\mathcal{I}} = D^{\mathcal{I}}$, which contradict the fact $D^{\mathcal{I}} = \emptyset$. \contra
+	\end{subproof}
+\end{proof}
