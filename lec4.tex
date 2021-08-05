@@ -1,4 +1,4 @@
-\lecture{4}{22.04.2021}{}
+\lecture{4}{22.04.2021}{}[.5cm]
 \begin{proof}
 	\begin{enumerate}
 		\item An easy consequence of the fact that $\subseteq$ on sets is reflexive and transitive.
@@ -78,8 +78,8 @@ In the following we will show, that there exist certain polynomial reductions be
 		\draw (sub) edge[above, bend left] node{3.} (sat);
 		\draw (sat) edge[below, bend left] node{4.} (sub);
 		\draw (sat) edge[right]  node{5.} (kbc);
-		\draw (kbc) edge[below, bend left] node{6.} (ins);
-		\draw (ins) edge[above, bend left] node{7.} (kbc);
+		\draw (kbc) edge[below, bend left] node{7.} (ins);
+		\draw (ins) edge[above, bend left] node{6.} (kbc);
 		\draw (tbc) edge[right, bend left] node{8.} (sat);
 		\draw (sat) edge[left, bend left] node{9.} (tbc);
 	\end{tikzpicture}
@@ -122,7 +122,7 @@ In the following we will show, that there exist certain polynomial reductions be
 											  & \iff \left( C \sqcap \neg D \right) \text{is unsatisfiable w.r.t.}\ \mathcal{T} 
 			\end{align*}
 		\item trivial.
-		\item see lecture video.
+		\item trivial.
 		\item "$ \implies$": By its contraposition. \newline
 			Assume that $\left( \mathcal{T}, \mathcal{A} \cup \left\{a: \neg C \right\} \right)$ is indeed consistent.
 			Then there is  a model $\mathcal{I}$ of $\mathcal{T} , \mathcal{A}$ and $\left\{ a: \neg C \right\}$.
@@ -143,7 +143,7 @@ In the following we will show, that there exist certain polynomial reductions be
 			Assume that $\mathcal{I}$ is a model of $\mathcal{T}$ such that $C^\mathcal{I} \neq \emptyset$
 			(definition of satisfiability).
 			Let $d \in C^{\mathcal{I}}$.
-			We extend $\mathcal{I}$ to $\mathcal{I}'$by setting $r^{\mathcal{I}} = \left\{ (e,d) \mid  e \in \Delta^{\mathcal{I}} \right\}$.
+			We extend $\mathcal{I}$ to $\mathcal{I}'$ by setting $r^{\mathcal{I}} = \left\{ (e,d) \mid  e \in \Delta^{\mathcal{I}} \right\}$.
 			Since $r$ does not occur in $C$ or $\mathcal{T}$, we still have $d \in C^\mathcal{I'}$ and $\mathcal{I'}$ is a model of $\mathcal{T}$. \newline
 			"$\impliedby$": \newline
 			If $\mathcal{I}$ is a model of $\mathcal{T} \cup \left\{ \top \sqsubseteq \exists r.C \right\}$,

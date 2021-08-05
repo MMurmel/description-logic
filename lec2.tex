@@ -7,7 +7,7 @@
 		\item $\forall A \in \mathscr{C}\mathrel{:} A^{\mathcal{I}} \subseteq \Delta^{\mathcal{I}}$
 		\item $\forall r \in \mathscr{R} \mathrel{:} r^{\mathcal{I}}\subseteq \Delta^{\mathcal{I}} \times \Delta^{\mathcal{I}}$
 	\end{itemize}
-	$\cdot^{\mathcal{I}}$ is further extend to complex $\mathcal{ALC}$-concept descriptions:
+	$\cdot^{\mathcal{I}}$ is further extend to complex $\mathcal{ALC}$-concept descriptions inductively:
 	\begin{itemize}
 		\item $\left( C \sqcap D \right) ^{\mathcal{I}} \coloneqq C^{\mathcal{I}} \cap D^{\mathcal{I}}$
 		\item $\left( C \sqcup D \right)^{\mathcal{I}} \coloneqq C^{\mathcal{I}} \cup D^{\mathcal{I}}$
@@ -44,7 +44,7 @@ or which don't have any $r$-successors at all.
 			\draw (g) edge[loop right, right] node{$s$} (g);
 		\end{tikzpicture}
 	\end{figure}
-	For example: $(\forall r.A)^\mathcal{I} = \left\{ d, f \right\} \subseteq \Delta^\mathcal{I} = \left\{ d,e,f,g \right\}$
+	For example: $(\forall r.A)^\mathcal{I} = \left\{ d, f, g \right\} \subseteq \Delta^\mathcal{I} = \left\{ d,e,f,g \right\}$
 	and $(\exists r.B)^\mathcal{I} = \emptyset$.
 \end{example}
 
@@ -60,7 +60,7 @@ Given such a formula $\phi (x)$ with the free variable $x$ and an interpretation
 \[
 	\phi ^{\mathcal{I}} \coloneqq \left\{ d \in \Delta ^{\mathcal{I}} \mid \mathcal{I} \vDash \phi (d) \right\} 
 .\]
-We will now show, that one can translate $\mathcal{ALC}$-concepts C into FOL formulae $\tau_{x}(C)$ (with the free variable $x$) such that their extensions coincide.
+We will now show, that one can translate $\mathcal{ALC}$-concepts $C$ into FOL formulae $\tau_{x}(C)$ (with the free variable $x$) such that their extensions coincide.
 Since $\mathcal{ALC}$-concepts are defined by induction, we will also define this translation inductively:
 Let $A \in \mathscr{C}$, $r \in \mathscr{R}$ and $C, D$ be (possibly) complex concepts.
 \begin{align*}

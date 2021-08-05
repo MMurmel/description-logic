@@ -138,7 +138,7 @@ The algorithm then applies the expansion rules:
 	This implies that the $\sqcup$-rule is non-deterministic.
 	When running the algorithm, this can lead to a branching in the search tree of ABoxes
 	and therefore a nondeterministic algorithm.
-	It returns "consistent" iff at least one of the complete ABoxes (the trees of the search tree) is clash-free.
+	It returns "consistent" iff at least one of the complete ABoxes (the leaves of the search tree) is clash-free.
 \end{note}
 
 It now remains to formally define the "obvious contradictions":
@@ -149,7 +149,7 @@ It now remains to formally define the "obvious contradictions":
 	\]
 	for some individual name $a$ and for some concept $C$.
 
-	$\mathcal{A}$ is complete if it contains a clash, or none of the expansion rules is applicable.
+	$\mathcal{A}$ is called \textit{complete} if it contains a clash, or none of the expansion rules is applicable.
 \end{definition}
 \begin{note}
 	Of course one could define the completeness of $\mathcal{A}$ without the condition of containing a clash.
