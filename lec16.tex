@@ -27,11 +27,11 @@ $C_G$ is a conjunction of the following concept descriptions:
 			C_2 = \bigsqcap_{i \in \left\{ 0, 2, \ldots, n-2 \right\}} \forall r^i.\exists r. \top
 		\]
 		i.e.\ the successor is contained in $P_i \sqcup \neg P_i = \top$.
-	\item One a truth value is chosen, it remains fixed:
+	\item Once a truth value is chosen, it remains fixed:
 		\[
 			C_3 = \bigsqcap_{1 \leq i \leq j <n} \forall r^j. \left( (P_i \implies \forall r.P_i) \sqcap (\neg P_i \implies \forall r. \neg P_i) \right)
 		\]
-	\item At the leafs, the formula $\phi$ is true:
+	\item At the leaves, the formula $\phi$ is true:
 		\[
 			C_4 = \forall r^n. \phi^*
 		\]

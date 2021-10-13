@@ -74,7 +74,7 @@ that does not satisfy $A \sqsubseteq B$ in the case of $A \sqsubseteq B \in \mat
 	Let $\mathcal{T}$ be a general $\mathcal{EL}$ TBox in normal form and $\mathcal{T}^*$ the saturated TBox
 	obtained by exhaustive application of the classification rules.
 	
-	The canonical interpretation $\mathcal{I}_{\mathcal{T}^*}$ induced by $\mathcal{T}^*$ is define as follows:
+	The canonical interpretation $\mathcal{I}_{\mathcal{T}^*}$ induced by $\mathcal{T}^*$ is defined as follows:
 	\begin{itemize}
 		\item $\Delta^{\mathcal{I}_{\mathcal{T}^*}} \coloneqq \left\{ A \mid A \text{ is a concept name in } \func{sig}(\mathcal{T}) \right\} \cup \left\{ \top \right\}$,
 		\item $A^{\mathcal{I}_{\mathcal{T}^*}} \coloneqq \left\{ B \in \Delta^{\mathcal{I}_{\mathcal{T}^*}} \mid B \sqsubseteq A \in \mathcal{T}^* \right\}$ for all concept names $A \in \func{sig}(\mathcal{T})$,
@@ -143,7 +143,7 @@ that does not satisfy $A \sqsubseteq B$ in the case of $A \sqsubseteq B \in \mat
 
 \newpage
 \section{Subsumption in $\mathcal{ELI}$ w.r.t.\ general TBoxes}
-We now take a look at subsumption in $\mathcal{ELI}$
+We now take a look at subsumption in $\mathcal{ELI}$.
 We will see that, in contrast to $\mathcal{EL}$, subsumption in $\mathcal{ELI}$ w.r.t.\ general TBoxes
 is no longer polynomial, but \textsc{ExpTime}-complete.
 This is caused by the ability of $\mathcal{ELI}$ to express a restricted form of value restrictions:

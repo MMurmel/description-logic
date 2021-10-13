@@ -16,6 +16,24 @@
 \renewcommand{\sqsubseteq}{\mathrel{\helpersSub}}
 \DeclareMathSymbol{:}{\mathop}{operators}{"3A}
 
+\titlepic{
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}[scale = 1.5, transform shape]
+			\node[default, label= left: $A$] (d) {$d$};
+			\node[default, right of = d] (g) {$g$};
+			\node[default, label= above: $A$, above of = g] (e) {$e$};
+			\node[default, label= above: {$A, B$}, right of = e] (f) {$f$};
+			\draw (d) edge[above] node{$r$} (e);
+			\draw (g) edge[above] node{$s$} (d);
+			\draw (e) edge[right] node{$r$} (g);
+			\draw (e) edge[above] node{$s$} (f);
+			\draw (g) edge[loop right, right] node{$s$} (g);
+		\end{tikzpicture}
+	\caption*{$(\exists r.\forall r.A \sqcup B)^\mathcal{I} = \left\{ d, e \right\}$}
+	\end{figure}
+}
+
 \begin{document}
 	\selectlanguage{english}
 	\maketitle
